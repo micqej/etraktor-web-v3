@@ -173,7 +173,7 @@ export default function HomePage() {
             </div>
             <div>
               <img
-                src="/images/vyroba_100e7e85.jpeg"
+                src="/images/elektricky-malotraktor.jpg"
                 alt="Etraktor výroba"
                 className="about-img"
               />
