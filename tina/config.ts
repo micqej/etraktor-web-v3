@@ -5,7 +5,8 @@ export default defineConfig({
   clientId: "TVOJ_TINA_CLIENT_ID",
   token: "TVOJ_TINA_TOKEN",
   build: {
-    outputDir: "admin",
+    outputFolder: "admin",
+    publicFolder: "public",
   },
   media: {
     tina: {
@@ -23,8 +24,8 @@ export default defineConfig({
         fields: [
           { name: "title", type: "string", label: "Title" },
           { name: "body", type: "rich-text", label: "Content" },
-          { name: "seo", type: "object", fields: [
-            { name: "description", type: "string" }
+          { name: "seo", type: "object", label: "SEO", fields: [
+            { name: "description", type: "string", label: "Description" }
           ]}
         ],
         ui: {
