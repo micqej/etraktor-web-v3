@@ -109,52 +109,61 @@ function Tabs() {
         ))}
       </div>
       {active === 'tab-z' && (
-        <table className="spec-table">
-          <thead><tr><th>Parameter</th><th>2×12V DC</th><th>4×12V DC</th></tr></thead>
-          <tbody>
-            <tr><td>Typ zariadenia</td><td colSpan={2}>ET 2000</td></tr>
-            <tr><td>Typ pohonu</td><td colSpan={2}>Samonosná tuhá náprava s diferenciálom</td></tr>
-            <tr><td>Rýchlosť vpred / vzad</td><td colSpan={2}>0–15 km/h / 0–7 km/h</td></tr>
-            <tr><td>Najmenší priemer otáčania</td><td colSpan={2}>6,5 m</td></tr>
-            <tr><td>Hmotnosť traktora</td><td>380 kg</td><td>480 kg</td></tr>
-            <tr><td>Max. ťahaný náklad</td><td>300 kg / 1 300 kg*</td><td>400 kg / 1 300 kg*</td></tr>
-            <tr><td>Max. celková hmotnosť</td><td>680 kg / 1 680 kg*</td><td>880 kg</td></tr>
-            <tr><td>Max. ťažná sila (asfalt)</td><td>2 800 N</td><td>3 650 N</td></tr>
-            <tr><td>Brodenie</td><td colSpan={2}>150 mm pri 5 km/h</td></tr>
-            <tr><td>Max. sklon povrchu</td><td colSpan={2}>10° (17%)</td></tr>
-            <tr><td>Max. veľkosť prekážky</td><td colSpan={2}>120 mm</td></tr>
-            <tr><td>Prevádzková teplota</td><td colSpan={2}>−5°C až +40°C</td></tr>
-            <tr><td>Prevádzková vlhkosť</td><td colSpan={2}>30–80% (bez kondenzácie)</td></tr>
-            <tr><td>Hladina akustického tlaku</td><td colSpan={2}>66 dBA</td></tr>
-          </tbody>
-        </table>
+        <>
+          <table className="spec-table">
+            <thead><tr><th>Parameter</th><th>2×12V DC</th><th>4×12V DC</th></tr></thead>
+            <tbody>
+              <tr><td>Typ zariadenia</td><td colSpan={2}>ET 2000</td></tr>
+              <tr><td>Typ pohonu</td><td colSpan={2}>Samonosná tuhá náprava s diferenciálom</td></tr>
+              <tr><td>Rýchlosť vpred / vzad</td><td colSpan={2}>0–15 km/h / 0–7 km/h</td></tr>
+              <tr><td>Najmenší priemer otáčania</td><td colSpan={2}>6,5 m</td></tr>
+              <tr><td>Hmotnosť traktora</td><td>380 kg</td><td>480 kg</td></tr>
+              <tr><td>Max. ťahaný náklad</td><td>300 kg / 1 300 kg*</td><td>400 kg / 1 300 kg*</td></tr>
+              <tr><td>Max. celková hmotnosť</td><td>680 kg / 1 680 kg*</td><td>880 kg</td></tr>
+              <tr><td>Max. ťažná sila (asfalt)</td><td>2 800 N</td><td>3 650 N</td></tr>
+              <tr><td>Brodenie</td><td colSpan={2}>150 mm pri 5 km/h</td></tr>
+              <tr><td>Max. sklon povrchu</td><td colSpan={2}>10° (17%)</td></tr>
+              <tr><td>Max. veľkosť prekážky</td><td colSpan={2}>120 mm</td></tr>
+              <tr><td>Prevádzková teplota</td><td colSpan={2}>−5°C až +40°C</td></tr>
+              <tr><td>Prevádzková vlhkosť</td><td colSpan={2}>30–80% (bez kondenzácie)</td></tr>
+              <tr><td>Hladina akustického tlaku</td><td colSpan={2}>66 dBA</td></tr>
+            </tbody>
+          </table>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>* sklon podlahy 0°, max. rýchlosť 7 km/h</p>
+        </>
       )}
       {active === 'tab-b' && (
-        <table className="spec-table">
-          <thead><tr><th>Parameter</th><th>2×12V DC</th><th>4×12V DC</th></tr></thead>
-          <tbody>
-            <tr><td>Typ batérií</td><td colSpan={2}>Hawker XFC – trakčné (bez údržby)</td></tr>
-            <tr><td>Kapacita</td><td>158 Ah</td><td>316 Ah</td></tr>
-            <tr><td>Hmotnosť konfigurácie</td><td>380 kg</td><td>480 kg</td></tr>
-            <tr><td>Životnosť (60% vybitie)</td><td colSpan={2}>1 200 ZVEI cyklov</td></tr>
-            <tr><td>Životnosť (80% vybitie)</td><td colSpan={2}>800 cyklov</td></tr>
-            <tr><td>Menovitá prevádzková teplota</td><td colSpan={2}>30°C</td></tr>
-            <tr><td>Doplňovanie destilovanej vody</td><td colSpan={2}>Nie je potrebné</td></tr>
-          </tbody>
-        </table>
+        <>
+          <table className="spec-table">
+            <thead><tr><th>Parameter</th><th>2×12V DC</th><th>4×12V DC</th></tr></thead>
+            <tbody>
+              <tr><td>Typ batérií</td><td colSpan={2}>Hawker XFC – trakčné (bez údržby)</td></tr>
+              <tr><td>Kapacita</td><td>158 Ah</td><td>316 Ah</td></tr>
+              <tr><td>Hmotnosť konfigurácie</td><td>380 kg</td><td>480 kg</td></tr>
+              <tr><td>Životnosť (60% vybitie)</td><td colSpan={2}>1 200 ZVEI cyklov</td></tr>
+              <tr><td>Životnosť (80% vybitie)</td><td colSpan={2}>800 cyklov</td></tr>
+              <tr><td>Menovitá prevádzková teplota</td><td colSpan={2}>30°C</td></tr>
+              <tr><td>Doplňovanie destilovanej vody</td><td colSpan={2}>Nie je potrebné</td></tr>
+            </tbody>
+          </table>
+          <img src="https://www.etraktor.sk/images/bateria.png" alt="Batéria" style={{ maxWidth: 300, borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginTop: '1.5rem' }} />
+        </>
       )}
       {active === 'tab-n' && (
-        <table className="spec-table">
-          <thead><tr><th>Parameter</th><th>Hodnota</th></tr></thead>
-          <tbody>
-            <tr><td>Typ nabíjačky</td><td>Hawker XFC schválená nabíjačka</td></tr>
-            <tr><td>Vstupné napätie</td><td>240V AC (sieť)</td></tr>
-            <tr><td>Výstupné napätie</td><td>24V DC</td></tr>
-            <tr><td>Prúd nabíjačky (opcia)</td><td>40A</td></tr>
-            <tr><td>Nabíjanie počas prevádzky</td><td>Kdekoľvek – bez poškodenia batérií</td></tr>
-            <tr><td>Odporúčané skladovanie</td><td>Plne nabité, 20°C, sucho</td></tr>
-          </tbody>
-        </table>
+        <>
+          <table className="spec-table">
+            <thead><tr><th>Parameter</th><th>Hodnota</th></tr></thead>
+            <tbody>
+              <tr><td>Typ nabíjačky</td><td>Hawker XFC schválená nabíjačka</td></tr>
+              <tr><td>Vstupné napätie</td><td>240V AC (sieť)</td></tr>
+              <tr><td>Výstupné napätie</td><td>24V DC</td></tr>
+              <tr><td>Prúd nabíjačky (opcia)</td><td>40A</td></tr>
+              <tr><td>Nabíjanie počas prevádzky</td><td>Kdekoľvek – bez poškodenia batérií</td></tr>
+              <tr><td>Odporúčané skladovanie</td><td>Plne nabité, 20°C, sucho</td></tr>
+            </tbody>
+          </table>
+          <img src="https://www.etraktor.sk/images/nabijanie.png" alt="Nabíjanie" style={{ maxWidth: 380, borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginTop: '1.5rem' }} />
+        </>
       )}
       {active === 'tab-v' && (
         <table className="spec-table">
