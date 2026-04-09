@@ -1,11 +1,11 @@
 export default function RefsSection() {
   const refs = [
-    { alt: 'Strojnícka fakulta TU Košice', src: 'https://www.etraktor.sk/images/ref1.png' },
-    { alt: 'PIAFA Vyškov', src: 'https://www.etraktor.sk/images/ref2.png' },
-    { alt: 'Žilinská Univerzita', src: 'https://www.etraktor.sk/images/ref3.png' },
-    { alt: 'Referencia 4', src: 'https://www.etraktor.sk/images/ref4.png' },
-    { alt: 'Referencia 5', src: 'https://www.etraktor.sk/images/ref5.png' },
-    { alt: 'Referencia 6', src: 'https://www.etraktor.sk/images/ref6.png' },
+    { alt: 'Strojnícka fakulta TU Košice', src: '/refs/tuke.jpg' },
+    { alt: 'PIAFA Vyškov', src: '/refs/piafa.jpg' },
+    { alt: 'Žilinská Univerzita', src: '/refs/uniza.jpg' },
+    { alt: 'Referencia 4', src: '/refs/ref4.jpg' },
+    { alt: 'Referencia 5', src: '/refs/ref5.jpg' },
+    { alt: 'Referencia 6', src: '/refs/ref6.jpg' },
   ]
   return (
     <section className="refs-section">

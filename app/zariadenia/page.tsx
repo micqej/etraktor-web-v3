@@ -27,9 +27,9 @@ export default function ZariadeniaPage() {
           <h2 className="section-title">Naše realizácie</h2>
           <div className="three-col">
             {[
-              { title: 'Linka dverí pre školiace stredisko', desc: 'Kompletné riešenie na kľúč vrátane konštrukčného vývoja a montáže.', src: 'https://www.etraktor.sk/images/zariadenie1.jpg', alt: 'Linka dverí' },
-              { title: 'Kontrolné prípravky', desc: 'Presné kontrolné prípravky pre výrobné linky a QA procesy.', src: 'https://www.etraktor.sk/images/zariadenie2.jpg', alt: 'Kontrolné prípravky' },
-              { title: 'Násypný vážiaci modul', desc: 'Špeciálne zariadenie pre presné váženie a dávkovanie materiálu.', src: 'https://www.etraktor.sk/images/zariadenie3.jpg', alt: 'Násypný vážiaci modul' },
+              { title: 'Linka dverí pre školiace stredisko', desc: 'Kompletné riešenie na kľúč vrátane konštrukčného vývoja a montáže.', src: '/images/zariadenia_666ca974.jpeg', alt: 'Linka dverí' },
+              { title: 'Kontrolné prípravky', desc: 'Presné kontrolné prípravky pre výrobné linky a QA procesy.', src: '/images/zariadenia_8beb0717.jpeg', alt: 'Kontrolné prípravky' },
+              { title: 'Násypný vážiaci modul', desc: 'Špeciálne zariadenie pre presné váženie a dávkovanie materiálu.', src: '/images/zariadenia_180dd027.jpeg', alt: 'Násypný vážiaci modul' },
             ].map((item, i) => (
               <div className="img-card" key={i}>
                 <img src={item.src} alt={item.alt} style={{ width: '100%', height: 220, objectFit: 'contain', padding: '0.5rem', background: 'var(--bg)' }} />

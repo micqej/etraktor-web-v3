@@ -39,7 +39,7 @@ export default function PaletyPage() {
             </div>
             <div className="img-card">
               <img
-                src="https://www.etraktor.sk/images/paleta1.jpg"
+                src="/images/palety_f149ab5c.jpeg"
                 alt="Nerobotické palety"
                 style={{ width: '100%', height: 260, objectFit: 'contain', padding: '1rem', background: 'var(--bg)' }}
               />
@@ -57,7 +57,7 @@ export default function PaletyPage() {
           <div className="two-col">
             <div className="img-card">
               <img
-                src="https://www.etraktor.sk/images/paleta2.jpg"
+                src="/images/palety_1c58982b.jpeg"
                 alt="Robotické palety"
                 style={{ width: '100%', height: 260, objectFit: 'contain', padding: '1rem', background: 'var(--bg)' }}
               />

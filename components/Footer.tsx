@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container footer-inner">
         <div className="footer-logo">
           <img
-            src="https://www.etraktor.sk/images/logo.jpg"
+            src="/logo.png"
             alt="logo"
             style={{ height: 42, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)' }}
           />

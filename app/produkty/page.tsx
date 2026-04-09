@@ -12,21 +12,15 @@ const CheckIcon = () => (
 )
 
 const galleryImages = [
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-01.JPG', alt: 'ET 2000' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-02.JPG', alt: 'Tichý chod' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-03.JPG', alt: 'Jazda v teréne' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-04.JPG', alt: 'Prevoz' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-05.JPG', alt: 'Vlečka' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-06.JPG', alt: 'Príves 600kg' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-07.JPG', alt: 'Radlica na sneh' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-08.JPG', alt: 'Pluh' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-09.JPG', alt: 'Kosenie' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-10.JPG', alt: 'Zametanie' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-11.JPG', alt: 'Akcia 11' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-12.JPG', alt: 'Akcia 12' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-13.JPG', alt: 'Akcia 13' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-14.JPG', alt: 'Akcia 14' },
-  { src: 'https://www.etraktor.sk/images/galeria/elektricky-malotraktor-15.JPG', alt: 'Akcia 15' },
+  { src: '/images/elektricky-malotraktor.jpg', alt: 'ET 2000' },
+  { src: '/images/dojazd1.jpg', alt: 'Dojazd 2x12V' },
+  { src: '/images/dojazd2.jpg', alt: 'Dojazd 4x12V' },
+  { src: '/images/prislusenstvosumar.jpg', alt: 'Kompletny sortiment' },
+  { src: '/images/prislusenstvo.jpg', alt: 'Predna radlica na sneh' },
+  { src: '/images/zadnyzaves.png', alt: 'Zadny zaves' },
+  { src: '/images/prislusenstvo2.png', alt: 'Prislusenstvo 2' },
+  { src: '/images/prislusenstvo3.png', alt: 'Prislusenstvo 3' },
+  { src: '/images/prislusenstvo4.png', alt: 'Prislusenstvo 4' },
 ]
 
 const videos = [
@@ -146,7 +140,7 @@ function Tabs() {
               <tr><td>Doplňovanie destilovanej vody</td><td colSpan={2}>Nie je potrebné</td></tr>
             </tbody>
           </table>
-          <img src="https://www.etraktor.sk/images/bateria.png" alt="Batéria" style={{ maxWidth: 300, borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginTop: '1.5rem' }} />
+          <img src="/images/bateria.png" alt="Batéria" style={{ maxWidth: 300, borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginTop: '1.5rem' }} />
         </>
       )}
       {active === 'tab-n' && (
@@ -162,7 +156,7 @@ function Tabs() {
               <tr><td>Odporúčané skladovanie</td><td>Plne nabité, 20°C, sucho</td></tr>
             </tbody>
           </table>
-          <img src="https://www.etraktor.sk/images/nabijanie.png" alt="Nabíjanie" style={{ maxWidth: 380, borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginTop: '1.5rem' }} />
+          <img src="/images/nabijanie.png" alt="Nabíjanie" style={{ maxWidth: 380, borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginTop: '1.5rem' }} />
         </>
       )}
       {active === 'tab-v' && (
@@ -217,7 +211,7 @@ export default function ProduktyPage() {
 
       {/* HERO */}
       <section className="hero" style={{ minHeight: '75vh' }}>
-        <div className="hero-bg" style={{ backgroundImage: "url('https://www.etraktor.sk/images/elektricky-malotraktor.jpg')" }} />
+        <div className="hero-bg" style={{ backgroundImage: "url('/images/elektricky-malotraktor.jpg')" }} />
         <div className="hero-overlay" />
         <div className="hero-content">
           <div className="hero-grid">
@@ -232,7 +226,7 @@ export default function ProduktyPage() {
               </div>
             </div>
             <div>
-              <img src="https://www.etraktor.sk/images/elektricky-malotraktor.jpg" alt="ET 2000" className="hero-right-img" />
+              <img src="/images/elektricky-malotraktor.jpg" alt="ET 2000" className="hero-right-img" />
             </div>
           </div>
         </div>
@@ -275,7 +269,7 @@ export default function ProduktyPage() {
                 <div className="stat-card"><div className="stat-card-val">66 dBA</div><div className="stat-card-label">Hluk</div></div>
                 <div className="stat-card"><div className="stat-card-val">~∞</div><div className="stat-card-label">Životnosť</div></div>
               </div>
-              <img src="https://www.etraktor.sk/images/elektricky-malotraktor.jpg" alt="ET 2000" style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', objectFit: 'cover', maxHeight: 260 }} />
+              <img src="/images/elektricky-malotraktor.jpg" alt="ET 2000" style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', objectFit: 'cover', maxHeight: 260 }} />
             </div>
           </div>
         </div>
@@ -341,11 +335,11 @@ export default function ProduktyPage() {
             {['rozmerythumb1', 'rozmerythumb2', 'rozmerythumb3'].map((img, i) => (
               <img
                 key={i}
-                src={`https://www.etraktor.sk/images/${img}.png`}
+                src={`/images/${img}.png`}
                 alt={`Rozmery ${i + 1}`}
                 style={{ borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', width: '100%', cursor: 'pointer' }}
                 onClick={() => setLb({
-                  images: ['rozmerythumb1', 'rozmerythumb2', 'rozmerythumb3'].map(x => `https://www.etraktor.sk/images/${x}.png`),
+                  images: ['rozmerythumb1', 'rozmerythumb2', 'rozmerythumb3'].map(x => `/images/${x}.png`),
                   idx: i,
                 })}
               />
@@ -365,8 +359,8 @@ export default function ProduktyPage() {
               { src: 'dojazd1', label: 'Konfigurácia 2×12V DC', badge: 'štandard', badgeClass: 'badge-std', info: 'Hmotnosť 380 kg • Kapacita 158 Ah • Štandardná konfigurácia pre záhradné a poľnohospodárske práce.' },
               { src: 'dojazd2', label: 'Konfigurácia 4×12V DC', badge: 'opcia', badgeClass: 'badge-opt', info: 'Hmotnosť 480 kg • Kapacita 316 Ah • Rozšírená kapacita pre náročné priemyselné nasadenie.' },
             ].map((d, i) => (
-              <div className="img-card" key={i} onClick={() => setLb({ images: ['dojazd1', 'dojazd2'].map(x => `https://www.etraktor.sk/images/${x}.jpg`), idx: i })}>
-                <img src={`https://www.etraktor.sk/images/${d.src}.jpg`} alt={d.label} style={{ width: '100%', height: 'auto', minHeight: 160, objectFit: 'contain', background: '#f5f7f5' }} />
+              <div className="img-card" key={i} onClick={() => setLb({ images: ['dojazd1', 'dojazd2'].map(x => `/images/${x}.jpg`), idx: i })}>
+                <img src={`/images/${d.src}.jpg`} alt={d.label} style={{ width: '100%', height: 'auto', minHeight: 160, objectFit: 'contain', background: '#f5f7f5' }} />
                 <div className="img-card-body">
                   <div className="img-card-title">{d.label} <span className={d.badgeClass} style={{ marginLeft: 6 }}>{d.badge}</span></div>
                   <div className="img-card-desc">{d.info}</div>
@@ -389,7 +383,7 @@ export default function ProduktyPage() {
               { src: 'zadnyzaves', alt: 'Zadný záves', title: 'Zadný záves', desc: 'Univerzálny zadný záves pre pluh, vyorávač zemiakov, brány a ďalšie príslušenstvo.' },
             ].map((item, i) => (
               <div className="img-card" key={i}>
-                <img src={`https://www.etraktor.sk/images/${item.src}.${item.src === 'zadnyzaves' ? 'png' : 'jpg'}`} alt={item.alt} style={{ width: '100%', height: 200, objectFit: 'cover' }} />
+                <img src={`/images/${item.src}.${item.src === 'zadnyzaves' ? 'png' : 'jpg'}`} alt={item.alt} style={{ width: '100%', height: 200, objectFit: 'cover' }} />
                 <div className="img-card-body">
                   <div className="img-card-title">{item.title}</div>
                   <div className="img-card-desc">{item.desc}</div>
@@ -407,8 +401,8 @@ export default function ProduktyPage() {
           <h2 className="section-title">Certifikované zariadenie</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', maxWidth: 600 }}>
             {[1, 2].map(n => (
-              <div className="img-card" key={n} onClick={() => setLb({ images: [1, 2].map(x => `https://www.etraktor.sk/images/certifikat${x}.jpg`), idx: n - 1 })}>
-                <img src={`https://www.etraktor.sk/images/certifikat${n}.jpg`} alt={`Certifikát ${n}`} style={{ width: '100%', height: 220, objectFit: 'contain', padding: '1rem', background: 'white' }} />
+              <div className="img-card" key={n} onClick={() => setLb({ images: [1, 2].map(x => `/images/certifikat${x}.jpg`), idx: n - 1 })}>
+                <img src={`/images/certifikat${n}.jpg`} alt={`Certifikát ${n}`} style={{ width: '100%', height: 220, objectFit: 'contain', padding: '1rem', background: 'white' }} />
                 <div className="img-card-body"><div className="img-card-title">Certifikát {n}</div></div>
               </div>
             ))}

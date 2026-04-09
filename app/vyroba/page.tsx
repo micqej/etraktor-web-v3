@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 
 export default function VyrobaPage() {
   const images = [
-    { src: 'https://www.etraktor.sk/images/vyroba1.jpg', alt: 'Výrobný priestor 1', title: 'Výrobný priestor 1' },
-    { src: 'https://www.etraktor.sk/images/vyroba2.jpg', alt: 'Výrobný priestor 2', title: 'Výrobný priestor 2' },
-    { src: 'https://www.etraktor.sk/images/vyroba3.jpg', alt: 'Výrobný priestor 3', title: 'Výrobný priestor 3' },
-    { src: 'https://www.etraktor.sk/images/vyroba4.jpg', alt: 'Výrobný priestor 4', title: 'Výrobný priestor 4' },
-    { src: 'https://www.etraktor.sk/images/vyroba5.jpg', alt: 'Výrobný priestor 5', title: 'Výrobný priestor 5' },
+    { src: '/images/vyroba_b79432df.jpeg', alt: 'Výrobný priestor 1', title: 'Výrobný priestor 1' },
+    { src: '/images/vyroba_ac05ee94.jpeg', alt: 'Výrobný priestor 2', title: 'Výrobný priestor 2' },
+    { src: '/images/vyroba_781d8e3e.jpeg', alt: 'Výrobný priestor 3', title: 'Výrobný priestor 3' },
+    { src: '/images/vyroba_100e7e85.jpeg', alt: 'Výrobný priestor 4', title: 'Výrobný priestor 4' },
+    { src: '/images/vyroba_40c95da1.jpeg', alt: 'Výrobný priestor 5', title: 'Výrobný priestor 5' },
   ]
 
   const services = [

@@ -23,7 +23,7 @@ export default function Nav() {
             <img
               className="nav-logo-img"
               alt="etraktor.sk"
-              src="https://www.etraktor.sk/images/logo.jpg"
+              src="/logo.png"
               style={{ height: 46, width: 46, objectFit: 'contain', borderRadius: '50%', border: '2px solid var(--border)' }}
             />
             <span className="nav-logo-sk">etraktor.sk</span>

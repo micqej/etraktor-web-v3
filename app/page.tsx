@@ -15,7 +15,7 @@ export default function HomePage() {
 
       {/* HERO */}
       <section className="hero">
-        <div className="hero-bg" style={{ backgroundImage: "url('https://www.etraktor.sk/images/elektricky-malotraktor.jpg')" }} />
+        <div className="hero-bg" style={{ backgroundImage: "url('/images/elektricky-malotraktor.jpg')" }} />
         <div className="hero-overlay" />
         <div className="hero-content">
           <div className="hero-grid">
@@ -33,7 +33,7 @@ export default function HomePage() {
             </div>
             <div>
               <img
-                src="https://www.etraktor.sk/images/elektricky-malotraktor.jpg"
+                src="/images/elektricky-malotraktor.jpg"
                 alt="ET 2000"
                 className="hero-right-img"
               />
@@ -65,7 +65,7 @@ export default function HomePage() {
           <div className="two-col" style={{ marginBottom: '6rem' }}>
             <div>
               <img
-                src="https://www.etraktor.sk/images/paleta1.jpg"
+                src="/images/palety_f149ab5c.jpeg"
                 alt="Transportné palety"
                 style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', maxHeight: 320, objectFit: 'contain', background: 'var(--bg)', padding: '1rem' }}
               />
@@ -89,7 +89,7 @@ export default function HomePage() {
             </div>
             <div>
               <img
-                src="https://www.etraktor.sk/images/zariadenie1.jpg"
+                src="/images/zariadenia_8beb0717.jpeg"
                 alt="Jednoúčelové zariadenia"
                 style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', maxHeight: 320, objectFit: 'contain', background: 'var(--bg)', padding: '1rem' }}
               />
@@ -99,7 +99,7 @@ export default function HomePage() {
           <div className="two-col" style={{ marginBottom: '6rem' }}>
             <div>
               <img
-                src="https://www.etraktor.sk/images/vyroba1.jpg"
+                src="/images/vyroba_b79432df.jpeg"
                 alt="Výroba"
                 style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', maxHeight: 320, objectFit: 'cover' }}
               />
@@ -123,7 +123,7 @@ export default function HomePage() {
             </div>
             <div>
               <img
-                src="https://www.etraktor.sk/images/elektricky-malotraktor.jpg"
+                src="/images/elektricky-malotraktor.jpg"
                 alt="eTRAKTOR"
                 style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', maxHeight: 300, objectFit: 'cover' }}
               />
@@ -173,7 +173,7 @@ export default function HomePage() {
             </div>
             <div>
               <img
-                src="https://www.etraktor.sk/images/vyroba1.jpg"
+                src="/images/vyroba_100e7e85.jpeg"
                 alt="Etraktor výroba"
                 className="about-img"
               />
