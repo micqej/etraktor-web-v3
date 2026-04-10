@@ -2,18 +2,13 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import siteSettings from '@/content/site/site-settings.json'
+import {assetPath} from '@/lib/content'
 
 export default function Nav() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-
-  const links = [
-    { href: '/', label: 'Domov' },
-    { href: '/palety', label: 'Transportné palety' },
-    { href: '/zariadenia', label: 'Jednoúčelové zariadenia' },
-    { href: '/vyroba', label: 'Výroba' },
-    { href: '/produkty', label: 'eTRAKTOR' },
-  ]
+  const links = siteSettings.navLinks
 
   return (
     <>
@@ -22,11 +17,11 @@ export default function Nav() {
           <Link href="/" className="nav-logo">
             <img
               className="nav-logo-img"
-              alt="etraktor.sk"
-              src="/logo.png"
+              alt={siteSettings.logoAlt}
+              src={assetPath(siteSettings.logoImage)}
               style={{ height: 46, width: 46, objectFit: 'contain', borderRadius: '50%', border: '2px solid var(--border)' }}
             />
-            <span className="nav-logo-sk">etraktor.sk</span>
+            <span className="nav-logo-sk">{siteSettings.logoText}</span>
           </Link>
           <div className="nav-links">
             {links.map(l => (
@@ -38,8 +33,8 @@ export default function Nav() {
                 {l.label}
               </Link>
             ))}
-            <Link href="/kontakt" className={`nav-cta${pathname === '/kontakt' ? ' active' : ''}`}>
-              Kontakt
+            <Link href={siteSettings.contactLink.href} className={`nav-cta${pathname === siteSettings.contactLink.href ? ' active' : ''}`}>
+              {siteSettings.contactLink.label}
             </Link>
           </div>
           <button
@@ -59,7 +54,7 @@ export default function Nav() {
             {l.label}
           </Link>
         ))}
-        <Link href="/kontakt" onClick={() => setMenuOpen(false)}>Kontakt</Link>
+        <Link href={siteSettings.contactLink.href} onClick={() => setMenuOpen(false)}>{siteSettings.contactLink.label}</Link>
       </div>
     </>
   )

@@ -1,0 +1,26 @@
+{
+  "heroTag": "Kompletná výroba",
+  "heroTitle": "Výroba pod vlastnou strechou",
+  "heroDescription": "CNC pálenie, CNC ohýbanie, elektrické rozvádzače. Kompletná výroba v jednom mieste.",
+  "galleryTag": "Naša dielňa",
+  "galleryTitle": "Výrobné priestory",
+  "galleryDescription": "Pozrite si zázemie kde vznikajú naše produkty. Kliknite na foto pre zväčšenie.",
+  "images": [
+    { "src": "/images/vyroba_b79432df.jpeg", "alt": "Výrobný priestor 1", "title": "Výrobný priestor 1" },
+    { "src": "/images/vyroba_ac05ee94.jpeg", "alt": "Výrobný priestor 2", "title": "Výrobný priestor 2" },
+    { "src": "/images/vyroba_781d8e3e.jpeg", "alt": "Výrobný priestor 3", "title": "Výrobný priestor 3" },
+    { "src": "/images/vyroba_100e7e85.jpeg", "alt": "Výrobný priestor 4", "title": "Výrobný priestor 4" },
+    { "src": "/images/vyroba_40c95da1.jpeg", "alt": "Výrobný priestor 5", "title": "Výrobný priestor 5" }
+  ],
+  "servicesTag": "Kapacity",
+  "servicesTitle": "Čo vyrábame",
+  "services": [
+    { "title": "CNC pálenie", "description": "Presné CNC pálenie kovových dielov pre potreby výroby aj zákazníkov." },
+    { "title": "CNC ohýbanie", "description": "Ohýbanie plechov a profilov s presnou toleranciou." },
+    { "title": "Elektrické rozvádzače", "description": "Návrh, výroba a montáž elektrických rozvádzačov." }
+  ],
+  "ctaTitle": "Potrebujete výrobné kapacity?",
+  "ctaText": "Realizujeme projekty od návrhu po hotový produkt.",
+  "ctaButtonLabel": "Kontaktujte nás",
+  "ctaButtonHref": "/kontakt"
+}

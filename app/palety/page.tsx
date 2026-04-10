@@ -3,6 +3,8 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import RefsSection from '@/components/RefsSection'
 import type { Metadata } from 'next'
+import paletyPage from '@/content/pages/palety.json'
+import {assetPath} from '@/lib/content'
 
 export const metadata: Metadata = {
   title: 'Transportné palety – Etraktor, s.r.o.',
@@ -21,9 +23,9 @@ export default function PaletyPage() {
 
       <div className="page-hero">
         <div className="container">
-          <span className="tag">Logistika &amp; Automobilový priemysel</span>
-          <h1>Transportné palety</h1>
-          <p>Transportné palety sú základným kameňom modernej logistiky a skladovania nie len v automotíve. Pevná a unifikovaná základňa pre efektívny presun tovaru vo veľkom množstve.</p>
+          <span className="tag">{paletyPage.heroTag}</span>
+          <h1>{paletyPage.heroTitle}</h1>
+          <p>{paletyPage.heroDescription}</p>
         </div>
       </div>
 
@@ -31,21 +33,21 @@ export default function PaletyPage() {
         <div className="container">
           <div className="two-col">
             <div>
-              <span className="tag">Nerobotické palety</span>
-              <h2 className="section-title">Nerobotické palety</h2>
-              <p>Transportné palety sú základným kameňom modernej logistiky a skladovania nie len v automotíve. Ich hlavným účelom je vytvoriť pevnú a unifikovanú základňu, ktorá umožňuje efektívny presun tovaru vo veľkom množstve bez ohľadu na to či je materiál zakladaný ručne alebo robotom.</p>
+              <span className="tag">{paletyPage.nonRobotTag}</span>
+              <h2 className="section-title">{paletyPage.nonRobotTitle}</h2>
+              <p>{paletyPage.nonRobotDescription}</p>
               <br />
-              <Link href="/kontakt" className="btn-primary">Mám záujem</Link>
+              <Link href={paletyPage.nonRobotButtonHref} className="btn-primary">{paletyPage.nonRobotButtonLabel}</Link>
             </div>
             <div className="img-card">
               <img
-                src="/images/palety_f149ab5c.jpeg"
-                alt="Nerobotické palety"
+                src={assetPath(paletyPage.nonRobotImage)}
+                alt={paletyPage.nonRobotImageAlt}
                 style={{ width: '100%', height: 260, objectFit: 'contain', padding: '1rem', background: 'var(--bg)' }}
               />
               <div className="img-card-body">
-                <div className="img-card-title">Nerobotické transportné palety</div>
-                <div className="img-card-desc">Kliknite pre zväčšenie</div>
+                <div className="img-card-title">{paletyPage.nonRobotCardTitle}</div>
+                <div className="img-card-desc">{paletyPage.nonRobotCardDescription}</div>
               </div>
             </div>
           </div>
@@ -57,27 +59,22 @@ export default function PaletyPage() {
           <div className="two-col">
             <div className="img-card">
               <img
-                src="/images/palety_1c58982b.jpeg"
-                alt="Robotické palety"
+                src={assetPath(paletyPage.robotImage)}
+                alt={paletyPage.robotImageAlt}
                 style={{ width: '100%', height: 260, objectFit: 'contain', padding: '1rem', background: 'var(--bg)' }}
               />
               <div className="img-card-body">
-                <div className="img-card-title">Robotické palety a zásobníky</div>
-                <div className="img-card-desc">Kliknite pre zväčšenie</div>
+                <div className="img-card-title">{paletyPage.robotCardTitle}</div>
+                <div className="img-card-desc">{paletyPage.robotCardDescription}</div>
               </div>
             </div>
             <div>
-              <span className="tag">Robotické riešenia</span>
-              <h2 className="section-title">Robotické palety &amp; zásobníky</h2>
-              <p>Robotické palety a zásobníky sú navrhnuté pre plne automatizované výrobné linky. Zaručujú presnú polohu dielov pre robotické uchopovanie a presun.</p>
+              <span className="tag">{paletyPage.robotTag}</span>
+              <h2 className="section-title">{paletyPage.robotTitle}</h2>
+              <p>{paletyPage.robotDescription}</p>
               <br />
               <div className="check-list">
-                {[
-                  'Robotické palety pre automobilový priemysel',
-                  'Robotické zásobníky s presnou polohou dielov',
-                  'Vlastná výroba pod jednou strechou',
-                  'Konštrukčný vývoj, výroba, montáž, dokumentácia',
-                ].map((item, i) => (
+                {paletyPage.robotItems.map((item, i) => (
                   <div className="check-item" key={i}>
                     <CheckIcon />
                     <span>{item}</span>
@@ -85,7 +82,7 @@ export default function PaletyPage() {
                 ))}
               </div>
               <br />
-              <Link href="/kontakt" className="btn-primary">Dopytovať riešenie</Link>
+              <Link href={paletyPage.robotButtonHref} className="btn-primary">{paletyPage.robotButtonLabel}</Link>
             </div>
           </div>
         </div>
@@ -97,11 +94,11 @@ export default function PaletyPage() {
         <div className="container">
           <div className="cta-inner">
             <div>
-              <h2>Potrebujete transportné palety?</h2>
-              <p>Navrhneme riešenie presne podľa Vašich požiadaviek.</p>
+              <h2>{paletyPage.ctaTitle}</h2>
+              <p>{paletyPage.ctaText}</p>
             </div>
-            <Link href="/kontakt" className="btn-primary" style={{ background: 'white', color: 'var(--green-dark)' }}>
-              Kontaktujte nás
+            <Link href={paletyPage.ctaButtonHref} className="btn-primary" style={{ background: 'white', color: 'var(--green-dark)' }}>
+              {paletyPage.ctaButtonLabel}
             </Link>
           </div>
         </div>
