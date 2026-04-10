@@ -6,4 +6,6 @@ export const dataset =
 export const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || 'eypnbw53'
 
+export const token = process.env.SANITY_API_READ_TOKEN
+
 export const studioUrl = '/admin'
