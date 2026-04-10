@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import {VisualEditing, createDataAttribute} from 'next-sanity'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import RefsSection from '@/components/RefsSection'
@@ -7,6 +8,8 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Domov – Etraktor, s.r.o.',
 }
+
+const homePageAttr = createDataAttribute({id: 'homePage', type: 'homePage'})
 
 export default function HomePage() {
   return (
@@ -20,18 +23,32 @@ export default function HomePage() {
         <div className="hero-content">
           <div className="hero-grid">
             <div className="hero-left">
-              <p className="hero-eyebrow">Etraktor, s.r.o. &mdash; Bardejov, Slovenská republika</p>
+              <p className="hero-eyebrow" data-sanity={homePageAttr('heroEyebrow')}>
+                Etraktor, s.r.o. &mdash; Bardejov, Slovenská republika
+              </p>
               <h1 className="hero-title">
-                Inovatívna<br />spoločnosť<br /><span>v strojárstve</span>
+                <span data-sanity={homePageAttr('heroTitleLine1')}>Inovatívna</span>
+                <br />
+                <span data-sanity={homePageAttr('heroTitleLine2')}>spoločnosť</span>
+                <br />
+                <span data-sanity={homePageAttr('heroTitleAccent')}>v strojárstve</span>
               </h1>
-              <p className="hero-subtitle">Vývoj &bull; Výroba &bull; Certifikácia</p>
-              <p className="hero-desc">Od myšlienky po realizáciu. Vyvíjame nové produkty, transportné palety, jednoúčelové zariadenia a vlastný elektrický malotraktor ET 2000.</p>
+              <p className="hero-subtitle" data-sanity={homePageAttr('heroSubtitle')}>
+                Vývoj &bull; Výroba &bull; Certifikácia
+              </p>
+              <p className="hero-desc" data-sanity={homePageAttr('heroDescription')}>
+                Od myšlienky po realizáciu. Vyvíjame nové produkty, transportné palety, jednoúčelové zariadenia a vlastný elektrický malotraktor ET 2000.
+              </p>
               <div className="hero-btns">
-                <Link href="/produkty" className="btn-primary">eTRAKTOR ET 2000</Link>
-                <Link href="/kontakt" className="btn-outline">Kontaktujte nás</Link>
+                <Link href="/produkty" className="btn-primary" data-sanity={homePageAttr('heroPrimaryLabel')}>
+                  eTRAKTOR ET 2000
+                </Link>
+                <Link href="/kontakt" className="btn-outline" data-sanity={homePageAttr('heroSecondaryLabel')}>
+                  Kontaktujte nás
+                </Link>
               </div>
             </div>
-            <div>
+            <div data-sanity={homePageAttr('heroProductImage')}>
               <img
                 src="/images/elektricky-malotraktor.jpg"
                 alt="ET 2000"
@@ -43,10 +60,10 @@ export default function HomePage() {
         <div className="hero-stats-bar">
           <div className="container">
             <div className="hero-stats">
-              <div className="hstat"><div className="hstat-val">2019</div><div className="hstat-label">Rok založenia</div></div>
-              <div className="hstat"><div className="hstat-val">A&ndash;Z</div><div className="hstat-label">Vývoj produktov</div></div>
-              <div className="hstat"><div className="hstat-val">ET 2000</div><div className="hstat-label">Vlastný produkt</div></div>
-              <div className="hstat"><div className="hstat-val">TISR</div><div className="hstat-label">Certifikácia</div></div>
+              <div className="hstat" data-sanity={homePageAttr(['heroStats', 0])}><div className="hstat-val">2019</div><div className="hstat-label">Rok založenia</div></div>
+              <div className="hstat" data-sanity={homePageAttr(['heroStats', 1])}><div className="hstat-val">A&ndash;Z</div><div className="hstat-label">Vývoj produktov</div></div>
+              <div className="hstat" data-sanity={homePageAttr(['heroStats', 2])}><div className="hstat-val">ET 2000</div><div className="hstat-label">Vlastný produkt</div></div>
+              <div className="hstat" data-sanity={homePageAttr(['heroStats', 3])}><div className="hstat-val">TISR</div><div className="hstat-label">Certifikácia</div></div>
             </div>
           </div>
         </div>
@@ -58,12 +75,12 @@ export default function HomePage() {
       {/* SLUŽBY */}
       <section className="bg" style={{ padding: '5rem 2rem' }}>
         <div className="container">
-          <span className="tag">Čo robíme</span>
-          <h2 className="section-title">Naše služby</h2>
-          <p className="section-desc">Komplexné riešenia od vývoja po realizáciu pre automobilový priemysel a ďalšie odvetvia.</p>
+          <span className="tag" data-sanity={homePageAttr('servicesTag')}>Čo robíme</span>
+          <h2 className="section-title" data-sanity={homePageAttr('servicesTitle')}>Naše služby</h2>
+          <p className="section-desc" data-sanity={homePageAttr('servicesDescription')}>Komplexné riešenia od vývoja po realizáciu pre automobilový priemysel a ďalšie odvetvia.</p>
 
-          <div className="two-col" style={{ marginBottom: '6rem' }}>
-            <div>
+          <div className="two-col" style={{ marginBottom: '6rem' }} data-sanity={homePageAttr(['services', 0])}>
+            <div data-sanity={homePageAttr(['services', 0, 'image'])}>
               <img
                 src="/images/palety_f149ab5c.jpeg"
                 alt="Transportné palety"
@@ -71,23 +88,23 @@ export default function HomePage() {
               />
             </div>
             <div>
-              <span className="tag">Logistika &amp; Automotív</span>
-              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }}>Transportné palety</h3>
-              <p>Základný kameň modernej logistiky. Nerobotické aj robotické palety pre automobilový priemysel, robotické zásobníky.</p>
+              <span className="tag" data-sanity={homePageAttr(['services', 0, 'tag'])}>Logistika &amp; Automotív</span>
+              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }} data-sanity={homePageAttr(['services', 0, 'title'])}>Transportné palety</h3>
+              <p data-sanity={homePageAttr(['services', 0, 'description'])}>Základný kameň modernej logistiky. Nerobotické aj robotické palety pre automobilový priemysel, robotické zásobníky.</p>
               <br />
-              <Link href="/palety" className="btn-primary">Zistiť viac &rarr;</Link>
+              <Link href="/palety" className="btn-primary" data-sanity={homePageAttr(['services', 0, 'buttonLabel'])}>Zistiť viac &rarr;</Link>
             </div>
           </div>
 
-          <div className="two-col" style={{ marginBottom: '6rem' }}>
+          <div className="two-col" style={{ marginBottom: '6rem' }} data-sanity={homePageAttr(['services', 1])}>
             <div>
-              <span className="tag">Priemyselná automatizácia</span>
-              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }}>Jednoúčelové zariadenia</h3>
-              <p>Zariadenie na kľúč podľa požiadaviek. Testovacie zariadenia, montážne prípravky, kontrolné prípravky.</p>
+              <span className="tag" data-sanity={homePageAttr(['services', 1, 'tag'])}>Priemyselná automatizácia</span>
+              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }} data-sanity={homePageAttr(['services', 1, 'title'])}>Jednoúčelové zariadenia</h3>
+              <p data-sanity={homePageAttr(['services', 1, 'description'])}>Zariadenie na kľúč podľa požiadaviek. Testovacie zariadenia, montážne prípravky, kontrolné prípravky.</p>
               <br />
-              <Link href="/zariadenia" className="btn-primary">Zistiť viac &rarr;</Link>
+              <Link href="/zariadenia" className="btn-primary" data-sanity={homePageAttr(['services', 1, 'buttonLabel'])}>Zistiť viac &rarr;</Link>
             </div>
-            <div>
+            <div data-sanity={homePageAttr(['services', 1, 'image'])}>
               <img
                 src="/images/zariadenia_8beb0717.jpeg"
                 alt="Jednoúčelové zariadenia"
@@ -96,8 +113,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="two-col" style={{ marginBottom: '6rem' }}>
-            <div>
+          <div className="two-col" style={{ marginBottom: '6rem' }} data-sanity={homePageAttr(['services', 2])}>
+            <div data-sanity={homePageAttr(['services', 2, 'image'])}>
               <img
                 src="/images/vyroba_b79432df.jpeg"
                 alt="Výroba"
@@ -105,23 +122,23 @@ export default function HomePage() {
               />
             </div>
             <div>
-              <span className="tag">Kompletná výroba</span>
-              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }}>Výroba pod vlastnou strechou</h3>
-              <p>CNC pálenie, CNC ohýbanie, elektrické rozvádzače. Kompletná výroba v jednom mieste.</p>
+              <span className="tag" data-sanity={homePageAttr(['services', 2, 'tag'])}>Kompletná výroba</span>
+              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }} data-sanity={homePageAttr(['services', 2, 'title'])}>Výroba pod vlastnou strechou</h3>
+              <p data-sanity={homePageAttr(['services', 2, 'description'])}>CNC pálenie, CNC ohýbanie, elektrické rozvádzače. Kompletná výroba v jednom mieste.</p>
               <br />
-              <Link href="/vyroba" className="btn-primary">Zistiť viac &rarr;</Link>
+              <Link href="/vyroba" className="btn-primary" data-sanity={homePageAttr(['services', 2, 'buttonLabel'])}>Zistiť viac &rarr;</Link>
             </div>
           </div>
 
-          <div className="two-col">
+          <div className="two-col" data-sanity={homePageAttr(['services', 3])}>
             <div>
-              <span className="tag">Vlastný produkt</span>
-              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }}>eTRAKTOR</h3>
-              <p>Elektrický malotraktor ET 2000 a ET 3000. Nulové emisie, tichá prevádzka, 90% účinnosť motora.</p>
+              <span className="tag" data-sanity={homePageAttr(['services', 3, 'tag'])}>Vlastný produkt</span>
+              <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem' }} data-sanity={homePageAttr(['services', 3, 'title'])}>eTRAKTOR</h3>
+              <p data-sanity={homePageAttr(['services', 3, 'description'])}>Elektrický malotraktor ET 2000 a ET 3000. Nulové emisie, tichá prevádzka, 90% účinnosť motora.</p>
               <br />
-              <Link href="/produkty" className="btn-primary">Zistiť viac &rarr;</Link>
+              <Link href="/produkty" className="btn-primary" data-sanity={homePageAttr(['services', 3, 'buttonLabel'])}>Zistiť viac &rarr;</Link>
             </div>
-            <div>
+            <div data-sanity={homePageAttr(['services', 3, 'image'])}>
               <img
                 src="/images/elektricky-malotraktor.jpg"
                 alt="eTRAKTOR"
@@ -135,8 +152,8 @@ export default function HomePage() {
       {/* DOPLNKOVÉ SLUŽBY */}
       <section className="green-dark" style={{ padding: '4rem 2rem' }}>
         <div className="container">
-          <span className="tag">Doplnkové služby</span>
-          <h2 className="section-title">Ďalšie čo ponúkame</h2>
+          <span className="tag" data-sanity={homePageAttr('extrasTag')}>Doplnkové služby</span>
+          <h2 className="section-title" data-sanity={homePageAttr('extrasTitle')}>Ďalšie čo ponúkame</h2>
           <div className="extras-grid">
             {[
               'Renovácia starých strojov – zvýšenie bezpečnosti',
@@ -148,7 +165,7 @@ export default function HomePage() {
               'Koncepty a plány nákladov',
               'Certifikácia v spolupráci s TISR',
             ].map((item, i) => (
-              <div className="extra-item" key={i}>
+              <div className="extra-item" key={i} data-sanity={homePageAttr(['extras', i])}>
                 <div className="extra-dot" />
                 <span>{item}</span>
               </div>
@@ -162,16 +179,16 @@ export default function HomePage() {
         <div className="container">
           <div className="about-grid">
             <div>
-              <span className="tag">O spoločnosti</span>
-              <h2 className="section-title">Etraktor, s.r.o.</h2>
-              <p>Inovatívna spoločnosť z Bardejova, hlavne zameraná na vývoj nových produktov od myšlienky po realizáciu. Zaoberáme sa vývojom transportných paliet pre prepravu dielov v automobilovom priemysle. Oblasť strojárstva, založená v roku 2019.</p>
+              <span className="tag" data-sanity={homePageAttr('aboutTag')}>O spoločnosti</span>
+              <h2 className="section-title" data-sanity={homePageAttr('aboutTitle')}>Etraktor, s.r.o.</h2>
+              <p data-sanity={homePageAttr('aboutText')}>Inovatívna spoločnosť z Bardejova, hlavne zameraná na vývoj nových produktov od myšlienky po realizáciu. Zaoberáme sa vývojom transportných paliet pre prepravu dielov v automobilovom priemysle. Oblasť strojárstva, založená v roku 2019.</p>
               <div className="about-details">
-                <div className="detail-row"><span className="detail-label">IČO</span><span>52134539</span></div>
-                <div className="detail-row"><span className="detail-label">DIČ</span><span>2120911815</span></div>
-                <div className="detail-row"><span className="detail-label">Sídlo</span><span>Duklianska 1376/17, 08501 Bardejov</span></div>
+                <div className="detail-row" data-sanity={homePageAttr(['aboutIcoLabel'])}><span className="detail-label">IČO</span><span data-sanity={homePageAttr(['aboutIcoValue'])}>52134539</span></div>
+                <div className="detail-row" data-sanity={homePageAttr(['aboutDicLabel'])}><span className="detail-label">DIČ</span><span data-sanity={homePageAttr(['aboutDicValue'])}>2120911815</span></div>
+                <div className="detail-row" data-sanity={homePageAttr(['aboutAddressLabel'])}><span className="detail-label">Sídlo</span><span data-sanity={homePageAttr(['aboutAddressValue'])}>Duklianska 1376/17, 08501 Bardejov</span></div>
               </div>
             </div>
-            <div>
+            <div data-sanity={homePageAttr('aboutImage')}>
               <img
                 src="/images/elektricky-malotraktor.jpg"
                 alt="Etraktor výroba"
@@ -187,10 +204,10 @@ export default function HomePage() {
         <div className="container">
           <div className="cta-inner">
             <div>
-              <h2>Máte projekt na mysli?</h2>
-              <p>Ozvite sa nám &ndash; radi preberieme Vaše požiadavky a navrhneme riešenie.</p>
+              <h2 data-sanity={homePageAttr('ctaTitle')}>Máte projekt na mysli?</h2>
+              <p data-sanity={homePageAttr('ctaText')}>Ozvite sa nám &ndash; radi preberieme Vaše požiadavky a navrhneme riešenie.</p>
             </div>
-            <Link href="/kontakt" className="btn-primary" style={{ background: 'white', color: 'var(--green-dark)' }}>
+            <Link href="/kontakt" className="btn-primary" style={{ background: 'white', color: 'var(--green-dark)' }} data-sanity={homePageAttr('ctaButtonLabel')}>
               Kontaktujte nás
             </Link>
           </div>
@@ -198,6 +215,7 @@ export default function HomePage() {
       </section>
 
       <Footer />
+      <VisualEditing />
     </>
   )
 }

@@ -1,5 +1,6 @@
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
+import {defineDocuments, presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 
 import {dataset, projectId, studioUrl} from '@/sanity/env'
@@ -12,7 +13,23 @@ export default defineConfig({
   projectId,
   dataset,
   basePath: studioUrl,
-  plugins: [structureTool({structure}), visionTool()],
+  plugins: [
+    structureTool({structure}),
+    presentationTool({
+      previewUrl: {
+        initial: async ({origin}) => `${origin}/`,
+      },
+      resolve: {
+        mainDocuments: defineDocuments([
+          {
+            route: '/',
+            type: 'homePage',
+          },
+        ]),
+      },
+    }),
+    visionTool(),
+  ],
   schema: {
     types: schemaTypes,
   },
