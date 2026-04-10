@@ -7,7 +7,7 @@ const baseConfig: ClientConfig = {
   apiVersion,
   dataset,
   projectId,
-  useCdn: true,
+  useCdn: false,
 }
 
 export const sanityClient = createClient(baseConfig)

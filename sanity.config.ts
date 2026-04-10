@@ -18,6 +18,9 @@ export default defineConfig({
     presentationTool({
       previewUrl: {
         initial: async ({origin}) => `${origin}/`,
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+        },
       },
       resolve: {
         mainDocuments: defineDocuments([
