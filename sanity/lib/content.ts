@@ -1,8 +1,8 @@
-import {cache} from 'react'
+import {draftMode} from 'next/headers'
 
 import {groq} from 'next-sanity'
 
-import {sanityClient} from '@/sanity/lib/client'
+import {getSanityClient} from '@/sanity/lib/client'
 import {urlForImage} from '@/sanity/lib/image'
 
 type SanityImageLike = unknown
@@ -455,7 +455,8 @@ const productsPageQuery = groq`*[_type == "productsPage" && _id == "productsPage
 
 async function fetchSingle<T>(query: string) {
   try {
-    return await sanityClient.fetch<T | null>(query)
+    const isDraftMode = (await draftMode()).isEnabled
+    return await getSanityClient(isDraftMode).fetch<T | null>(query)
   } catch {
     return null
   }
@@ -978,7 +979,7 @@ export const defaultProductsPage: ProductContent = {
   ctaSecondaryHref: 'tel:+421907933648',
 }
 
-export const getSiteSettings = cache(async (): Promise<SiteSettingsContent> => {
+export async function getSiteSettings(): Promise<SiteSettingsContent> {
   const data = await fetchSingle<any>(siteSettingsQuery)
 
   if (!data) return defaultSiteSettings
@@ -1000,9 +1001,9 @@ export const getSiteSettings = cache(async (): Promise<SiteSettingsContent> => {
     footerAddress: data.footerAddress || defaultSiteSettings.footerAddress,
     footerCredit: data.footerCredit || defaultSiteSettings.footerCredit,
   }
-})
+}
 
-export const getHomePage = cache(async (): Promise<HomePageContent> => {
+export async function getHomePage(): Promise<HomePageContent> {
   const data = await fetchSingle<any>(homePageQuery)
 
   if (!data) return defaultHomePage
@@ -1030,7 +1031,7 @@ export const getHomePage = cache(async (): Promise<HomePageContent> => {
         : defaultHomePage.services,
     extras: data.extras?.length ? data.extras : defaultHomePage.extras,
   }
-})
+}
 
 function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageContent {
   if (!data) return fallback
@@ -1062,16 +1063,24 @@ function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageConten
   }
 }
 
-export const getPalletsPage = cache(async () => mapSimplePage(await fetchSingle<any>(palletsPageQuery), defaultPalletsPage))
-export const getProductionPage = cache(async () => mapSimplePage(await fetchSingle<any>(productionPageQuery), defaultProductionPage))
-export const getDevicesPage = cache(async () => mapSimplePage(await fetchSingle<any>(devicesPageQuery), defaultDevicesPage))
+export async function getPalletsPage() {
+  return mapSimplePage(await fetchSingle<any>(palletsPageQuery), defaultPalletsPage)
+}
 
-export const getContactPage = cache(async (): Promise<ContactPageContent> => {
+export async function getProductionPage() {
+  return mapSimplePage(await fetchSingle<any>(productionPageQuery), defaultProductionPage)
+}
+
+export async function getDevicesPage() {
+  return mapSimplePage(await fetchSingle<any>(devicesPageQuery), defaultDevicesPage)
+}
+
+export async function getContactPage(): Promise<ContactPageContent> {
   const data = await fetchSingle<any>(contactPageQuery)
   return data ? {...defaultContactPage, ...data} : defaultContactPage
-})
+}
 
-export const getProductsPage = cache(async (): Promise<ProductContent> => {
+export async function getProductsPage(): Promise<ProductContent> {
   const data = await fetchSingle<any>(productsPageQuery)
 
   if (!data) return defaultProductsPage
@@ -1122,4 +1131,4 @@ export const getProductsPage = cache(async (): Promise<ProductContent> => {
       })) || defaultProductsPage.galleryImages,
     videos: data.videos?.length ? data.videos : defaultProductsPage.videos,
   }
-})
+}
