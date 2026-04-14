@@ -6,5 +6,5 @@ export const dynamic = 'force-dynamic'
 export default async function KontaktPage() {
   const [siteSettings, page] = await Promise.all([getSiteSettings(), getContactPage()])
 
-  return <ContactPageContent page={page} siteSettings={siteSettings} />
+  return <ContactPageContent page={page} siteSettings={siteSettings} documentId="contactPage" />
 }

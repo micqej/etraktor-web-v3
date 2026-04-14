@@ -43,4 +43,16 @@ export const contactPageType = defineType({
       of: [defineArrayMember({type: 'string'})],
     }),
   ],
+  preview: {
+    select: {
+      title: 'heroTitle',
+      subtitle: 'detailsTitle',
+    },
+    prepare({title, subtitle}) {
+      return {
+        title: title || 'Kontakt',
+        subtitle: subtitle || 'Kontaktná stránka',
+      }
+    },
+  },
 })

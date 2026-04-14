@@ -12,5 +12,5 @@ export const dynamic = 'force-dynamic'
 export default async function PaletyPage() {
   const [siteSettings, page] = await Promise.all([getSiteSettings(), getPalletsPage()])
 
-  return <SimplePageContent page={page} siteSettings={siteSettings} />
+  return <SimplePageContent page={page} siteSettings={siteSettings} documentId="palletsPage" />
 }

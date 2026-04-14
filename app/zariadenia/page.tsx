@@ -12,5 +12,5 @@ export const dynamic = 'force-dynamic'
 export default async function ZariadeniaPage() {
   const [siteSettings, page] = await Promise.all([getSiteSettings(), getDevicesPage()])
 
-  return <SimplePageContent page={page} siteSettings={siteSettings} darkProcess />
+  return <SimplePageContent page={page} siteSettings={siteSettings} documentId="devicesPage" darkProcess />
 }

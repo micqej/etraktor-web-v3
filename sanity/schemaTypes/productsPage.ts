@@ -323,4 +323,16 @@ export const productsPageType = defineType({
     defineField({name: 'ctaSecondaryLabel', title: 'Sekundárne CTA text', type: 'string', group: 'cta'}),
     defineField({name: 'ctaSecondaryHref', title: 'Sekundárne CTA odkaz', type: 'string', group: 'cta'}),
   ],
+  preview: {
+    select: {
+      title: 'heroTitle',
+      subtitle: 'heroSubtitle',
+    },
+    prepare({title, subtitle}) {
+      return {
+        title: title || 'Produkty',
+        subtitle: subtitle || 'Produktová stránka',
+      }
+    },
+  },
 })

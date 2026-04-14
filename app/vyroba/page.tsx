@@ -12,5 +12,5 @@ export const dynamic = 'force-dynamic'
 export default async function VyrobaPage() {
   const [siteSettings, page] = await Promise.all([getSiteSettings(), getProductionPage()])
 
-  return <SimplePageContent page={page} siteSettings={siteSettings} processAsCards />
+  return <SimplePageContent page={page} siteSettings={siteSettings} documentId="productionPage" processAsCards />
 }

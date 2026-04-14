@@ -100,4 +100,16 @@ export const siteSettingsType = defineType({
       description: 'Napr. Web vytvorilo Monetico.sk',
     }),
   ],
+  preview: {
+    select: {
+      title: 'siteTitle',
+      subtitle: 'companyName',
+    },
+    prepare({title, subtitle}) {
+      return {
+        title: title || 'Nastavenia webu',
+        subtitle: subtitle || 'Site settings',
+      }
+    },
+  },
 })

@@ -128,4 +128,16 @@ export const palletsPageType = defineType({
     defineField({name: 'ctaButtonLabel', title: 'CTA tlačidlo text', type: 'string', group: 'cta'}),
     defineField({name: 'ctaButtonHref', title: 'CTA tlačidlo odkaz', type: 'string', group: 'cta'}),
   ],
+  preview: {
+    select: {
+      title: 'heroTitle',
+      subtitle: 'heroTag',
+    },
+    prepare({title, subtitle}) {
+      return {
+        title: title || 'Obsahová stránka',
+        subtitle: subtitle || 'Singleton page',
+      }
+    },
+  },
 })

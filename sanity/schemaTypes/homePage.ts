@@ -142,4 +142,16 @@ export const homePageType = defineType({
     defineField({name: 'ctaButtonLabel', title: 'CTA tlačidlo text', type: 'string', group: 'cta'}),
     defineField({name: 'ctaButtonHref', title: 'CTA tlačidlo odkaz', type: 'string', group: 'cta'}),
   ],
+  preview: {
+    select: {
+      title: 'heroTitleAccent',
+      subtitle: 'heroSubtitle',
+    },
+    prepare({title, subtitle}) {
+      return {
+        title: title || 'Domovská stránka',
+        subtitle: subtitle || 'Homepage singleton',
+      }
+    },
+  },
 })

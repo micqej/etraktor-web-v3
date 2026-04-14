@@ -6,5 +6,5 @@ export const dynamic = 'force-dynamic'
 export default async function ProduktyPage() {
   const [siteSettings, page] = await Promise.all([getSiteSettings(), getProductsPage()])
 
-  return <ProductsPageContent page={page} siteSettings={siteSettings} />
+  return <ProductsPageContent page={page} siteSettings={siteSettings} documentId="productsPage" />
 }
