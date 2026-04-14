@@ -3,6 +3,7 @@ import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 
 import {dataset, projectId, siteUrl, studioUrl} from '@/sanity/env'
+import {PresentationNavigator} from '@/sanity/PresentationNavigator'
 import {schemaTypes} from '@/sanity/schemaTypes'
 import {structure} from '@/sanity/structure'
 
@@ -50,6 +51,13 @@ export default defineConfig({
             },
           ]),
         ),
+      },
+      components: {
+        unstable_navigator: {
+          component: PresentationNavigator,
+          minWidth: 220,
+          maxWidth: 260,
+        },
       },
     }),
   ],
