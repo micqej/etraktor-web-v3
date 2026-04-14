@@ -4,6 +4,7 @@ import {groq} from 'next-sanity'
 
 import {getSanityClient} from '@/sanity/lib/client'
 import {urlForImage} from '@/sanity/lib/image'
+import {token} from '@/sanity/lib/token'
 
 type SanityImageLike = unknown
 
@@ -466,6 +467,39 @@ async function fetchSingle<T>(query: string) {
   } catch {
     return null
   }
+}
+
+async function ensureSingletonDocument(
+  id: string,
+  type: string,
+  initialValue: Record<string, unknown>,
+) {
+  if (!token) return
+
+  try {
+    await getSanityClient(false)
+      .withConfig({token, useCdn: false, stega: false})
+      .createIfNotExists({
+        _id: id,
+        _type: type,
+        ...initialValue,
+      })
+  } catch {
+    // If the token is read-only or the dataset is unavailable, keep serving fallback content.
+  }
+}
+
+async function fetchSingletonWithSeed<T>(
+  query: string,
+  id: string,
+  type: string,
+  initialValue: Record<string, unknown>,
+) {
+  const firstResult = await fetchSingle<T>(query)
+  if (firstResult) return firstResult
+
+  await ensureSingletonDocument(id, type, initialValue)
+  return await fetchSingle<T>(query)
 }
 
 export const defaultSiteSettings: SiteSettingsContent = {
@@ -1079,25 +1113,196 @@ function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageConten
   }
 }
 
+function toSimplePageDocument(page: SimplePageContent) {
+  return {
+    heroTag: page.heroTag,
+    heroTitle: page.heroTitle,
+    heroDescription: page.heroDescription,
+    sections: page.sections.map((section) => ({
+      tag: section.tag,
+      title: section.title,
+      description: section.description,
+      buttonLabel: section.buttonLabel,
+      buttonHref: section.buttonHref,
+      imageAlign: section.imageAlign,
+      imageFit: section.imageFit,
+      bullets: section.bullets,
+    })),
+    galleryTag: page.galleryTag,
+    galleryTitle: page.galleryTitle,
+    galleryDescription: page.galleryDescription,
+    galleryCards: page.galleryCards.map((card) => ({
+      title: card.title,
+      description: card.description,
+      alt: card.imageAlt,
+    })),
+    processTag: page.processTag,
+    processTitle: page.processTitle,
+    processSteps: page.processSteps.map((step) => ({
+      number: step.number,
+      title: step.title,
+      description: step.description,
+    })),
+    ctaTitle: page.ctaTitle,
+    ctaText: page.ctaText,
+    ctaButtonLabel: page.ctaButtonLabel,
+    ctaButtonHref: page.ctaButtonHref,
+  }
+}
+
+function toContactPageDocument(page: ContactPageContent) {
+  return {
+    heroTag: page.heroTag,
+    heroTitle: page.heroTitle,
+    heroText: page.heroText,
+    detailsTitle: page.detailsTitle,
+    contactPersonLabel: page.contactPersonLabel,
+    contactPersonValue: page.contactPersonValue,
+    addressLabel: page.addressLabel,
+    addressValue: page.addressValue,
+    phoneLabel: page.phoneLabel,
+    phoneValue: page.phoneValue,
+    emailLabel: page.emailLabel,
+    emailValue: page.emailValue,
+    webLabel: page.webLabel,
+    webValue: page.webValue,
+    companyDataTitle: page.companyDataTitle,
+    companyIco: page.companyIco,
+    companyDic: page.companyDic,
+    companyYear: page.companyYear,
+    formTitle: page.formTitle,
+    formNameLabel: page.formNameLabel,
+    formPhoneLabel: page.formPhoneLabel,
+    formEmailLabel: page.formEmailLabel,
+    formTopicLabel: page.formTopicLabel,
+    formMessageLabel: page.formMessageLabel,
+    formSubmitLabel: page.formSubmitLabel,
+    inquiryOptions: page.inquiryOptions,
+  }
+}
+
+function toProductsPageDocument(page: ProductContent) {
+  return {
+    heroEyebrow: page.heroEyebrow,
+    heroTitle: page.heroTitle,
+    heroAccent: page.heroAccent,
+    heroSubtitle: page.heroSubtitle,
+    heroDescription: page.heroDescription,
+    heroPrimaryLabel: page.heroPrimaryLabel,
+    heroPrimaryHref: page.heroPrimaryHref,
+    heroSecondaryLabel: page.heroSecondaryLabel,
+    heroSecondaryHref: page.heroSecondaryHref,
+    heroStats: page.heroStats,
+    introTag: page.introTag,
+    introTitle: page.introTitle,
+    introParagraphs: page.introParagraphs,
+    efficiencyTitleA: page.efficiencyTitleA,
+    efficiencyValueA: page.efficiencyValueA,
+    efficiencyTitleB: page.efficiencyTitleB,
+    efficiencyValueB: page.efficiencyValueB,
+    benefitsTag: page.benefitsTag,
+    benefitsTitle: page.benefitsTitle,
+    benefits: page.benefits,
+    useCasesTag: page.useCasesTag,
+    useCasesTitle: page.useCasesTitle,
+    useCases: page.useCases,
+    dimensionsTag: page.dimensionsTag,
+    dimensionsTitle: page.dimensionsTitle,
+    dimensionImages: page.dimensionImages.map((image) => ({alt: image.alt})),
+    basicSpecs: page.basicSpecs,
+    batterySpecs: page.batterySpecs,
+    chargingSpecs: page.chargingSpecs,
+    equipmentGroups: page.equipmentGroups,
+    rangeTag: page.rangeTag,
+    rangeTitle: page.rangeTitle,
+    rangeCards: page.rangeCards.map((card) => ({
+      title: card.title,
+      badge: card.badge,
+      badgeClass: card.badgeClass,
+      info: card.info,
+    })),
+    accessoriesTag: page.accessoriesTag,
+    accessoriesTitle: page.accessoriesTitle,
+    accessories: page.accessories.map((item) => ({
+      title: item.title,
+      description: item.description,
+      alt: item.imageAlt,
+    })),
+    certificatesTag: page.certificatesTag,
+    certificatesTitle: page.certificatesTitle,
+    certificates: page.certificates.map((item) => ({
+      title: item.title,
+      alt: item.alt,
+    })),
+    galleryTag: page.galleryTag,
+    galleryTitle: page.galleryTitle,
+    galleryDescription: page.galleryDescription,
+    galleryImages: page.galleryImages.map((image) => ({alt: image.alt})),
+    videosTag: page.videosTag,
+    videosTitle: page.videosTitle,
+    videos: page.videos,
+    ctaTitle: page.ctaTitle,
+    ctaText: page.ctaText,
+    ctaPrimaryLabel: page.ctaPrimaryLabel,
+    ctaPrimaryHref: page.ctaPrimaryHref,
+    ctaSecondaryLabel: page.ctaSecondaryLabel,
+    ctaSecondaryHref: page.ctaSecondaryHref,
+  }
+}
+
 export async function getPalletsPage() {
-  return mapSimplePage(await fetchSingle<any>(palletsPageQuery), defaultPalletsPage)
+  return mapSimplePage(
+    await fetchSingletonWithSeed<any>(
+      palletsPageQuery,
+      'palletsPage',
+      'palletsPage',
+      toSimplePageDocument(defaultPalletsPage),
+    ),
+    defaultPalletsPage,
+  )
 }
 
 export async function getProductionPage() {
-  return mapSimplePage(await fetchSingle<any>(productionPageQuery), defaultProductionPage)
+  return mapSimplePage(
+    await fetchSingletonWithSeed<any>(
+      productionPageQuery,
+      'productionPage',
+      'productionPage',
+      toSimplePageDocument(defaultProductionPage),
+    ),
+    defaultProductionPage,
+  )
 }
 
 export async function getDevicesPage() {
-  return mapSimplePage(await fetchSingle<any>(devicesPageQuery), defaultDevicesPage)
+  return mapSimplePage(
+    await fetchSingletonWithSeed<any>(
+      devicesPageQuery,
+      'devicesPage',
+      'devicesPage',
+      toSimplePageDocument(defaultDevicesPage),
+    ),
+    defaultDevicesPage,
+  )
 }
 
 export async function getContactPage(): Promise<ContactPageContent> {
-  const data = await fetchSingle<any>(contactPageQuery)
+  const data = await fetchSingletonWithSeed<any>(
+    contactPageQuery,
+    'contactPage',
+    'contactPage',
+    toContactPageDocument(defaultContactPage),
+  )
   return data ? {...defaultContactPage, ...data} : defaultContactPage
 }
 
 export async function getProductsPage(): Promise<ProductContent> {
-  const data = await fetchSingle<any>(productsPageQuery)
+  const data = await fetchSingletonWithSeed<any>(
+    productsPageQuery,
+    'productsPage',
+    'productsPage',
+    toProductsPageDocument(defaultProductsPage),
+  )
 
   if (!data) return defaultProductsPage
 
