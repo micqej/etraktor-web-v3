@@ -1,4 +1,3 @@
-import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 
@@ -12,7 +11,7 @@ export default defineConfig({
   projectId,
   dataset,
   basePath: studioUrl,
-  plugins: [structureTool({structure}), visionTool()],
+  plugins: [structureTool({structure})],
   schema: {
     types: schemaTypes,
   },
