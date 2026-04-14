@@ -1,27 +1,34 @@
 import Link from 'next/link'
-import siteSettings from '@/content/site/site-settings.json'
-import {assetPath} from '@/lib/content'
 
-export default function Footer() {
+import type {SiteSettingsContent} from '@/sanity/lib/content'
+
+type FooterProps = {
+  siteSettings: SiteSettingsContent
+}
+
+export default function Footer({siteSettings}: FooterProps) {
+  const year = new Date().getFullYear()
+
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
-        <div className="footer-logo">
+        <Link href="/" className="footer-logo" aria-label="Prejsť na domovskú stránku">
           <img
-            src={assetPath(siteSettings.logoImage)}
-            alt={siteSettings.logoAlt}
+            src={siteSettings.logoSrc}
+            alt="logo"
             style={{ height: 42, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)' }}
           />
-          <span>{siteSettings.logoText}</span>
-        </div>
+          <span>{siteSettings.siteTitle}</span>
+        </Link>
         <div className="footer-links">
           {siteSettings.footerLinks.map((link) => (
-            <Link href={link.href} key={link.href}>{link.label}</Link>
+            <Link href={link.href} key={link.href}>
+              {link.label}
+            </Link>
           ))}
         </div>
         <div className="footer-copy">
-          {siteSettings.footerCopyright} &bull; {siteSettings.footerAddress} &nbsp;|&nbsp; {siteSettings.footerCreditLabel}{' '}
-          <a href={siteSettings.footerCreditHref} target="_blank" rel="noopener">{siteSettings.footerCreditText}</a>
+          © {year} {siteSettings.siteTitle} &bull; {siteSettings.footerAddress} &nbsp;|&nbsp; {siteSettings.footerCredit}
         </div>
       </div>
     </footer>

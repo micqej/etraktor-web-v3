@@ -1,15 +1,18 @@
-import references from '@/content/site/references.json'
-import {assetPath} from '@/lib/content'
+import type {SiteSettingsContent} from '@/sanity/lib/content'
 
-export default function RefsSection() {
+type RefsSectionProps = {
+  siteSettings: SiteSettingsContent
+}
+
+export default function RefsSection({siteSettings}: RefsSectionProps) {
   return (
     <section className="refs-section">
       <div className="container">
-        <span className="tag">{references.tag}</span>
+        <span className="tag">{siteSettings.referencesTag}</span>
         <div className="refs-logos">
-          {references.items.map((r, i) => (
-            <div className="ref-logo" key={i}>
-              <img src={assetPath(r.src)} alt={r.alt} />
+          {siteSettings.references.map((reference) => (
+            <div className="ref-logo" key={reference.src}>
+              <img src={reference.src} alt={reference.alt} />
             </div>
           ))}
         </div>
