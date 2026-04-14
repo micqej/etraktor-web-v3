@@ -33,6 +33,18 @@ export default function SimplePageContent({
 }: SimplePageContentProps) {
   const processSectionClass = darkProcess ? 'green-dark' : 'bg'
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
+  const sectionPath = (index: number) => {
+    const key = page.sections[index]?._key
+    return key ? `sections[_key=="${key}"]` : `sections[${index}]`
+  }
+  const galleryCardPath = (index: number) => {
+    const key = page.galleryCards[index]?._key
+    return key ? `galleryCards[_key=="${key}"]` : `galleryCards[${index}]`
+  }
+  const processStepPath = (index: number) => {
+    const key = page.processSteps[index]?._key
+    return key ? `processSteps[_key=="${key}"]` : `processSteps[${index}]`
+  }
 
   return (
     <>
@@ -51,11 +63,11 @@ export default function SimplePageContent({
         const sectionClass = index % 2 === 0 ? 'white' : 'bg'
         const imageNode = section.imageSrc ? (
           <div className="img-card">
-            <img
-              src={section.imageSrc}
-              alt={section.imageAlt || section.title}
-              data-sanity={pageAttr(`sections[${index}].image`)}
-              style={{
+              <img
+                src={section.imageSrc}
+                alt={section.imageAlt || section.title}
+                data-sanity={pageAttr(`${sectionPath(index)}.image`)}
+                style={{
                 width: '100%',
                 height: 260,
                 objectFit: section.imageFit || 'contain',
@@ -64,21 +76,21 @@ export default function SimplePageContent({
               }}
             />
             <div className="img-card-body">
-              <div className="img-card-title" data-sanity={pageAttr(`sections[${index}].title`)}>{section.title}</div>
-              <div className="img-card-desc" data-sanity={pageAttr(`sections[${index}].description`)}>{section.description}</div>
+              <div className="img-card-title" data-sanity={pageAttr(`${sectionPath(index)}.title`)}>{section.title}</div>
+              <div className="img-card-desc" data-sanity={pageAttr(`${sectionPath(index)}.description`)}>{section.description}</div>
             </div>
           </div>
         ) : null
 
         const textNode = (
           <div>
-            <span className="tag" data-sanity={pageAttr(`sections[${index}].tag`)}>{section.tag}</span>
-            <h2 className="section-title" data-sanity={pageAttr(`sections[${index}].title`)}>{section.title}</h2>
-            <p data-sanity={pageAttr(`sections[${index}].description`)}>{section.description}</p>
+            <span className="tag" data-sanity={pageAttr(`${sectionPath(index)}.tag`)}>{section.tag}</span>
+            <h2 className="section-title" data-sanity={pageAttr(`${sectionPath(index)}.title`)}>{section.title}</h2>
+            <p data-sanity={pageAttr(`${sectionPath(index)}.description`)}>{section.description}</p>
             {section.bullets?.length ? (
               <div className="check-list">
                 {section.bullets.map((item, bulletIndex) => (
-                  <div className="check-item" key={item} data-sanity={pageAttr(`sections[${index}].bullets[${bulletIndex}]`)}>
+                  <div className="check-item" key={item} data-sanity={pageAttr(`${sectionPath(index)}.bullets[${bulletIndex}]`)}>
                     <CheckIcon />
                     <span>{item}</span>
                   </div>
@@ -88,7 +100,7 @@ export default function SimplePageContent({
             {section.buttonLabel && section.buttonHref ? (
               <>
                 <br />
-                <Link href={section.buttonHref} className="btn-primary" data-sanity={pageAttr(`sections[${index}].buttonLabel`)}>
+                <Link href={section.buttonHref} className="btn-primary" data-sanity={pageAttr(`${sectionPath(index)}.buttonLabel`)}>
                   {section.buttonLabel}
                 </Link>
               </>
@@ -97,7 +109,7 @@ export default function SimplePageContent({
         )
 
         return (
-          <section className={sectionClass} key={`${section.title}-${index}`} data-sanity={pageAttr(`sections[${index}]`)}>
+          <section className={sectionClass} key={`${section.title}-${index}`} data-sanity={pageAttr(sectionPath(index))}>
             <div className="container">
               <div className="two-col">
                 {imageFirst ? imageNode : textNode}
@@ -116,18 +128,18 @@ export default function SimplePageContent({
             {page.galleryDescription ? <p className="section-desc" data-sanity={pageAttr('galleryDescription')}>{page.galleryDescription}</p> : null}
             <div className="three-col">
               {page.galleryCards.map((card, index) => (
-                <div className="img-card" key={card.title} data-sanity={pageAttr(`galleryCards[${index}]`)}>
+                <div className="img-card" key={card.title} data-sanity={pageAttr(galleryCardPath(index))}>
                   {card.imageSrc ? (
                     <img
                       src={card.imageSrc}
                       alt={card.imageAlt || card.title}
-                      data-sanity={pageAttr(`galleryCards[${index}].image`)}
+                      data-sanity={pageAttr(`${galleryCardPath(index)}.image`)}
                       style={{width: '100%', height: 220, objectFit: 'contain', padding: '0.75rem', background: 'var(--bg)'}}
                     />
                   ) : null}
                   <div className="img-card-body">
-                    <div className="img-card-title" data-sanity={pageAttr(`galleryCards[${index}].title`)}>{card.title}</div>
-                    {card.description ? <div className="img-card-desc" data-sanity={pageAttr(`galleryCards[${index}].description`)}>{card.description}</div> : null}
+                    <div className="img-card-title" data-sanity={pageAttr(`${galleryCardPath(index)}.title`)}>{card.title}</div>
+                    {card.description ? <div className="img-card-desc" data-sanity={pageAttr(`${galleryCardPath(index)}.description`)}>{card.description}</div> : null}
                   </div>
                 </div>
               ))}
@@ -146,7 +158,7 @@ export default function SimplePageContent({
                 {page.processSteps.map((step, index) => (
                   <div
                     key={step.title}
-                    data-sanity={pageAttr(`processSteps[${index}]`)}
+                    data-sanity={pageAttr(processStepPath(index))}
                     style={{
                       background: 'white',
                       borderRadius: 12,
@@ -172,17 +184,17 @@ export default function SimplePageContent({
                         color: 'var(--green-dark)',
                       }}
                     >
-                      <span data-sanity={pageAttr(`processSteps[${index}].number`)}>{step.number}</span>
+                      <span data-sanity={pageAttr(`${processStepPath(index)}.number`)}>{step.number}</span>
                     </div>
-                    <h3 style={{fontWeight: 700, marginBottom: '0.5rem'}} data-sanity={pageAttr(`processSteps[${index}].title`)}>{step.title}</h3>
-                    <p style={{fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.55}} data-sanity={pageAttr(`processSteps[${index}].description`)}>{step.description}</p>
+                    <h3 style={{fontWeight: 700, marginBottom: '0.5rem'}} data-sanity={pageAttr(`${processStepPath(index)}.title`)}>{step.title}</h3>
+                    <p style={{fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.55}} data-sanity={pageAttr(`${processStepPath(index)}.description`)}>{step.description}</p>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="four-col" style={{marginTop: '2rem'}}>
                 {page.processSteps.map((step, index) => (
-                  <div key={step.title} style={{textAlign: 'center', padding: '1.5rem 1rem'}} data-sanity={pageAttr(`processSteps[${index}]`)}>
+                  <div key={step.title} style={{textAlign: 'center', padding: '1.5rem 1rem'}} data-sanity={pageAttr(processStepPath(index))}>
                     <div
                       style={{
                         fontFamily: "'Barlow Condensed',sans-serif",
@@ -193,13 +205,13 @@ export default function SimplePageContent({
                         marginBottom: '0.75rem',
                       }}
                     >
-                      <span data-sanity={pageAttr(`processSteps[${index}].number`)}>{step.number}</span>
+                      <span data-sanity={pageAttr(`${processStepPath(index)}.number`)}>{step.number}</span>
                     </div>
-                    <h4 style={{fontWeight: 700, marginBottom: '0.5rem', color: darkProcess ? 'white' : 'var(--green-dark)'}} data-sanity={pageAttr(`processSteps[${index}].title`)}>
+                    <h4 style={{fontWeight: 700, marginBottom: '0.5rem', color: darkProcess ? 'white' : 'var(--green-dark)'}} data-sanity={pageAttr(`${processStepPath(index)}.title`)}>
                       {step.title}
                     </h4>
                     <p
-                      data-sanity={pageAttr(`processSteps[${index}].description`)}
+                      data-sanity={pageAttr(`${processStepPath(index)}.description`)}
                       style={{
                         fontSize: '0.85rem',
                         opacity: darkProcess ? 0.7 : 1,

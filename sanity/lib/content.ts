@@ -81,6 +81,7 @@ export type HomePageContent = {
 }
 
 export type SimpleCard = {
+  _key?: string
   title: string
   description: string
   imageSrc?: string
@@ -88,12 +89,14 @@ export type SimpleCard = {
 }
 
 export type ProcessStep = {
+  _key?: string
   number: string
   title: string
   description: string
 }
 
 export type SimplePageSection = {
+  _key?: string
   tag: string
   title: string
   description: string
@@ -298,6 +301,7 @@ const simplePageProjection = `{
   heroTitle,
   heroDescription,
   sections[]{
+    _key,
     tag,
     title,
     description,
@@ -312,6 +316,7 @@ const simplePageProjection = `{
   galleryTitle,
   galleryDescription,
   galleryCards[]{
+    _key,
     title,
     description,
     image,
@@ -320,6 +325,7 @@ const simplePageProjection = `{
   processTag,
   processTitle,
   processSteps[]{
+    _key,
     number,
     title,
     description
@@ -1041,6 +1047,7 @@ function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageConten
     ...data,
     sections:
       data.sections?.map((section: any, index: number) => ({
+        _key: section._key,
         tag: section.tag || fallback.sections[index]?.tag || '',
         title: section.title || fallback.sections[index]?.title || '',
         description: section.description || fallback.sections[index]?.description || '',
@@ -1054,12 +1061,21 @@ function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageConten
       })) || fallback.sections,
     galleryCards:
       data.galleryCards?.map((card: any, index: number) => ({
+        _key: card._key,
         title: card.title || fallback.galleryCards[index]?.title || '',
         description: card.description || fallback.galleryCards[index]?.description || '',
         imageSrc: assetUrl(card.image, fallback.galleryCards[index]?.imageSrc || '/images/elektricky-malotraktor.jpg'),
         imageAlt: card.alt || fallback.galleryCards[index]?.imageAlt || card.title || 'Galéria',
       })) || fallback.galleryCards,
-    processSteps: data.processSteps?.length ? data.processSteps : fallback.processSteps,
+    processSteps:
+      data.processSteps?.length
+        ? data.processSteps.map((step: any) => ({
+            _key: step._key,
+            number: step.number,
+            title: step.title,
+            description: step.description,
+          }))
+        : fallback.processSteps,
   }
 }
 
