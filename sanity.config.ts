@@ -1,6 +1,6 @@
 import {defineConfig} from 'sanity'
+import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
-import {presentationTool} from 'next-sanity'
 
 import {dataset, projectId, siteUrl, studioUrl} from '@/sanity/env'
 import {schemaTypes} from '@/sanity/schemaTypes'
