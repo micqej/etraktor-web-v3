@@ -16,6 +16,15 @@ const pageLocations = {
   siteSettings: {title: 'Domov', href: '/'},
 } as const
 
+const mainDocuments = [
+  {route: '/', type: 'homePage'},
+  {route: '/kontakt', type: 'contactPage'},
+  {route: '/produkty', type: 'productsPage'},
+  {route: '/palety', type: 'palletsPage'},
+  {route: '/zariadenia', type: 'devicesPage'},
+  {route: '/vyroba', type: 'productionPage'},
+] as const
+
 export default defineConfig({
   name: 'default',
   title: 'Etraktor Admin',
@@ -32,6 +41,7 @@ export default defineConfig({
         },
       },
       resolve: {
+        mainDocuments: [...mainDocuments],
         locations: Object.fromEntries(
           Object.entries(pageLocations).map(([type, location]) => [
             type,
