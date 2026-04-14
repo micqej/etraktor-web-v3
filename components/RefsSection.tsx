@@ -1,5 +1,3 @@
-import {createDataAttribute} from 'next-sanity'
-
 import type {SiteSettingsContent} from '@/sanity/lib/content'
 
 type RefsSectionProps = {
@@ -7,16 +5,14 @@ type RefsSectionProps = {
 }
 
 export default function RefsSection({siteSettings}: RefsSectionProps) {
-  const settingsAttr = createDataAttribute({id: 'siteSettings', type: 'siteSettings', path: []})
-
   return (
-    <section className="refs-section" data-sanity={settingsAttr('references')}>
+    <section className="refs-section">
       <div className="container">
-        <span className="tag" data-sanity={settingsAttr('referencesTag')}>{siteSettings.referencesTag}</span>
+        <span className="tag">{siteSettings.referencesTag}</span>
         <div className="refs-logos">
-          {siteSettings.references.map((reference, index) => (
-            <div className="ref-logo" key={reference.src} data-sanity={settingsAttr(`references[${index}]`)}>
-              <img src={reference.src} alt={reference.alt} data-sanity={settingsAttr(`references[${index}].image`)} />
+          {siteSettings.references.map((reference) => (
+            <div className="ref-logo" key={reference.src}>
+              <img src={reference.src} alt={reference.alt} />
             </div>
           ))}
         </div>
