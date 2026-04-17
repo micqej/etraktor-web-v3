@@ -142,6 +142,7 @@ async function patchProductsPage() {
 
   const productCatalog = current.productCatalog.map((item: ExistingDoc, index: number) => {
     const labels = labelSets[item.title]
+    const defaults = defaultProductsPage.productCatalog.find((product) => product.title === item.title)
     const sanitizedVideos = uniqueYouTubeVideos(
       (item.videos || []).map((video: ExistingDoc) => ({
         ...video,
@@ -158,8 +159,18 @@ async function patchProductsPage() {
 
     return {
       ...item,
-      documentsTitle: item.documentsTitle || 'Dokumenty na stiahnutie',
+      documentsTitle: defaults?.documentsTitle || item.documentsTitle || 'Dokumenty na stiahnutie',
       documents: mergeDocumentLabels(item.documents, labels, `product-doc-${index + 1}`),
+      specs:
+        item.title === 'ET 3000'
+          ? (defaults?.specs || []).map((spec, specIndex) => ({
+              _key: item.specs?.[specIndex]?._key || `product-spec-${index + 1}-${specIndex + 1}`,
+              parameter: spec.parameter,
+              value: spec.value,
+            }))
+          : item.title === 'Príslušenstvo'
+            ? []
+            : item.specs,
       videos: sanitizedVideos,
     }
   })
@@ -197,9 +208,10 @@ async function patchProductsPage() {
       introStats: defaultProductsPage.introStats,
       catalogTag: defaultProductsPage.catalogTag,
       catalogTitle: defaultProductsPage.catalogTitle,
-      catalogDescription:
-        defaultProductsPage.catalogDescription,
+      catalogDescription: defaultProductsPage.catalogDescription,
       productCatalog,
+      accessoriesTag: defaultProductsPage.accessoriesTag,
+      accessoriesTitle: defaultProductsPage.accessoriesTitle,
       comfortTag: defaultProductsPage.comfortTag,
       comfortTitle: defaultProductsPage.comfortTitle,
       comfortItems: defaultProductsPage.comfortItems.map((item, index) => ({
@@ -219,9 +231,10 @@ async function patchProductsPage() {
       introStats: defaultProductsPage.introStats,
       catalogTag: defaultProductsPage.catalogTag,
       catalogTitle: defaultProductsPage.catalogTitle,
-      catalogDescription:
-        defaultProductsPage.catalogDescription,
+      catalogDescription: defaultProductsPage.catalogDescription,
       productCatalog,
+      accessoriesTag: defaultProductsPage.accessoriesTag,
+      accessoriesTitle: defaultProductsPage.accessoriesTitle,
       comfortTag: defaultProductsPage.comfortTag,
       comfortTitle: defaultProductsPage.comfortTitle,
       comfortItems: defaultProductsPage.comfortItems.map((item, index) => ({

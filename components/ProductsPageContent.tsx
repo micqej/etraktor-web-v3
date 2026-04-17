@@ -18,7 +18,17 @@ import type {
   SiteSettingsContent,
 } from '@/sanity/lib/content'
 import {productsPageQuery} from '@/sanity/lib/queries'
-import {youtubeWatchUrl} from '@/sanity/lib/youtube'
+
+const DEFAULT_PRODUCT_GALLERY = [
+  '/images/elektricky-malotraktor.jpg',
+  '/images/dojazd1.jpg',
+  '/images/dojazd2.jpg',
+]
+
+function isAccessoryCatalogItem(item: ProductCatalogItem) {
+  const value = `${item.title} ${item.badge}`.toLowerCase()
+  return value.includes('príslušen') || value.includes('prislusen')
+}
 
 function CheckIcon() {
   return (
@@ -88,64 +98,68 @@ function VideoSlider({videos}: Pick<ProductContent, 'videos'>) {
 
 function SpecsTable({rows, dual = true}: {rows: ProductSpec[]; dual?: boolean}) {
   return (
-    <table className="spec-table">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          {dual ? (
-            <>
-              <th>2×12V DC</th>
-              <th>4×12V DC</th>
-            </>
-          ) : (
-            <th>Hodnota</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={`${row.parameter}-${row.value || row.valueA}`}>
-            <td>{row.parameter}</td>
+    <div className="spec-table-wrap">
+      <table className="spec-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
             {dual ? (
               <>
-                <td>{row.valueA}</td>
-                <td>{row.valueB}</td>
+                <th>2×12V DC</th>
+                <th>4×12V DC</th>
               </>
             ) : (
-              <td>{row.value}</td>
+              <th>Hodnota</th>
             )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={`${row.parameter}-${row.value || row.valueA}`}>
+              <td>{row.parameter}</td>
+              {dual ? (
+                <>
+                  <td>{row.valueA}</td>
+                  <td>{row.valueB}</td>
+                </>
+              ) : (
+                <td>{row.value}</td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
 function EquipmentTable({groups}: {groups: ProductEquipmentGroup[]}) {
   return (
-    <table className="spec-table">
-      <thead>
-        <tr>
-          <th>Vybavenie</th>
-          <th>Typ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {groups.flatMap((group) => [
-          <tr className="group-row" key={group.title}>
-            <td colSpan={2}>{group.title}</td>
-          </tr>,
-          ...group.items.map((item) => (
-            <tr key={`${group.title}-${item.label}`}>
-              <td>{item.label}</td>
-              <td>
-                <TypeBadge type={item.type} />
-              </td>
-            </tr>
-          )),
-        ])}
-      </tbody>
-    </table>
+    <div className="spec-table-wrap">
+      <table className="spec-table">
+        <thead>
+          <tr>
+            <th>Vybavenie</th>
+            <th>Typ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groups.flatMap((group) => [
+            <tr className="group-row" key={group.title}>
+              <td colSpan={2}>{group.title}</td>
+            </tr>,
+            ...group.items.map((item) => (
+              <tr key={`${group.title}-${item.label}`}>
+                <td>{item.label}</td>
+                <td>
+                  <TypeBadge type={item.type} />
+                </td>
+              </tr>
+            )),
+          ])}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
@@ -179,94 +193,60 @@ function Tabs({page}: {page: ProductContent}) {
 
 function ProductCatalogSection({
   item,
-  index,
+  catalogIndex,
+  displayIndex,
   pageAttr,
   onOpenLightbox,
+  fallbackImages,
 }: {
   item: ProductCatalogItem
-  index: number
+  catalogIndex: number
+  displayIndex: number
   pageAttr: (path: string) => string
   onOpenLightbox: (images: string[], startIndex: number) => void
+  fallbackImages: string[]
 }) {
-  const basePath = item._key ? `productCatalog[_key=="${item._key}"]` : `productCatalog[${index}]`
+  const basePath = item._key ? `productCatalog[_key=="${item._key}"]` : `productCatalog[${catalogIndex}]`
   const availableDocuments = item.documents.filter((document) => document.url && document.url !== '#')
-  const videoLinks = item.videos
-    .map((video) => ({...video, href: youtubeWatchUrl(video.youtubeId)}))
-    .filter((video) => Boolean(video.href))
-  const additionalImages = item.galleryImages
-    .map((image, imageIndex) => ({...image, originalIndex: imageIndex}))
-    .filter((image) => image.src !== item.imageSrc)
-  const lightboxImages = [item.imageSrc, ...additionalImages.map((image) => image.src)]
+  const gallerySources = [...item.galleryImages.map((image) => image.src), ...fallbackImages].filter(Boolean)
+  const lightboxImages = Array.from(
+    new Set([item.imageSrc, ...gallerySources].filter(Boolean)),
+  ).filter(Boolean)
+  const additionalImages = lightboxImages.slice(1)
+  const documentsTitle = item.documentsTitle?.trim()
+  const normalizedDocumentsTitle = documentsTitle?.toLowerCase()
+  const documentsHeading =
+    normalizedDocumentsTitle && normalizedDocumentsTitle !== 'dokumenty' && normalizedDocumentsTitle !== 'dokumenty na stiahnutie'
+      ? documentsTitle
+      : `Dokumenty ${item.title}`
 
   const documentPath = (docIndex: number) => {
     const key = item.documents[docIndex]?._key
     return key ? `${basePath}.documents[_key=="${key}"]` : `${basePath}.documents[${docIndex}]`
   }
 
-  const galleryPath = (imageIndex: number) => {
-    const key = item.galleryImages[imageIndex]?._key
-    return key ? `${basePath}.galleryImages[_key=="${key}"]` : `${basePath}.galleryImages[${imageIndex}]`
-  }
-
-  const videoPath = (videoIndex: number) => {
-    const key = item.videos[videoIndex]?._key
-    return key ? `${basePath}.videos[_key=="${key}"]` : `${basePath}.videos[${videoIndex}]`
-  }
-
-  const specPath = (specIndex: number) => {
-    const key = item.specs[specIndex]?._key
-    return key ? `${basePath}.specs[_key=="${key}"]` : `${basePath}.specs[${specIndex}]`
+  const imagePath = (imageSrc: string) => {
+    if (imageSrc === item.imageSrc) return `${basePath}.image`
+    const galleryIndex = item.galleryImages.findIndex((image) => image.src === imageSrc)
+    if (galleryIndex === -1) return undefined
+    const key = item.galleryImages[galleryIndex]?._key
+    return key ? `${basePath}.galleryImages[_key=="${key}"]` : `${basePath}.galleryImages[${galleryIndex}]`
   }
 
   return (
-    <section className={index % 2 === 0 ? 'white' : 'bg'} data-sanity={pageAttr(basePath)}>
+    <section className={displayIndex % 2 === 0 ? 'white' : 'bg'} data-sanity={pageAttr(basePath)}>
       <div className="container">
-        <div className="two-col" style={{alignItems: 'start'}}>
-          <div>
-            <span className="tag" data-sanity={pageAttr(`${basePath}.badge`)}>
-              {item.badge}
-            </span>
-            <h2 className="section-title" data-sanity={pageAttr(`${basePath}.title`)}>
+        <div className="product-doc-shell">
+          <div className="product-doc-copy">
+            <h2 className="section-title product-doc-title" data-sanity={pageAttr(`${basePath}.title`)}>
               {item.title}
             </h2>
-            <p
-              style={{fontWeight: 700, marginBottom: '1rem', color: 'var(--green-dark)'}}
-              data-sanity={pageAttr(`${basePath}.subtitle`)}
-            >
-              {item.subtitle}
-            </p>
-            <p data-sanity={pageAttr(`${basePath}.description`)}>{item.description}</p>
-
-            {item.highlights.length ? (
-              <div className="check-list" style={{marginTop: '1.25rem'}}>
-                {item.highlights.map((highlight, highlightIndex) => (
-                  <div
-                    key={`${item.title}-${highlightIndex}`}
-                    className="check-item"
-                    data-sanity={pageAttr(`${basePath}.highlights[${highlightIndex}]`)}
-                  >
-                    <CheckIcon />
-                    <span>{highlight}</span>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-
             {availableDocuments.length ? (
-              <div style={{marginTop: '1.75rem'}}>
-                <h3
-                  style={{
-                    fontFamily: "'Barlow Condensed',sans-serif",
-                    fontSize: '1.6rem',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    marginBottom: '0.75rem',
-                  }}
-                  data-sanity={pageAttr(`${basePath}.documentsTitle`)}
-                >
-                  {item.documentsTitle}
+              <>
+                <h3 className="subsection-title" data-sanity={pageAttr(`${basePath}.documentsTitle`)}>
+                  {documentsHeading}
                 </h3>
-                <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
+                <div className="product-doc-grid">
                   {item.documents.map((document, docIndex) =>
                     document.url && document.url !== '#' ? (
                       <a
@@ -274,7 +254,7 @@ function ProductCatalogSection({
                         href={document.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="btn-outline"
+                        className="doc-button"
                         data-sanity={pageAttr(`${documentPath(docIndex)}.label`)}
                       >
                         {document.label}
@@ -282,104 +262,43 @@ function ProductCatalogSection({
                     ) : null,
                   )}
                 </div>
-              </div>
-            ) : null}
-
-            {videoLinks.length ? (
-              <div style={{marginTop: '1.75rem'}}>
-                <h3
-                  style={{
-                    fontFamily: "'Barlow Condensed',sans-serif",
-                    fontSize: '1.6rem',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    marginBottom: '0.75rem',
-                  }}
-                  data-sanity={pageAttr(`${basePath}.videosTitle`)}
-                >
-                  {item.videosTitle}
-                </h3>
-                <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
-                  {videoLinks.map((video, videoIndex) => (
-                    <a
-                      key={`${video.youtubeId}-${videoIndex}`}
-                      href={video.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-outline"
-                      data-sanity={pageAttr(videoPath(videoIndex))}
-                    >
-                      {video.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
+              </>
             ) : null}
           </div>
 
-          <div>
+          <div className="product-media-stack">
             <img
-              src={item.imageSrc}
+              src={lightboxImages[0] || item.imageSrc}
               alt={item.imageAlt}
               data-sanity={pageAttr(`${basePath}.image`)}
-              style={{
-                width: '100%',
-                borderRadius: 'var(--radius)',
-                boxShadow: 'var(--shadow)',
-                maxHeight: 400,
-                objectFit: 'cover',
-                cursor: 'pointer',
-              }}
+              className="product-main-image zoomable-image"
               onClick={() => onOpenLightbox(lightboxImages, 0)}
             />
 
             {additionalImages.length ? (
-              <div style={{marginTop: '1rem'}}>
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0.75rem'}}>
-                  {additionalImages.map((image, imageIndex) => (
+              <div className="product-gallery-grid">
+                {additionalImages.map((imageSrc, imageIndex) => {
+                  const imageAlt =
+                    item.galleryImages.find((image) => image.src === imageSrc)?.alt || `${item.title} ${imageIndex + 2}`
+                  const imageSanityPath = imagePath(imageSrc)
+
+                  return (
                     <div
-                      key={`${image.src}-${imageIndex}`}
+                      key={`${imageSrc}-${imageIndex}`}
                       className="gi-new"
                       onClick={() => onOpenLightbox(lightboxImages, imageIndex + 1)}
-                      data-sanity={pageAttr(galleryPath(image.originalIndex))}
+                      data-sanity={imageSanityPath ? pageAttr(imageSanityPath) : undefined}
                     >
                       <img
-                        src={image.src}
-                        alt={image.alt}
+                        src={imageSrc}
+                        alt={imageAlt}
                         loading="lazy"
-                        data-sanity={pageAttr(galleryPath(image.originalIndex))}
+                        data-sanity={imageSanityPath ? pageAttr(imageSanityPath) : undefined}
                       />
                       <div className="gi-overlay" />
                     </div>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            {item.specs.length ? (
-              <div style={{marginTop: '1.5rem'}}>
-                <h3
-                  style={{
-                    fontFamily: "'Barlow Condensed',sans-serif",
-                    fontSize: '1.6rem',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    marginBottom: '0.75rem',
-                  }}
-                  data-sanity={pageAttr(`${basePath}.specsTitle`)}
-                >
-                  {item.specsTitle}
-                </h3>
-                <table className="spec-table">
-                  <tbody>
-                    {item.specs.map((spec, specIndex) => (
-                      <tr key={`${spec.parameter}-${specIndex}`} data-sanity={pageAttr(specPath(specIndex))}>
-                        <td data-sanity={pageAttr(`${specPath(specIndex)}.parameter`)}>{spec.parameter}</td>
-                        <td data-sanity={pageAttr(`${specPath(specIndex)}.value`)}>{spec.value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  )
+                })}
               </div>
             ) : null}
           </div>
@@ -399,9 +318,26 @@ type ProductsPageProps = {
 export default function ProductsPageContent({page, data, siteSettings, documentId}: ProductsPageProps) {
   const [liveData] = useLiveQuery<any>(page, productsPageQuery)
   const resolvedPage = mapLiveProductsPage(page, data || liveData)
-  const hasCatalog = resolvedPage.productCatalog.length > 0
+  const visibleProductCatalog = resolvedPage.productCatalog
+    .map((item, catalogIndex) => ({item, catalogIndex}))
+    .filter(({item}) => !isAccessoryCatalogItem(item))
+  const hasCatalog = visibleProductCatalog.length > 0
+  const dimensionsTag =
+    resolvedPage.dimensionsTag.toLowerCase().includes('et 2000') ? 'Technické parametre' : resolvedPage.dimensionsTag
+  const accessoriesTag =
+    resolvedPage.accessoriesTag.toLowerCase().includes('rozšírené') ? 'Príslušenstvo' : resolvedPage.accessoriesTag
   const [lightbox, setLightbox] = useState<{images: string[]; index: number} | null>(null)
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
+  const catalogItemPath = (index: number) => {
+    const key = resolvedPage.productCatalog[index]?._key
+    return key ? `productCatalog[_key=="${key}"]` : `productCatalog[${index}]`
+  }
+  const et3000Index = resolvedPage.productCatalog.findIndex((item) => item.title.toLowerCase().includes('et 3000'))
+  const et3000Item = et3000Index >= 0 ? resolvedPage.productCatalog[et3000Index] : null
+  const et3000Specs =
+    et3000Item?.specs.filter((spec) => spec.parameter.trim().toLowerCase() !== 'stav' && spec.value.trim()).length
+      ? et3000Item.specs.filter((spec) => spec.parameter.trim().toLowerCase() !== 'stav' && spec.value.trim())
+      : [{parameter: 'Typ zariadenia', value: 'ET 3000'}]
 
   const heroStatPath = (index: number) => {
     const key = resolvedPage.heroStats[index]?._key
@@ -461,7 +397,13 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               </div>
             </div>
             <div>
-              <img src={resolvedPage.heroImageSrc} alt={resolvedPage.heroAccent} className="hero-right-img" data-sanity={pageAttr('heroImage')} />
+              <img
+                src={resolvedPage.heroImageSrc}
+                alt={resolvedPage.heroAccent}
+                className="hero-right-img zoomable-image"
+                data-sanity={pageAttr('heroImage')}
+                onClick={() => setLightbox({images: [resolvedPage.heroImageSrc], index: 0})}
+              />
             </div>
           </div>
         </div>
@@ -544,7 +486,9 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
                 src={resolvedPage.introImageSrc}
                 alt={resolvedPage.heroAccent}
                 style={{width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', objectFit: 'cover', maxHeight: 360}}
+                className="zoomable-image"
                 data-sanity={pageAttr('introImage')}
+                onClick={() => setLightbox({images: [resolvedPage.introImageSrc], index: 0})}
               />
             </div>
           </div>
@@ -577,7 +521,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               <h2 className="section-title" data-sanity={pageAttr('useCasesTitle')}>
                 {resolvedPage.useCasesTitle}
               </h2>
-              <div className="features-grid" style={{gridTemplateColumns: '1fr 1fr', marginTop: 0}}>
+              <div className="features-grid features-grid-two">
                 {resolvedPage.useCases.map((item, index) => (
                   <div className="feature-item" key={item.title} data-sanity={pageAttr(`useCases[${index}]`)}>
                     <div className="feature-icon">
@@ -604,24 +548,50 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
       <section className="white" id="parametre">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('dimensionsTag')}>
-            {resolvedPage.dimensionsTag}
+            {dimensionsTag}
           </span>
           <h2 className="section-title" data-sanity={pageAttr('dimensionsTitle')}>
             {resolvedPage.dimensionsTitle}
           </h2>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem', marginBottom: '2.5rem'}}>
+          <div className="dimension-grid">
             {resolvedPage.dimensionImages.map((image, index) => (
               <img
                 key={image.src}
                 src={image.src}
                 alt={image.alt}
+                className="dimension-image zoomable-image"
                 data-sanity={pageAttr(`dimensionImages[${index}].image`)}
-                style={{borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', width: '100%', cursor: 'pointer'}}
                 onClick={() => setLightbox({images: resolvedPage.dimensionImages.map((item) => item.src), index})}
               />
             ))}
           </div>
-          <Tabs page={resolvedPage} />
+          <div className="tech-panels">
+            <div className="tech-panel">
+              <h3 className="subsection-title">ET 2000 špecifikácie</h3>
+              <Tabs page={resolvedPage} />
+            </div>
+            <div className="tech-panel">
+              <h3 className="subsection-title">ET 3000 špecifikácie</h3>
+              <div className="spec-table-wrap">
+                <table className="spec-table">
+                  <tbody>
+                    {et3000Specs.map((spec, specIndex) => {
+                      const basePath = et3000Index >= 0 ? catalogItemPath(et3000Index) : 'productCatalog[1]'
+                      const key = et3000Item?.specs[specIndex]?._key
+                      const specPath = key ? `${basePath}.specs[_key=="${key}"]` : `${basePath}.specs[${specIndex}]`
+
+                      return (
+                        <tr key={`${spec.parameter}-${specIndex}`} data-sanity={pageAttr(specPath)}>
+                          <td data-sanity={pageAttr(`${specPath}.parameter`)}>{spec.parameter}</td>
+                          <td data-sanity={pageAttr(`${specPath}.value`)}>{spec.value}</td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -633,7 +603,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
           <h2 className="section-title" data-sanity={pageAttr('rangeTitle')}>
             {resolvedPage.rangeTitle}
           </h2>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem'}}>
+          <div className="range-grid">
             {resolvedPage.rangeCards.map((card, index) => (
               <div
                 className="img-card"
@@ -644,7 +614,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
                 <img
                   src={card.imageSrc}
                   alt={card.title}
-                  style={{width: '100%', height: 'auto', minHeight: 160, objectFit: 'contain', background: '#f5f7f5'}}
+                  className="range-card-image"
                   data-sanity={pageAttr(`rangeCards[${index}].image`)}
                 />
                 <div className="img-card-body">
@@ -664,29 +634,15 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         </div>
       </section>
 
-      {hasCatalog ? (
-        <section className="white">
-          <div className="container">
-            <span className="tag" data-sanity={pageAttr('catalogTag')}>
-              {resolvedPage.catalogTag}
-            </span>
-            <h2 className="section-title" data-sanity={pageAttr('catalogTitle')}>
-              {resolvedPage.catalogTitle}
-            </h2>
-            <p className="section-desc" data-sanity={pageAttr('catalogDescription')}>
-              {resolvedPage.catalogDescription}
-            </p>
-          </div>
-        </section>
-      ) : null}
-
       {hasCatalog
-        ? resolvedPage.productCatalog.map((item, index) => (
+        ? visibleProductCatalog.map(({item, catalogIndex}, displayIndex) => (
             <ProductCatalogSection
-              key={`${item.title}-${index}`}
+              key={`${item.title}-${catalogIndex}`}
               item={item}
-              index={index}
+              catalogIndex={catalogIndex}
+              displayIndex={displayIndex}
               pageAttr={pageAttr}
+              fallbackImages={DEFAULT_PRODUCT_GALLERY}
               onOpenLightbox={(images, startIndex) => setLightbox({images, index: startIndex})}
             />
           ))
@@ -695,18 +651,23 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
       <section className="white">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('accessoriesTag')}>
-            {resolvedPage.accessoriesTag}
+            {accessoriesTag}
           </span>
           <h2 className="section-title" data-sanity={pageAttr('accessoriesTitle')}>
             {resolvedPage.accessoriesTitle}
           </h2>
-          <div className="three-col">
+          <div className="accessories-grid">
             {resolvedPage.accessories.map((item, index) => (
-              <div className="img-card" key={item.title} data-sanity={pageAttr(`accessories[${index}]`)}>
+              <div
+                className="img-card accessory-card"
+                key={item.title}
+                data-sanity={pageAttr(`accessories[${index}]`)}
+                onClick={() => setLightbox({images: resolvedPage.accessories.map((card) => card.imageSrc || ''), index})}
+              >
                 <img
                   src={item.imageSrc}
                   alt={item.imageAlt || item.title}
-                  style={{width: '100%', height: 200, objectFit: 'cover'}}
+                  className="accessory-card-image zoomable-image"
                   data-sanity={pageAttr(`accessories[${index}].image`)}
                 />
                 <div className="img-card-body">
@@ -731,7 +692,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
           <h2 className="section-title" data-sanity={pageAttr('comfortTitle')}>
             {resolvedPage.comfortTitle}
           </h2>
-          <div className="two-col" style={{alignItems: 'start'}}>
+          <div className="comfort-layout">
             <div>
               <div className="check-list">
                 {resolvedPage.comfortItems.map((item, index) => (
@@ -747,25 +708,20 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
                 ))}
               </div>
             </div>
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem'}}>
+            <div className="comfort-media-grid">
               {resolvedPage.comfortImages.map((image, index) => (
-                <img
+                <div
                   key={image.src}
-                  src={image.src}
-                  alt={image.alt}
-                  style={{
-                    borderRadius: 'var(--radius)',
-                    boxShadow: 'var(--shadow)',
-                    cursor: 'pointer',
-                    width: '100%',
-                    objectFit: 'contain',
-                    background: 'white',
-                    padding: '0.5rem',
-                    gridColumn: index === 0 ? 'span 2' : undefined,
-                  }}
-                  data-sanity={pageAttr(comfortImagePath(index))}
+                  className="comfort-media-card"
                   onClick={() => setLightbox({images: resolvedPage.comfortImages.map((item) => item.src), index})}
-                />
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="zoomable-image"
+                    data-sanity={pageAttr(comfortImagePath(index))}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -780,7 +736,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
           <h2 className="section-title" data-sanity={pageAttr('certificatesTitle')}>
             {resolvedPage.certificatesTitle}
           </h2>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', maxWidth: 600}}>
+          <div className="certificates-grid">
             {resolvedPage.certificates.map((item, index) => (
               <div
                 className="img-card"
@@ -791,7 +747,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
                 <img
                   src={item.src}
                   alt={item.alt}
-                  style={{width: '100%', height: 220, objectFit: 'contain', padding: '1rem', background: 'white'}}
+                  className="certificate-image"
                   data-sanity={pageAttr(`certificates[${index}].image`)}
                 />
                 <div className="img-card-body">

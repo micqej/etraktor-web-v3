@@ -191,11 +191,11 @@ export const productsPageType = defineType({
     defineField({name: 'catalogDescription', title: 'Popis produktovej sekcie', type: 'text', rows: 3, group: 'catalog'}),
     defineField({
       name: 'productCatalog',
-      title: 'Produkty a príslušenstvo',
+      title: 'Produktové bloky',
       type: 'array',
       group: 'catalog',
       description:
-        'Samostatné bloky pre ET 2000, ET 3000, príslušenstvo alebo nový produkt. Každý blok má vlastný obrázok, text, dokumenty na stiahnutie, video odkazy a doplnkové obrázky.',
+        'Samostatné bloky pre jednotlivé modely. Každý blok má vlastný obrázok, dokumenty na stiahnutie a galériu fotografií.',
       of: [
         defineArrayMember({
           type: 'object',
