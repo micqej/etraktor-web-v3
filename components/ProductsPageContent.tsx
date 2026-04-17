@@ -155,8 +155,24 @@ function ProductCatalogSection({
   pageAttr: (path: string) => string
   onOpenLightbox: (images: string[], startIndex: number) => void
 }) {
-  const basePath = `productCatalog[${index}]`
+  const basePath = item._key ? `productCatalog[_key=="${item._key}"]` : `productCatalog[${index}]`
   const galleryImages = item.galleryImages.map((image) => image.src)
+  const documentPath = (docIndex: number) => {
+    const key = item.documents[docIndex]?._key
+    return key ? `${basePath}.documents[_key=="${key}"]` : `${basePath}.documents[${docIndex}]`
+  }
+  const galleryPath = (imageIndex: number) => {
+    const key = item.galleryImages[imageIndex]?._key
+    return key ? `${basePath}.galleryImages[_key=="${key}"]` : `${basePath}.galleryImages[${imageIndex}]`
+  }
+  const videoPath = (videoIndex: number) => {
+    const key = item.videos[videoIndex]?._key
+    return key ? `${basePath}.videos[_key=="${key}"]` : `${basePath}.videos[${videoIndex}]`
+  }
+  const specPath = (specIndex: number) => {
+    const key = item.specs[specIndex]?._key
+    return key ? `${basePath}.specs[_key=="${key}"]` : `${basePath}.specs[${specIndex}]`
+  }
 
   return (
     <section className={index % 2 === 0 ? 'white' : 'bg'} data-sanity={pageAttr(basePath)}>
@@ -192,7 +208,7 @@ function ProductCatalogSection({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-outline"
-                      data-sanity={pageAttr(`${basePath}.documents[${docIndex}].label`)}
+                      data-sanity={pageAttr(`${documentPath(docIndex)}.label`)}
                     >
                       {document.label}
                     </a>
@@ -216,9 +232,9 @@ function ProductCatalogSection({
                 <table className="spec-table">
                   <tbody>
                     {item.specs.map((spec, specIndex) => (
-                      <tr key={`${spec.parameter}-${specIndex}`} data-sanity={pageAttr(`${basePath}.specs[${specIndex}]`)}>
-                        <td data-sanity={pageAttr(`${basePath}.specs[${specIndex}].parameter`)}>{spec.parameter}</td>
-                        <td data-sanity={pageAttr(`${basePath}.specs[${specIndex}].value`)}>{spec.value}</td>
+                      <tr key={`${spec.parameter}-${specIndex}`} data-sanity={pageAttr(specPath(specIndex))}>
+                        <td data-sanity={pageAttr(`${specPath(specIndex)}.parameter`)}>{spec.parameter}</td>
+                        <td data-sanity={pageAttr(`${specPath(specIndex)}.value`)}>{spec.value}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -239,9 +255,9 @@ function ProductCatalogSection({
                   key={`${image.src}-${imageIndex}`}
                   className="gi-new"
                   onClick={() => onOpenLightbox(galleryImages, imageIndex)}
-                  data-sanity={pageAttr(`${basePath}.galleryImages[${imageIndex}]`)}
+                  data-sanity={pageAttr(galleryPath(imageIndex))}
                 >
-                  <img src={image.src} alt={image.alt} loading="lazy" data-sanity={pageAttr(`${basePath}.galleryImages[${imageIndex}]`)} />
+                  <img src={image.src} alt={image.alt} loading="lazy" data-sanity={pageAttr(galleryPath(imageIndex))} />
                   <div className="gi-overlay" />
                 </div>
               ))}
@@ -255,6 +271,13 @@ function ProductCatalogSection({
               {item.videosTitle}
             </h3>
             <VideoSlider videos={item.videos} />
+            <div style={{display: 'none'}}>
+              {item.videos.map((video, videoIndex) => (
+                <span key={`${video.youtubeId}-${videoIndex}`} data-sanity={pageAttr(videoPath(videoIndex))}>
+                  {video.label}
+                </span>
+              ))}
+            </div>
           </div>
         ) : null}
       </div>

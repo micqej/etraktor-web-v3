@@ -81,6 +81,7 @@ export const homePageType = defineType({
       title: 'Hero štatistiky',
       type: 'array',
       group: 'hero',
+      description: 'Štatistiky v spodnej lište hero sekcie.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -102,6 +103,7 @@ export const homePageType = defineType({
       title: 'Služby',
       type: 'array',
       group: 'services',
+      description: 'Jednotlivé karty na domovskej stránke. Môžete meniť poradie, texty aj obrázky.',
       of: [
         defineArrayMember({
           type: 'object',

@@ -33,6 +33,7 @@ export type SiteSettingsContent = {
 }
 
 export type HomeService = {
+  _key?: string
   tag: string
   title: string
   description: string
@@ -57,7 +58,7 @@ export type HomePageContent = {
   heroSecondaryHref: string
   heroBackgroundImageSrc: string
   heroProductImageSrc: string
-  heroStats: {value: string; label: string}[]
+  heroStats: {_key?: string; value: string; label: string}[]
   servicesTag: string
   servicesTitle: string
   servicesDescription: string
@@ -160,7 +161,7 @@ export type ContactPageContent = {
 export type ProductStat = {value: string; label: string}
 export type ProductSpec = {parameter: string; valueA?: string; valueB?: string; value?: string}
 export type ProductEquipmentGroup = {title: string; items: {label: string; type: string}[]}
-export type ProductDownload = {label: string; url: string}
+export type ProductDownload = {_key?: string; label: string; url: string}
 export type ProductRangeCard = {
   title: string
   badge: string
@@ -169,6 +170,7 @@ export type ProductRangeCard = {
   imageSrc: string
 }
 export type ProductCatalogItem = {
+  _key?: string
   badge: string
   title: string
   subtitle: string
@@ -179,11 +181,11 @@ export type ProductCatalogItem = {
   documentsTitle: string
   documents: ProductDownload[]
   videosTitle: string
-  videos: {youtubeId: string; label: string}[]
+  videos: {_key?: string; youtubeId: string; label: string}[]
   galleryTitle: string
-  galleryImages: {src: string; alt: string}[]
+  galleryImages: {_key?: string; src: string; alt: string}[]
   specsTitle: string
-  specs: {parameter: string; value: string}[]
+  specs: {_key?: string; parameter: string; value: string}[]
 }
 
 export type ProductContent = {
@@ -412,6 +414,7 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
   catalogTitle,
   catalogDescription,
   productCatalog[]{
+    _key,
     badge,
     title,
     subtitle,
@@ -656,8 +659,8 @@ export const defaultHomePage: HomePageContent = {
       imageFit: 'cover',
     },
     {
-      tag: 'Vlastný produkt',
-      title: 'eTRAKTOR',
+      tag: 'Vlastné produkty',
+      title: 'Vlastné produkty',
       description:
         'Elektrický malotraktor ET 2000 a ET 3000. Nulové emisie, tichá prevádzka, 90% účinnosť motora.',
       buttonLabel: 'Zistiť viac →',
@@ -735,8 +738,8 @@ export const defaultPalletsPage: SimplePageContent = {
     },
   ],
   galleryTag: 'Ukážky realizácií',
-  galleryTitle: 'Príklady paliet',
-  galleryDescription: 'Výber riešení z logistiky a automotive výroby.',
+  galleryTitle: 'Realizované projekty',
+  galleryDescription: 'Galéria riešení z logistiky a automotive výroby. Obrázky aj krátke popisy sa dajú priebežne dopĺňať a meniť.',
   galleryCards: [
     {
       title: 'Nerobotické transportné palety',
@@ -767,8 +770,8 @@ export const defaultDevicesPage: SimplePageContent = {
     'Vytvoríme Vám zariadenie na kľúč podľa požiadaviek. Testovacie zariadenia, montážne prípravky, kontrolné prípravky a ďalšie.',
   sections: [],
   galleryTag: 'Ukážky realizácií',
-  galleryTitle: 'Naše realizácie',
-  galleryDescription: '',
+  galleryTitle: 'Realizované projekty',
+  galleryDescription: 'Ukážky jednoúčelových zariadení. Projekty, obrázky aj popisy viete v Sanity priebežne pridávať a aktualizovať.',
   galleryCards: [
     {
       title: 'Linka dverí pre školiace stredisko',
@@ -809,8 +812,8 @@ export const defaultProductionPage: SimplePageContent = {
   heroDescription: 'CNC pálenie, CNC ohýbanie, elektrické rozvádzače. Kompletná výroba v jednom mieste.',
   sections: [],
   galleryTag: 'Naša dielňa',
-  galleryTitle: 'Výrobné priestory',
-  galleryDescription: 'Pozrite si zázemie kde vznikajú naše produkty.',
+  galleryTitle: 'Výrobné priestory a realizácie',
+  galleryDescription: 'Pozrite si zázemie, kde vznikajú naše produkty. Obrázky s popismi môžete pridávať, meniť aj odoberať.',
   galleryCards: [
     {title: 'Výrobný priestor 1', description: '', imageSrc: '/images/vyroba_b79432df.jpeg', imageAlt: 'Výrobný priestor 1'},
     {title: 'Výrobný priestor 2', description: '', imageSrc: '/images/vyroba_ac05ee94.jpeg', imageAlt: 'Výrobný priestor 2'},
@@ -917,6 +920,8 @@ export const defaultProductsPage: ProductContent = {
         {label: 'Cenník ET 2000', url: '#'},
         {label: 'Rozmery ET 2000', url: '#'},
         {label: 'Technické parametre ET 2000', url: '#'},
+        {label: 'Príslušenstvo ET 2000', url: '#'},
+        {label: 'Certifikáty ET 2000', url: '#'},
       ],
       videosTitle: 'Videá ET 2000',
       videos: [
@@ -953,6 +958,8 @@ export const defaultProductsPage: ProductContent = {
         {label: 'Cenník ET 3000', url: '#'},
         {label: 'Rozmery ET 3000', url: '#'},
         {label: 'Technické parametre ET 3000', url: '#'},
+        {label: 'Príslušenstvo ET 3000', url: '#'},
+        {label: 'Certifikáty ET 3000', url: '#'},
       ],
       videosTitle: 'Videá ET 3000',
       videos: [],
@@ -980,8 +987,9 @@ export const defaultProductsPage: ProductContent = {
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
       documents: [
-        {label: 'Príslušenstvo - cenník', url: '#'},
-        {label: 'Príslušenstvo - katalóg', url: '#'},
+        {label: 'Katalóg príslušenstva', url: '#'},
+        {label: 'Cenník príslušenstva', url: '#'},
+        {label: 'Kompatibilita ET 2000 / ET 3000', url: '#'},
       ],
       videosTitle: 'Videá príslušenstva',
       videos: [
@@ -1219,10 +1227,18 @@ export async function getHomePage(): Promise<HomePageContent> {
     heroBackgroundImageSrc: assetUrl(data.heroBackgroundImage, defaultHomePage.heroBackgroundImageSrc),
     heroProductImageSrc: assetUrl(data.heroProductImage, defaultHomePage.heroProductImageSrc),
     aboutImageSrc: assetUrl(data.aboutImage, defaultHomePage.aboutImageSrc),
-    heroStats: data.heroStats?.length ? data.heroStats : defaultHomePage.heroStats,
+    heroStats:
+      data.heroStats?.length
+        ? data.heroStats.map((item: any, index: number) => ({
+            _key: item._key,
+            value: item.value || defaultHomePage.heroStats[index]?.value || '',
+            label: item.label || defaultHomePage.heroStats[index]?.label || '',
+          }))
+        : defaultHomePage.heroStats,
     services:
       data.services?.length
         ? data.services.map((service: any, index: number) => ({
+            _key: service._key,
             tag: service.tag || defaultHomePage.services[index]?.tag || '',
             title: service.title || defaultHomePage.services[index]?.title || '',
             description: service.description || defaultHomePage.services[index]?.description || '',
@@ -1559,6 +1575,7 @@ export async function getProductsPage(): Promise<ProductContent> {
     introParagraphs: data.introParagraphs?.length ? data.introParagraphs : defaultProductsPage.introParagraphs,
     productCatalog:
       data.productCatalog?.map((item: any, index: number) => ({
+        _key: item._key,
         badge: item.badge || defaultProductsPage.productCatalog[index]?.badge || '',
         title: item.title || defaultProductsPage.productCatalog[index]?.title || '',
         subtitle: item.subtitle || defaultProductsPage.productCatalog[index]?.subtitle || '',
@@ -1570,6 +1587,7 @@ export async function getProductsPage(): Promise<ProductContent> {
           item.documentsTitle || defaultProductsPage.productCatalog[index]?.documentsTitle || 'Dokumenty na stiahnutie',
         documents:
           item.documents?.map((doc: any, docIndex: number) => ({
+            _key: doc._key,
             label:
               doc.label ||
               doc.file?.asset?.originalFilename ||
@@ -1578,10 +1596,18 @@ export async function getProductsPage(): Promise<ProductContent> {
             url: doc.file?.asset?.url || defaultProductsPage.productCatalog[index]?.documents[docIndex]?.url || '#',
           })) || defaultProductsPage.productCatalog[index]?.documents || [],
         videosTitle: item.videosTitle || defaultProductsPage.productCatalog[index]?.videosTitle || 'Videá',
-        videos: item.videos?.length ? item.videos : defaultProductsPage.productCatalog[index]?.videos || [],
+        videos:
+          item.videos?.length
+            ? item.videos.map((video: any) => ({
+                _key: video._key,
+                youtubeId: video.youtubeId,
+                label: video.label,
+              }))
+            : defaultProductsPage.productCatalog[index]?.videos || [],
         galleryTitle: item.galleryTitle || defaultProductsPage.productCatalog[index]?.galleryTitle || 'Galéria',
         galleryImages:
           item.galleryImages?.map((image: any, imageIndex: number) => ({
+            _key: image._key,
             src: assetUrl(image, defaultProductsPage.productCatalog[index]?.galleryImages[imageIndex]?.src || '/images/elektricky-malotraktor.jpg'),
             alt:
               image.alt ||
@@ -1589,7 +1615,14 @@ export async function getProductsPage(): Promise<ProductContent> {
               `${item.title || 'Produkt'} ${imageIndex + 1}`,
           })) || defaultProductsPage.productCatalog[index]?.galleryImages || [],
         specsTitle: item.specsTitle || defaultProductsPage.productCatalog[index]?.specsTitle || 'Parametre',
-        specs: item.specs?.length ? item.specs : defaultProductsPage.productCatalog[index]?.specs || [],
+        specs:
+          item.specs?.length
+            ? item.specs.map((spec: any) => ({
+                _key: spec._key,
+                parameter: spec.parameter,
+                value: spec.value,
+              }))
+            : defaultProductsPage.productCatalog[index]?.specs || [],
       })) || defaultProductsPage.productCatalog,
     benefits: data.benefits?.length ? data.benefits : defaultProductsPage.benefits,
     useCases: data.useCases?.length ? data.useCases : defaultProductsPage.useCases,

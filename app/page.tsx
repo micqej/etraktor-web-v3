@@ -16,6 +16,14 @@ export const dynamic = 'force-dynamic'
 export default async function HomePage() {
   const [siteSettings, page] = await Promise.all([getSiteSettings(), getHomePage()])
   const homeAttr = createDataAttribute({id: 'homePage', type: 'homePage', path: []})
+  const heroStatPath = (index: number) => {
+    const key = page.heroStats[index]?._key
+    return key ? `heroStats[_key=="${key}"]` : `heroStats[${index}]`
+  }
+  const servicePath = (index: number) => {
+    const key = page.services[index]?._key
+    return key ? `services[_key=="${key}"]` : `services[${index}]`
+  }
 
   return (
     <>
@@ -49,9 +57,9 @@ export default async function HomePage() {
           <div className="container">
             <div className="hero-stats">
               {page.heroStats.map((stat, index) => (
-                <div className="hstat" key={`${stat.value}-${stat.label}`} data-sanity={homeAttr(`heroStats[${index}]`)}>
-                  <div className="hstat-val" data-sanity={homeAttr(`heroStats[${index}].value`)}>{stat.value}</div>
-                  <div className="hstat-label" data-sanity={homeAttr(`heroStats[${index}].label`)}>{stat.label}</div>
+                <div className="hstat" key={`${stat.value}-${stat.label}`} data-sanity={homeAttr(heroStatPath(index))}>
+                  <div className="hstat-val" data-sanity={homeAttr(`${heroStatPath(index)}.value`)}>{stat.value}</div>
+                  <div className="hstat-label" data-sanity={homeAttr(`${heroStatPath(index)}.label`)}>{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -70,13 +78,13 @@ export default async function HomePage() {
           {page.services.map((service, index) => {
             const imageFirst = service.imageAlign === 'left'
             return (
-              <div className="two-col" style={{marginBottom: index === page.services.length - 1 ? undefined : '6rem'}} key={service.title} data-sanity={homeAttr(`services[${index}]`)}>
+              <div className="two-col" style={{marginBottom: index === page.services.length - 1 ? undefined : '6rem'}} key={service.title} data-sanity={homeAttr(servicePath(index))}>
                 {imageFirst ? (
                   <div>
                     <img
                       src={service.imageSrc}
                       alt={service.imageAlt}
-                      data-sanity={homeAttr(`services[${index}].image`)}
+                      data-sanity={homeAttr(`${servicePath(index)}.image`)}
                       style={{
                         width: '100%',
                         borderRadius: 'var(--radius)',
@@ -90,27 +98,27 @@ export default async function HomePage() {
                   </div>
                 ) : (
                   <div>
-                    <span className="tag" data-sanity={homeAttr(`services[${index}].tag`)}>{service.tag}</span>
-                    <h3 data-sanity={homeAttr(`services[${index}].title`)} style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}}>{service.title}</h3>
-                    <p data-sanity={homeAttr(`services[${index}].description`)}>{service.description}</p>
+                    <span className="tag" data-sanity={homeAttr(`${servicePath(index)}.tag`)}>{service.tag}</span>
+                    <h3 data-sanity={homeAttr(`${servicePath(index)}.title`)} style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}}>{service.title}</h3>
+                    <p data-sanity={homeAttr(`${servicePath(index)}.description`)}>{service.description}</p>
                     <br />
-                    <Link href={service.buttonHref} className="btn-primary" data-sanity={homeAttr(`services[${index}].buttonLabel`)}>{service.buttonLabel}</Link>
+                    <Link href={service.buttonHref} className="btn-primary" data-sanity={homeAttr(`${servicePath(index)}.buttonLabel`)}>{service.buttonLabel}</Link>
                   </div>
                 )}
                 {imageFirst ? (
                   <div>
-                    <span className="tag" data-sanity={homeAttr(`services[${index}].tag`)}>{service.tag}</span>
-                    <h3 data-sanity={homeAttr(`services[${index}].title`)} style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}}>{service.title}</h3>
-                    <p data-sanity={homeAttr(`services[${index}].description`)}>{service.description}</p>
+                    <span className="tag" data-sanity={homeAttr(`${servicePath(index)}.tag`)}>{service.tag}</span>
+                    <h3 data-sanity={homeAttr(`${servicePath(index)}.title`)} style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}}>{service.title}</h3>
+                    <p data-sanity={homeAttr(`${servicePath(index)}.description`)}>{service.description}</p>
                     <br />
-                    <Link href={service.buttonHref} className="btn-primary" data-sanity={homeAttr(`services[${index}].buttonLabel`)}>{service.buttonLabel}</Link>
+                    <Link href={service.buttonHref} className="btn-primary" data-sanity={homeAttr(`${servicePath(index)}.buttonLabel`)}>{service.buttonLabel}</Link>
                   </div>
                 ) : (
                   <div>
                     <img
                       src={service.imageSrc}
                       alt={service.imageAlt}
-                      data-sanity={homeAttr(`services[${index}].image`)}
+                      data-sanity={homeAttr(`${servicePath(index)}.image`)}
                       style={{
                         width: '100%',
                         borderRadius: 'var(--radius)',

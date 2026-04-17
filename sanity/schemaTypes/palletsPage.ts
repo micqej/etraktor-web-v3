@@ -84,6 +84,7 @@ export const palletsPageType = defineType({
       title: 'Obsahové sekcie',
       type: 'array',
       group: 'sections',
+      description: 'Každú sekciu viete samostatne upravovať, dopĺňať o obrázok, body aj CTA tlačidlo.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -97,9 +98,10 @@ export const palletsPageType = defineType({
     defineField({name: 'galleryDescription', title: 'Galéria popis', type: 'text', rows: 3, group: 'gallery'}),
     defineField({
       name: 'galleryCards',
-      title: 'Galéria kariet',
+      title: 'Realizované projekty / obrázky s popisom',
       type: 'array',
       group: 'gallery',
+      description: 'Sem klient vie pridávať ďalšie realizácie, meniť obrázky aj dopĺňať krátke popisy.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -115,6 +117,7 @@ export const palletsPageType = defineType({
       title: 'Kroky procesu',
       type: 'array',
       group: 'process',
+      description: 'Voliteľné kroky procesu alebo kapacity. Ak ich nepotrebujete, nechajte prázdne.',
       of: [
         defineArrayMember({
           type: 'object',

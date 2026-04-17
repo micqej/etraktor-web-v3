@@ -176,6 +176,8 @@ export const productsPageType = defineType({
       title: 'Produkty a príslušenstvo',
       type: 'array',
       group: 'catalog',
+      description:
+        'Samostatné bloky pre ET 2000, ET 3000, príslušenstvo alebo nový produkt. Každý blok má vlastný obrázok, text, dokumenty, videá, galériu a parametre.',
       of: [
         defineArrayMember({
           type: 'object',

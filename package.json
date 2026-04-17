@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed:sanity": "tsx scripts/seed-sanity-singletons.ts"
+    "seed:sanity": "tsx scripts/seed-sanity-singletons.ts",
+    "patch:client-feedback": "tsx scripts/patch-client-feedback.ts"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
