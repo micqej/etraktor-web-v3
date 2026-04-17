@@ -195,7 +195,7 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
     galleryImages[]{
       _key,
       alt,
-      asset->
+      image
     },
     specsTitle,
     specs[]{

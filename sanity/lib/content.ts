@@ -1628,7 +1628,10 @@ export async function getProductsPage(): Promise<ProductContent> {
         galleryImages:
           item.galleryImages?.map((image: any, imageIndex: number) => ({
             _key: image._key,
-            src: assetUrl(image, defaultProductsPage.productCatalog[index]?.galleryImages[imageIndex]?.src || '/images/elektricky-malotraktor.jpg'),
+            src: assetUrl(
+              image.image ?? image,
+              defaultProductsPage.productCatalog[index]?.galleryImages[imageIndex]?.src || '/images/elektricky-malotraktor.jpg',
+            ),
             alt:
               image.alt ||
               defaultProductsPage.productCatalog[index]?.galleryImages[imageIndex]?.alt ||
