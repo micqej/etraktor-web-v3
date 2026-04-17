@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import {createDataAttribute} from 'next-sanity'
+import {useLiveQuery} from 'next-sanity/preview'
 import {useEffect, useRef, useState} from 'react'
 
 import Footer from '@/components/Footer'
@@ -10,6 +11,7 @@ import Nav from '@/components/Nav'
 import RefsSection from '@/components/RefsSection'
 import {mapLiveProductsPage} from '@/sanity/lib/liveMappers'
 import type {ProductCatalogItem, ProductContent, ProductEquipmentGroup, ProductSpec, SiteSettingsContent} from '@/sanity/lib/content'
+import {productsPageQuery} from '@/sanity/lib/queries'
 
 function CheckIcon() {
   return (
@@ -294,7 +296,8 @@ type ProductsPageProps = {
 }
 
 export default function ProductsPageContent({page, data, siteSettings, documentId}: ProductsPageProps) {
-  const resolvedPage = data ? mapLiveProductsPage(page, data) : page
+  const [liveData] = useLiveQuery<any>(page, productsPageQuery)
+  const resolvedPage = mapLiveProductsPage(page, data || liveData)
   const hasCatalog = resolvedPage.productCatalog.length > 0
   const [lightbox, setLightbox] = useState<{images: string[]; index: number} | null>(null)
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
