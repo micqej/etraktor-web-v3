@@ -16,6 +16,7 @@ export default function Footer({siteSettings}: FooterProps) {
   const year = new Date().getFullYear()
   const [liveData] = useLiveQuery<any>(siteSettings, siteSettingsQuery)
   const resolvedSettings = mapLiveSiteSettings(siteSettings, liveData)
+  const brandName = resolvedSettings.companyName || resolvedSettings.siteTitle
   const settingsAttr = createDataAttribute({id: 'siteSettings', type: 'siteSettings', path: []})
   const footerLinkPath = (index: number) => {
     const key = resolvedSettings.footerLinks[index]?._key
@@ -31,7 +32,7 @@ export default function Footer({siteSettings}: FooterProps) {
             alt="logo"
             style={{ height: 42, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)' }}
           />
-          <span data-sanity={settingsAttr('siteTitle')}>{resolvedSettings.siteTitle}</span>
+          <span data-sanity={settingsAttr('companyName')}>{brandName}</span>
         </Link>
         <div className="footer-links">
           {resolvedSettings.footerLinks.map((link, index) => (
@@ -41,7 +42,7 @@ export default function Footer({siteSettings}: FooterProps) {
           ))}
         </div>
         <div className="footer-copy" data-sanity={settingsAttr('footerAddress')}>
-          © {year} {resolvedSettings.siteTitle} &bull; {resolvedSettings.footerAddress} &nbsp;|&nbsp; {resolvedSettings.footerCredit}
+          © {year} {brandName} &bull; {resolvedSettings.footerAddress} &nbsp;|&nbsp; {resolvedSettings.footerCredit}
         </div>
       </div>
     </footer>

@@ -7,11 +7,11 @@ import {siteUrl} from '@/sanity/env'
 
 const pages = [
   {title: 'Domov', route: '/', id: 'homePage', type: 'homePage'},
+  {title: 'Transportné palety', route: '/palety', id: 'palletsPage', type: 'palletsPage'},
+  {title: 'Jednoúčelové zariadenia', route: '/zariadenia', id: 'devicesPage', type: 'devicesPage'},
+  {title: 'Výroba', route: '/vyroba', id: 'productionPage', type: 'productionPage'},
+  {title: 'eTRAKTOR', route: '/produkty', id: 'productsPage', type: 'productsPage'},
   {title: 'Kontakt', route: '/kontakt', id: 'contactPage', type: 'contactPage'},
-  {title: 'Produkty', route: '/produkty', id: 'productsPage', type: 'productsPage'},
-  {title: 'Palety', route: '/palety', id: 'palletsPage', type: 'palletsPage'},
-  {title: 'Zariadenia', route: '/zariadenia', id: 'devicesPage', type: 'devicesPage'},
-  {title: 'Vyroba', route: '/vyroba', id: 'productionPage', type: 'productionPage'},
 ] as const
 
 export function PresentationNavigator() {

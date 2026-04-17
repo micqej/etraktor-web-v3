@@ -204,7 +204,7 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
               doc.file?.asset?.originalFilename ||
               initial.productCatalog[index]?.documents[docIndex]?.label ||
               `Dokument ${docIndex + 1}`,
-            url: doc.file?.asset?.url || initial.productCatalog[index]?.documents[docIndex]?.url || '#',
+            url: doc.file?.asset?.url || initial.productCatalog[index]?.documents[docIndex]?.url || '',
           })) || initial.productCatalog[index]?.documents || [],
         videosTitle: item.videosTitle || initial.productCatalog[index]?.videosTitle || 'Videá',
         videos:

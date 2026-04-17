@@ -10,7 +10,9 @@ export function getSanityClient(preview = false) {
     apiVersion,
     dataset,
     projectId,
-    useCdn: !useDrafts,
+    // This site is small and content correctness matters more than CDN latency.
+    // Disabling the Sanity CDN avoids stale published content after client edits.
+    useCdn: false,
     perspective: useDrafts ? 'previewDrafts' : 'published',
     stega: {
       studioUrl,

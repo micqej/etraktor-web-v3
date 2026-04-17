@@ -675,8 +675,8 @@ export const defaultHomePage: HomePageContent = {
       imageFit: 'cover',
     },
     {
-      tag: 'Vlastné produkty',
-      title: 'Vlastné produkty',
+      tag: 'Vlastný produkt',
+      title: 'eTRAKTOR',
       description:
         'Elektrický malotraktor ET 2000 a ET 3000. Nulové emisie, tichá prevádzka, 90% účinnosť motora.',
       buttonLabel: 'Zistiť viac →',
@@ -703,7 +703,7 @@ export const defaultHomePage: HomePageContent = {
   aboutTitle: 'Etraktor, s.r.o.',
   aboutText:
     'Inovatívna spoločnosť z Bardejova, hlavne zameraná na vývoj nových produktov od myšlienky po realizáciu. Zaoberáme sa vývojom transportných paliet pre prepravu dielov v automobilovom priemysle. Oblasť strojárstva, založená v roku 2019.',
-  aboutImageSrc: '/images/elektricky-malotraktor.jpg',
+  aboutImageSrc: '/images/vyroba_b79432df.jpeg',
   aboutIcoLabel: 'IČO',
   aboutIcoValue: '52134539',
   aboutDicLabel: 'DIČ',
@@ -786,8 +786,8 @@ export const defaultDevicesPage: SimplePageContent = {
     'Vytvoríme Vám zariadenie na kľúč podľa požiadaviek. Testovacie zariadenia, montážne prípravky, kontrolné prípravky a ďalšie.',
   sections: [],
   galleryTag: 'Ukážky realizácií',
-  galleryTitle: 'Realizované projekty',
-  galleryDescription: 'Ukážky jednoúčelových zariadení. Projekty, obrázky aj popisy viete v Sanity priebežne pridávať a aktualizovať.',
+  galleryTitle: 'Naše realizácie',
+  galleryDescription: '',
   galleryCards: [
     {
       title: 'Linka dverí pre školiace stredisko',
@@ -828,8 +828,8 @@ export const defaultProductionPage: SimplePageContent = {
   heroDescription: 'CNC pálenie, CNC ohýbanie, elektrické rozvádzače. Kompletná výroba v jednom mieste.',
   sections: [],
   galleryTag: 'Naša dielňa',
-  galleryTitle: 'Výrobné priestory a realizácie',
-  galleryDescription: 'Pozrite si zázemie, kde vznikajú naše produkty. Obrázky s popismi môžete pridávať, meniť aj odoberať.',
+  galleryTitle: 'Výrobné priestory',
+  galleryDescription: 'Pozrite si zázemie kde vznikajú naše produkty. Kliknite na foto pre zväčšenie.',
   galleryCards: [
     {title: 'Výrobný priestor 1', description: '', imageSrc: '/images/vyroba_b79432df.jpeg', imageAlt: 'Výrobný priestor 1'},
     {title: 'Výrobný priestor 2', description: '', imageSrc: '/images/vyroba_ac05ee94.jpeg', imageAlt: 'Výrobný priestor 2'},
@@ -910,7 +910,7 @@ export const defaultProductsPage: ProductContent = {
   introParagraphs: [
     'Elektrický malotraktor sa vyznačuje vyššou účinnosťou využitia energie ako klasické benzínové (resp. naftové) motory. Účinnosť spaľovacích motorov je cca 15–20%. U elektrických motoroch sa to pohybuje okolo 90%.',
     'Elektromotor má niekoľko súčastí, pri činnosti nedochádza k treniu, takže jeho životnosť je bez ohľadu na ložiská takmer neobmedzená.',
-    'Samotná jazda na elektrickom traktore je veľmi jednoduchá. Maximálny záberový moment od nulových otáčkach je pôžitkom pri jazde.',
+    'Samotná jazda na elektrickom traktore je veľmi jednoduchá. Maximálny záberový moment od nulových otáčkach je pôžitkom pri jazde. Brzdenie je s 90% postačujúce elektromotorom, ktorý spätne dobíja akumulátory (rekuperuje).',
   ],
   introImageSrc: '/images/elektricky-malotraktor.jpg',
   catalogTag: 'Vlastné produkty',
@@ -933,11 +933,11 @@ export const defaultProductsPage: ProductContent = {
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
       documents: [
-        {label: 'Cenník ET 2000', url: '#'},
-        {label: 'Rozmery ET 2000', url: '#'},
-        {label: 'Technické parametre ET 2000', url: '#'},
-        {label: 'Príslušenstvo ET 2000', url: '#'},
-        {label: 'Certifikáty ET 2000', url: '#'},
+        {label: 'Cenník ET 2000', url: ''},
+        {label: 'Rozmery ET 2000', url: ''},
+        {label: 'Technické parametre ET 2000', url: ''},
+        {label: 'Príslušenstvo ET 2000', url: ''},
+        {label: 'Certifikáty ET 2000', url: ''},
       ],
       videosTitle: 'Videá ET 2000',
       videos: [
@@ -971,11 +971,11 @@ export const defaultProductsPage: ProductContent = {
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
       documents: [
-        {label: 'Cenník ET 3000', url: '#'},
-        {label: 'Rozmery ET 3000', url: '#'},
-        {label: 'Technické parametre ET 3000', url: '#'},
-        {label: 'Príslušenstvo ET 3000', url: '#'},
-        {label: 'Certifikáty ET 3000', url: '#'},
+        {label: 'Cenník ET 3000', url: ''},
+        {label: 'Rozmery ET 3000', url: ''},
+        {label: 'Technické parametre ET 3000', url: ''},
+        {label: 'Príslušenstvo ET 3000', url: ''},
+        {label: 'Certifikáty ET 3000', url: ''},
       ],
       videosTitle: 'Videá ET 3000',
       videos: [],
@@ -1003,9 +1003,9 @@ export const defaultProductsPage: ProductContent = {
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
       documents: [
-        {label: 'Katalóg príslušenstva', url: '#'},
-        {label: 'Cenník príslušenstva', url: '#'},
-        {label: 'Kompatibilita ET 2000 / ET 3000', url: '#'},
+        {label: 'Katalóg príslušenstva', url: ''},
+        {label: 'Cenník príslušenstva', url: ''},
+        {label: 'Kompatibilita ET 2000 / ET 3000', url: ''},
       ],
       videosTitle: 'Videá príslušenstva',
       videos: [
@@ -1624,7 +1624,7 @@ export async function getProductsPage(): Promise<ProductContent> {
               doc.file?.asset?.originalFilename ||
               defaultProductsPage.productCatalog[index]?.documents[docIndex]?.label ||
               `Dokument ${docIndex + 1}`,
-            url: doc.file?.asset?.url || defaultProductsPage.productCatalog[index]?.documents[docIndex]?.url || '#',
+            url: doc.file?.asset?.url || defaultProductsPage.productCatalog[index]?.documents[docIndex]?.url || '',
           })) || defaultProductsPage.productCatalog[index]?.documents || [],
         videosTitle: item.videosTitle || defaultProductsPage.productCatalog[index]?.videosTitle || 'Videá',
         videos:

@@ -1,5 +1,7 @@
 import {createClient} from 'next-sanity'
 
+import {defaultProductsPage} from '@/sanity/lib/content'
+
 const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || 'eypnbw53'
 
@@ -41,47 +43,50 @@ function mergeDocumentLabels(existing: any[] = [], labels: string[], prefix: str
 
 async function patchHomePage() {
   const current = await client.getDocument<ExistingDoc>('homePage')
-  if (!current?.services?.length) return
+  if (!current) return
 
-  const services = current.services.map((service: ExistingDoc, index: number) => {
-    if (index !== 3) return service
+  const services = current.services?.length
+    ? current.services.map((service: ExistingDoc, index: number) => {
+        if (index !== 3) return service
 
-    return {
-      ...service,
-      tag: 'Vlastné produkty',
-      title: 'Vlastné produkty',
-    }
-  })
+        return {
+          ...service,
+          tag: 'Vlastný produkt',
+          title: 'eTRAKTOR',
+        }
+      })
+    : undefined
 
-  await client.patch('homePage').set({services}).commit()
-  await client.patch('drafts.homePage').set({services}).commit()
+  const patch: ExistingDoc = {
+    heroTitleLine2: 'spoločnosť',
+  }
+
+  if (services) {
+    patch.services = services
+  }
+
+  await client.patch('homePage').set(patch).commit()
+  await client.patch('drafts.homePage').set(patch).commit().catch(() => undefined)
 }
 
 async function patchSimplePages() {
   const updates = [
     {
-      id: 'palletsPage',
-      galleryTitle: 'Realizované projekty',
-      galleryDescription:
-        'Galéria riešení z logistiky a automotive výroby. Obrázky aj krátke popisy sa dajú priebežne dopĺňať a meniť.',
-    },
-    {
       id: 'devicesPage',
-      galleryTitle: 'Realizované projekty',
-      galleryDescription:
-        'Ukážky jednoúčelových zariadení. Projekty, obrázky aj popisy viete v Sanity priebežne pridávať a aktualizovať.',
+      galleryTitle: 'Naše realizácie',
+      galleryDescription: '',
     },
     {
       id: 'productionPage',
-      galleryTitle: 'Výrobné priestory a realizácie',
+      galleryTitle: 'Výrobné priestory',
       galleryDescription:
-        'Pozrite si zázemie, kde vznikajú naše produkty. Obrázky s popismi môžete pridávať, meniť aj odoberať.',
+        'Pozrite si zázemie kde vznikajú naše produkty. Kliknite na foto pre zväčšenie.',
       galleryCards: [
-        {title: 'Výrobný priestor 1', description: 'Hlavná časť výrobného priestoru pripravená pre zákazkovú výrobu a montáž.'},
-        {title: 'Výrobný priestor 2', description: 'Pracovisko pre presné spracovanie dielov a operatívnu výrobu.'},
-        {title: 'Výrobný priestor 3', description: 'Zázemie pre kompletizáciu, skladovanie a prípravu jednotlivých zostáv.'},
-        {title: 'Výrobný priestor 4', description: 'Technologické vybavenie pre kusovú aj sériovú zákazkovú výrobu.'},
-        {title: 'Výrobný priestor 5', description: 'Doplnkové výrobné a manipulačné priestory pod jednou strechou.'},
+        {title: 'Výrobný priestor 1', description: ''},
+        {title: 'Výrobný priestor 2', description: ''},
+        {title: 'Výrobný priestor 3', description: ''},
+        {title: 'Výrobný priestor 4', description: ''},
+        {title: 'Výrobný priestor 5', description: ''},
       ],
     },
   ]
@@ -104,7 +109,7 @@ async function patchSimplePages() {
     }
 
     await client.patch(update.id).set(patch).commit()
-    await client.patch(`drafts.${update.id}`).set(patch).commit()
+    await client.patch(`drafts.${update.id}`).set(patch).commit().catch(() => undefined)
   }
 }
 
@@ -145,25 +150,40 @@ async function patchProductsPage() {
     }
   })
 
+  const galleryImages = defaultProductsPage.galleryImages.map((image, index) => {
+    const currentImage = current.galleryImages?.[index]
+
+    return {
+      _key: currentImage?._key || `gallery-image-${index + 1}`,
+      _type: 'image',
+      alt: image.alt,
+      ...(currentImage?.asset ? {asset: currentImage.asset} : {}),
+    }
+  })
+
   await client
     .patch('productsPage')
     .set({
+      introParagraphs: defaultProductsPage.introParagraphs,
       catalogTag: 'Vlastné produkty',
       catalogTitle: 'Produkty a príslušenstvo',
       catalogDescription:
         'Začiatok všeobecne o elektrickom malotraktore a následne samostatné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty.',
       productCatalog,
+      galleryImages,
     })
     .commit()
 
   await client
     .patch('drafts.productsPage')
     .set({
+      introParagraphs: defaultProductsPage.introParagraphs,
       catalogTag: 'Vlastné produkty',
       catalogTitle: 'Produkty a príslušenstvo',
       catalogDescription:
         'Začiatok všeobecne o elektrickom malotraktore a následne samostatné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty.',
       productCatalog,
+      galleryImages,
     })
     .commit()
 }

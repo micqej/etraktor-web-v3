@@ -7,21 +7,9 @@ export const structure: StructureResolver = (S) =>
     .title('Obsah')
     .items([
       S.listItem()
-        .title('Nastavenia webu')
-        .id('siteSettings')
-        .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
-      S.listItem()
-        .title('Domovská stránka')
+        .title('Domov')
         .id('homePage')
         .child(S.document().schemaType('homePage').documentId('homePage')),
-      S.listItem()
-        .title('Kontakt')
-        .id('contactPage')
-        .child(S.document().schemaType('contactPage').documentId('contactPage')),
-      S.listItem()
-        .title('Produkty')
-        .id('productsPage')
-        .child(S.document().schemaType('productsPage').documentId('productsPage')),
       S.listItem()
         .title('Transportné palety')
         .id('palletsPage')
@@ -34,6 +22,19 @@ export const structure: StructureResolver = (S) =>
         .title('Výroba')
         .id('productionPage')
         .child(S.document().schemaType('productionPage').documentId('productionPage')),
+      S.listItem()
+        .title('eTRAKTOR')
+        .id('productsPage')
+        .child(S.document().schemaType('productsPage').documentId('productsPage')),
+      S.listItem()
+        .title('Kontakt')
+        .id('contactPage')
+        .child(S.document().schemaType('contactPage').documentId('contactPage')),
+      S.divider(),
+      S.listItem()
+        .title('Nastavenia webu')
+        .id('siteSettings')
+        .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
       S.divider(),
       ...S.documentTypeListItems().filter((item) => {
         const id = item.getId()

@@ -160,6 +160,7 @@ function ProductCatalogSection({
 }) {
   const basePath = item._key ? `productCatalog[_key=="${item._key}"]` : `productCatalog[${index}]`
   const galleryImages = item.galleryImages.map((image) => image.src)
+  const hasDownloadableDocuments = item.documents.some((document) => document.url && document.url !== '#')
   const documentPath = (docIndex: number) => {
     const key = item.documents[docIndex]?._key
     return key ? `${basePath}.documents[_key=="${key}"]` : `${basePath}.documents[${docIndex}]`
@@ -198,24 +199,26 @@ function ProductCatalogSection({
                 ))}
               </div>
             ) : null}
-            {item.documents.length ? (
+            {hasDownloadableDocuments ? (
               <div style={{marginTop: '1.75rem'}}>
                 <h3 style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.6rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}} data-sanity={pageAttr(`${basePath}.documentsTitle`)}>
                   {item.documentsTitle}
                 </h3>
                 <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
-                  {item.documents.map((document, docIndex) => (
-                    <a
-                      key={`${document.label}-${docIndex}`}
-                      href={document.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-outline"
-                      data-sanity={pageAttr(`${documentPath(docIndex)}.label`)}
-                    >
-                      {document.label}
-                    </a>
-                  ))}
+                  {item.documents.map((document, docIndex) =>
+                    document.url && document.url !== '#' ? (
+                      <a
+                        key={`${document.label}-${docIndex}`}
+                        href={document.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-outline"
+                        data-sanity={pageAttr(`${documentPath(docIndex)}.label`)}
+                      >
+                        {document.label}
+                      </a>
+                    ) : null,
+                  )}
                 </div>
               </div>
             ) : null}
