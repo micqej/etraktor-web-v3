@@ -132,6 +132,10 @@ export function mapLiveSimplePage(initial: SimplePageContent, data: any): Simple
 
 export function mapLiveProductsPage(initial: ProductContent, data: any): ProductContent {
   if (!data) return initial
+  if (typeof data.heroImageSrc === 'string') return data as ProductContent
+  if (data.productCatalog?.some((item: any) => item?.galleryImages?.some((image: any) => typeof image?.src === 'string'))) {
+    return data as ProductContent
+  }
 
   return {
     ...initial,
