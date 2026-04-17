@@ -11,7 +11,7 @@ export function getSanityClient(preview = false) {
     dataset,
     projectId,
     useCdn: !useDrafts,
-    perspective: useDrafts ? 'drafts' : 'published',
+    perspective: useDrafts ? 'previewDrafts' : 'published',
     stega: {
       studioUrl,
     },
