@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "seed:sanity": "tsx scripts/seed-sanity-singletons.ts"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
@@ -21,6 +22,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

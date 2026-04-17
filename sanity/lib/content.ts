@@ -484,8 +484,8 @@ async function ensureSingletonDocument(
         _type: type,
         ...initialValue,
       })
-  } catch {
-    // If the token is read-only or the dataset is unavailable, keep serving fallback content.
+  } catch (error) {
+    console.warn(`[sanity] Failed to seed singleton "${id}" (${type}). Falling back to in-code defaults.`, error)
   }
 }
 
@@ -1113,7 +1113,7 @@ function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageConten
   }
 }
 
-function toSimplePageDocument(page: SimplePageContent) {
+export function toSimplePageDocument(page: SimplePageContent) {
   return {
     heroTag: page.heroTag,
     heroTitle: page.heroTitle,
@@ -1150,7 +1150,7 @@ function toSimplePageDocument(page: SimplePageContent) {
   }
 }
 
-function toContactPageDocument(page: ContactPageContent) {
+export function toContactPageDocument(page: ContactPageContent) {
   return {
     heroTag: page.heroTag,
     heroTitle: page.heroTitle,
@@ -1181,7 +1181,7 @@ function toContactPageDocument(page: ContactPageContent) {
   }
 }
 
-function toProductsPageDocument(page: ProductContent) {
+export function toProductsPageDocument(page: ProductContent) {
   return {
     heroEyebrow: page.heroEyebrow,
     heroTitle: page.heroTitle,
