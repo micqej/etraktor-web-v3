@@ -5,6 +5,7 @@ import {createDataAttribute} from 'next-sanity'
 import {useLiveQuery} from 'next-sanity/preview'
 
 import type {SiteSettingsContent} from '@/sanity/lib/content'
+import {mapLiveSiteSettings} from '@/sanity/lib/liveMappers'
 import {siteSettingsQuery} from '@/sanity/lib/queries'
 
 type FooterProps = {
@@ -13,7 +14,8 @@ type FooterProps = {
 
 export default function Footer({siteSettings}: FooterProps) {
   const year = new Date().getFullYear()
-  const [resolvedSettings] = useLiveQuery<SiteSettingsContent>(siteSettings, siteSettingsQuery)
+  const [liveData] = useLiveQuery<any>(siteSettings, siteSettingsQuery)
+  const resolvedSettings = mapLiveSiteSettings(siteSettings, liveData)
   const settingsAttr = createDataAttribute({id: 'siteSettings', type: 'siteSettings', path: []})
   const footerLinkPath = (index: number) => {
     const key = resolvedSettings.footerLinks[index]?._key

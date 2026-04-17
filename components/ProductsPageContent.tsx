@@ -8,6 +8,7 @@ import Footer from '@/components/Footer'
 import {LightboxModal} from '@/components/Lightbox'
 import Nav from '@/components/Nav'
 import RefsSection from '@/components/RefsSection'
+import {mapLiveProductsPage} from '@/sanity/lib/liveMappers'
 import type {ProductCatalogItem, ProductContent, ProductEquipmentGroup, ProductSpec, SiteSettingsContent} from '@/sanity/lib/content'
 
 function CheckIcon() {
@@ -293,7 +294,7 @@ type ProductsPageProps = {
 }
 
 export default function ProductsPageContent({page, data, siteSettings, documentId}: ProductsPageProps) {
-  const resolvedPage = data ?? page
+  const resolvedPage = data ? mapLiveProductsPage(page, data) : page
   const hasCatalog = resolvedPage.productCatalog.length > 0
   const [lightbox, setLightbox] = useState<{images: string[]; index: number} | null>(null)
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})

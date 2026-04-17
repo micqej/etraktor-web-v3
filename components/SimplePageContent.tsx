@@ -6,6 +6,7 @@ import {createDataAttribute} from 'next-sanity'
 import Footer from '@/components/Footer'
 import Nav from '@/components/Nav'
 import RefsSection from '@/components/RefsSection'
+import {mapLiveSimplePage} from '@/sanity/lib/liveMappers'
 import type {SimplePageContent, SiteSettingsContent} from '@/sanity/lib/content'
 
 function CheckIcon() {
@@ -33,7 +34,7 @@ export default function SimplePageContent({
   darkProcess = false,
   processAsCards = false,
 }: SimplePageContentProps) {
-  const resolvedPage = data ?? page
+  const resolvedPage = data ? mapLiveSimplePage(page, data) : page
   const processSectionClass = darkProcess ? 'green-dark' : 'bg'
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
   const sectionPath = (index: number) => {

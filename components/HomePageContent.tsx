@@ -8,6 +8,7 @@ import Footer from '@/components/Footer'
 import Nav from '@/components/Nav'
 import RefsSection from '@/components/RefsSection'
 import type {HomePageContent as HomePageContentType, SiteSettingsContent} from '@/sanity/lib/content'
+import {mapLiveHomePage} from '@/sanity/lib/liveMappers'
 import {homePageQuery} from '@/sanity/lib/queries'
 
 type HomePageContentProps = {
@@ -16,7 +17,8 @@ type HomePageContentProps = {
 }
 
 export default function HomePageContent({page, siteSettings}: HomePageContentProps) {
-  const [resolvedPage] = useLiveQuery<HomePageContentType>(page, homePageQuery)
+  const [liveData] = useLiveQuery<any>(page, homePageQuery)
+  const resolvedPage = mapLiveHomePage(page, liveData)
   const homeAttr = createDataAttribute({id: 'homePage', type: 'homePage', path: []})
 
   const heroStatPath = (index: number) => {

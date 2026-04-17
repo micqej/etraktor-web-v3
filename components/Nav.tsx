@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 import type {SiteSettingsContent} from '@/sanity/lib/content'
+import {mapLiveSiteSettings} from '@/sanity/lib/liveMappers'
 import {siteSettingsQuery} from '@/sanity/lib/queries'
 
 type NavProps = {
@@ -15,7 +16,8 @@ type NavProps = {
 export default function Nav({siteSettings}: NavProps) {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [resolvedSettings] = useLiveQuery<SiteSettingsContent>(siteSettings, siteSettingsQuery)
+  const [liveData] = useLiveQuery<any>(siteSettings, siteSettingsQuery)
+  const resolvedSettings = mapLiveSiteSettings(siteSettings, liveData)
   const settingsAttr = createDataAttribute({id: 'siteSettings', type: 'siteSettings', path: []})
   const navItemPath = (index: number) => {
     const key = resolvedSettings.navItems[index]?._key
