@@ -9,11 +9,13 @@ import {token} from '@/sanity/lib/token'
 type SanityImageLike = unknown
 
 export type NavItem = {
+  _key?: string
   href: string
   label: string
 }
 
 export type ReferenceItem = {
+  _key?: string
   alt: string
   src: string
 }
@@ -260,14 +262,17 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   contactLabel,
   referencesTag,
   references[]{
+    _key,
     alt,
     image
   },
   navItems[]{
+    _key,
     href,
     label
   },
   footerLinks[]{
+    _key,
     href,
     label
   },
@@ -1206,11 +1211,26 @@ export async function getSiteSettings(): Promise<SiteSettingsContent> {
     referencesTag: data.referencesTag || defaultSiteSettings.referencesTag,
     references:
       data.references?.map((item: any, index: number) => ({
+        _key: item?._key,
         alt: item?.alt || defaultSiteSettings.references[index]?.alt || `Referencia ${index + 1}`,
         src: assetUrl(item?.image, defaultSiteSettings.references[index]?.src || '/refs/ref4.jpg'),
       })) || defaultSiteSettings.references,
-    navItems: data.navItems?.length ? data.navItems : defaultSiteSettings.navItems,
-    footerLinks: data.footerLinks?.length ? data.footerLinks : defaultSiteSettings.footerLinks,
+    navItems:
+      data.navItems?.length
+        ? data.navItems.map((item: any, index: number) => ({
+            _key: item._key,
+            href: item.href || defaultSiteSettings.navItems[index]?.href || '/',
+            label: item.label || defaultSiteSettings.navItems[index]?.label || '',
+          }))
+        : defaultSiteSettings.navItems,
+    footerLinks:
+      data.footerLinks?.length
+        ? data.footerLinks.map((item: any, index: number) => ({
+            _key: item._key,
+            href: item.href || defaultSiteSettings.footerLinks[index]?.href || '/',
+            label: item.label || defaultSiteSettings.footerLinks[index]?.label || '',
+          }))
+        : defaultSiteSettings.footerLinks,
     footerAddress: data.footerAddress || defaultSiteSettings.footerAddress,
     footerCredit: data.footerCredit || defaultSiteSettings.footerCredit,
   }

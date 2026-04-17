@@ -1,10 +1,12 @@
 'use client'
 import Link from 'next/link'
 import {createDataAttribute} from 'next-sanity'
+import {useLiveQuery} from 'next-sanity/preview'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 import type {SiteSettingsContent} from '@/sanity/lib/content'
+import {siteSettingsQuery} from '@/sanity/lib/queries'
 
 type NavProps = {
   siteSettings: SiteSettingsContent
@@ -13,7 +15,12 @@ type NavProps = {
 export default function Nav({siteSettings}: NavProps) {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [resolvedSettings] = useLiveQuery<SiteSettingsContent>(siteSettings, siteSettingsQuery)
   const settingsAttr = createDataAttribute({id: 'siteSettings', type: 'siteSettings', path: []})
+  const navItemPath = (index: number) => {
+    const key = resolvedSettings.navItems[index]?._key
+    return key ? `navItems[_key=="${key}"]` : `navItems[${index}]`
+  }
 
   return (
     <>
@@ -22,25 +29,25 @@ export default function Nav({siteSettings}: NavProps) {
           <Link href="/" className="nav-logo" data-sanity={settingsAttr('logo')}>
             <img
               className="nav-logo-img"
-              alt={siteSettings.siteTitle}
-              src={siteSettings.logoSrc}
+              alt={resolvedSettings.siteTitle}
+              src={resolvedSettings.logoSrc}
               style={{ height: 46, width: 46, objectFit: 'contain', borderRadius: '50%', border: '2px solid var(--border)' }}
             />
-            <span className="nav-logo-sk" data-sanity={settingsAttr('siteTitle')}>{siteSettings.siteTitle}</span>
+            <span className="nav-logo-sk" data-sanity={settingsAttr('siteTitle')}>{resolvedSettings.siteTitle}</span>
           </Link>
           <div className="nav-links">
-            {siteSettings.navItems.map((l, index) => (
+            {resolvedSettings.navItems.map((l, index) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className={pathname === l.href ? 'active' : ''}
-                data-sanity={settingsAttr(`navItems[${index}].label`)}
+                data-sanity={settingsAttr(`${navItemPath(index)}.label`)}
               >
                 {l.label}
               </Link>
             ))}
             <Link href="/kontakt" className={`nav-cta${pathname === '/kontakt' ? ' active' : ''}`} data-sanity={settingsAttr('contactLabel')}>
-              {siteSettings.contactLabel}
+              {resolvedSettings.contactLabel}
             </Link>
           </div>
           <button
@@ -55,12 +62,12 @@ export default function Nav({siteSettings}: NavProps) {
         </div>
       </nav>
       <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
-        {siteSettings.navItems.map((l, index) => (
-          <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)} data-sanity={settingsAttr(`navItems[${index}].label`)}>
+        {resolvedSettings.navItems.map((l, index) => (
+          <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)} data-sanity={settingsAttr(`${navItemPath(index)}.label`)}>
             {l.label}
           </Link>
         ))}
-        <Link href="/kontakt" onClick={() => setMenuOpen(false)} data-sanity={settingsAttr('contactLabel')}>{siteSettings.contactLabel}</Link>
+        <Link href="/kontakt" onClick={() => setMenuOpen(false)} data-sanity={settingsAttr('contactLabel')}>{resolvedSettings.contactLabel}</Link>
       </div>
     </>
   )
