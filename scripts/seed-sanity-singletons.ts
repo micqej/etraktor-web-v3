@@ -148,6 +148,12 @@ async function run() {
   for (const document of documents) {
     await client.createOrReplace(document)
     console.log(`Seeded ${document._id}`)
+
+    await client.createOrReplace({
+      ...document,
+      _id: `drafts.${document._id}`,
+    })
+    console.log(`Seeded drafts.${document._id}`)
   }
 }
 
