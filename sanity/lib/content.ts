@@ -251,8 +251,19 @@ export type ProductContent = {
   ctaSecondaryHref: string
 }
 
-const assetUrl = (image: SanityImageLike, fallback: string) =>
-  urlForImage(image)?.width(1600).fit('max').auto('format').url() || fallback
+const resolveImageSource = (image: SanityImageLike) => {
+  if (!image || typeof image !== 'object') return image
+  if ('image' in (image as Record<string, unknown>)) {
+    return (image as {image?: unknown}).image ?? null
+  }
+  return image
+}
+
+const assetUrl = (image: SanityImageLike, fallback: string) => {
+  const source = resolveImageSource(image)
+  if (!source) return fallback
+  return urlForImage(source)?.width(1600).fit('max').auto('format').url() || fallback
+}
 
 export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   siteTitle,

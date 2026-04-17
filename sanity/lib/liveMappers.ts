@@ -6,8 +6,19 @@ import type {
 } from '@/sanity/lib/content'
 import {urlForImage} from '@/sanity/lib/image'
 
-const assetUrl = (image: unknown, fallback: string) =>
-  urlForImage(image)?.width(1600).fit('max').auto('format').url() || fallback
+const resolveImageSource = (image: unknown) => {
+  if (!image || typeof image !== 'object') return image
+  if ('image' in (image as Record<string, unknown>)) {
+    return (image as {image?: unknown}).image ?? null
+  }
+  return image
+}
+
+const assetUrl = (image: unknown, fallback: string) => {
+  const source = resolveImageSource(image)
+  if (!source) return fallback
+  return urlForImage(source)?.width(1600).fit('max').auto('format').url() || fallback
+}
 
 export function mapLiveSiteSettings(initial: SiteSettingsContent, data: any): SiteSettingsContent {
   if (!data) return initial
@@ -204,7 +215,7 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
         galleryImages:
           item.galleryImages?.map((image: any, imageIndex: number) => ({
             _key: image._key,
-            src: assetUrl(image.image ?? image, initial.productCatalog[index]?.galleryImages[imageIndex]?.src || '/images/elektricky-malotraktor.jpg'),
+            src: assetUrl(image, initial.productCatalog[index]?.galleryImages[imageIndex]?.src || '/images/elektricky-malotraktor.jpg'),
             alt: image.alt || initial.productCatalog[index]?.galleryImages[imageIndex]?.alt || `${item.title || 'Produkt'} ${imageIndex + 1}`,
           })) || initial.productCatalog[index]?.galleryImages || [],
         specsTitle: item.specsTitle || initial.productCatalog[index]?.specsTitle || 'Parametre',
@@ -251,7 +262,7 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
       })) || initial.certificates,
     galleryImages:
       data.galleryImages?.map((item: any, index: number) => ({
-        src: assetUrl(item.image ?? item, initial.galleryImages[index]?.src || '/images/elektricky-malotraktor.jpg'),
+        src: assetUrl(item, initial.galleryImages[index]?.src || '/images/elektricky-malotraktor.jpg'),
         alt: item.alt || initial.galleryImages[index]?.alt || `Galéria ${index + 1}`,
       })) || initial.galleryImages,
     videos: data.videos?.length ? data.videos : initial.videos,
