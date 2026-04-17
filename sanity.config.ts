@@ -1,5 +1,5 @@
 import {defineConfig} from 'sanity'
-import {presentationTool} from 'sanity/presentation'
+import {defineLocations, presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 
 import {dataset, projectId, siteUrl, studioUrl} from '@/sanity/env'
@@ -8,13 +8,34 @@ import {schemaTypes} from '@/sanity/schemaTypes'
 import {structure} from '@/sanity/structure'
 
 const pageLocations = {
-  homePage: {title: 'Domov', href: '/'},
-  contactPage: {title: 'Kontakt', href: '/kontakt'},
-  productsPage: {title: 'Produkty', href: '/produkty'},
-  palletsPage: {title: 'Transportne palety', href: '/palety'},
-  devicesPage: {title: 'Jednoucelove zariadenia', href: '/zariadenia'},
-  productionPage: {title: 'Vyroba', href: '/vyroba'},
-  siteSettings: {title: 'Domov', href: '/'},
+  homePage: defineLocations({
+    select: {title: 'heroTitleAccent'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Domov', href: '/'}]}),
+  }),
+  contactPage: defineLocations({
+    select: {title: 'heroTitle'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Kontakt', href: '/kontakt'}]}),
+  }),
+  productsPage: defineLocations({
+    select: {title: 'heroTitle'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Produkty', href: '/produkty'}]}),
+  }),
+  palletsPage: defineLocations({
+    select: {title: 'heroTitle'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Transportné palety', href: '/palety'}]}),
+  }),
+  devicesPage: defineLocations({
+    select: {title: 'heroTitle'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Jednoúčelové zariadenia', href: '/zariadenia'}]}),
+  }),
+  productionPage: defineLocations({
+    select: {title: 'heroTitle'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Výroba', href: '/vyroba'}]}),
+  }),
+  siteSettings: defineLocations({
+    select: {title: 'siteTitle'},
+    resolve: (doc) => ({locations: [{title: doc?.title || 'Nastavenia webu', href: '/'}]}),
+  }),
 } as const
 
 const mainDocuments = [
@@ -43,14 +64,7 @@ export default defineConfig({
       },
       resolve: {
         mainDocuments: [...mainDocuments],
-        locations: Object.fromEntries(
-          Object.entries(pageLocations).map(([type, location]) => [
-            type,
-            {
-              locations: [location],
-            },
-          ]),
-        ),
+        locations: pageLocations,
       },
       components: {
         unstable_navigator: {

@@ -18,6 +18,7 @@ function CheckIcon() {
 
 type SimplePageContentProps = {
   page: SimplePageContent
+  data?: SimplePageContent
   siteSettings: SiteSettingsContent
   documentId: 'palletsPage' | 'devicesPage' | 'productionPage'
   darkProcess?: boolean
@@ -26,23 +27,25 @@ type SimplePageContentProps = {
 
 export default function SimplePageContent({
   page,
+  data,
   siteSettings,
   documentId,
   darkProcess = false,
   processAsCards = false,
 }: SimplePageContentProps) {
+  const resolvedPage = data ?? page
   const processSectionClass = darkProcess ? 'green-dark' : 'bg'
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
   const sectionPath = (index: number) => {
-    const key = page.sections[index]?._key
+    const key = resolvedPage.sections[index]?._key
     return key ? `sections[_key=="${key}"]` : `sections[${index}]`
   }
   const galleryCardPath = (index: number) => {
-    const key = page.galleryCards[index]?._key
+    const key = resolvedPage.galleryCards[index]?._key
     return key ? `galleryCards[_key=="${key}"]` : `galleryCards[${index}]`
   }
   const processStepPath = (index: number) => {
-    const key = page.processSteps[index]?._key
+    const key = resolvedPage.processSteps[index]?._key
     return key ? `processSteps[_key=="${key}"]` : `processSteps[${index}]`
   }
 
@@ -52,13 +55,13 @@ export default function SimplePageContent({
 
       <div className="page-hero">
         <div className="container">
-          <span className="tag" data-sanity={pageAttr('heroTag')}>{page.heroTag}</span>
-          <h1 data-sanity={pageAttr('heroTitle')}>{page.heroTitle}</h1>
-          <p data-sanity={pageAttr('heroDescription')}>{page.heroDescription}</p>
+          <span className="tag" data-sanity={pageAttr('heroTag')}>{resolvedPage.heroTag}</span>
+          <h1 data-sanity={pageAttr('heroTitle')}>{resolvedPage.heroTitle}</h1>
+          <p data-sanity={pageAttr('heroDescription')}>{resolvedPage.heroDescription}</p>
         </div>
       </div>
 
-      {page.sections.map((section, index) => {
+      {resolvedPage.sections.map((section, index) => {
         const imageFirst = section.imageAlign === 'left'
         const sectionClass = index % 2 === 0 ? 'white' : 'bg'
         const imageNode = section.imageSrc ? (
@@ -120,14 +123,14 @@ export default function SimplePageContent({
         )
       })}
 
-      {page.galleryCards.length ? (
+      {resolvedPage.galleryCards.length ? (
         <section className="white">
           <div className="container">
-            {page.galleryTag ? <span className="tag" data-sanity={pageAttr('galleryTag')}>{page.galleryTag}</span> : null}
-            {page.galleryTitle ? <h2 className="section-title" data-sanity={pageAttr('galleryTitle')}>{page.galleryTitle}</h2> : null}
-            {page.galleryDescription ? <p className="section-desc" data-sanity={pageAttr('galleryDescription')}>{page.galleryDescription}</p> : null}
+            {resolvedPage.galleryTag ? <span className="tag" data-sanity={pageAttr('galleryTag')}>{resolvedPage.galleryTag}</span> : null}
+            {resolvedPage.galleryTitle ? <h2 className="section-title" data-sanity={pageAttr('galleryTitle')}>{resolvedPage.galleryTitle}</h2> : null}
+            {resolvedPage.galleryDescription ? <p className="section-desc" data-sanity={pageAttr('galleryDescription')}>{resolvedPage.galleryDescription}</p> : null}
             <div className="three-col">
-              {page.galleryCards.map((card, index) => (
+              {resolvedPage.galleryCards.map((card, index) => (
                 <div className="img-card" key={card.title} data-sanity={pageAttr(galleryCardPath(index))}>
                   {card.imageSrc ? (
                     <img
@@ -148,14 +151,14 @@ export default function SimplePageContent({
         </section>
       ) : null}
 
-      {page.processSteps.length ? (
+      {resolvedPage.processSteps.length ? (
         <section className={processSectionClass}>
           <div className="container">
-            {page.processTag ? <span className="tag" data-sanity={pageAttr('processTag')}>{page.processTag}</span> : null}
-            {page.processTitle ? <h2 className="section-title" data-sanity={pageAttr('processTitle')}>{page.processTitle}</h2> : null}
+            {resolvedPage.processTag ? <span className="tag" data-sanity={pageAttr('processTag')}>{resolvedPage.processTag}</span> : null}
+            {resolvedPage.processTitle ? <h2 className="section-title" data-sanity={pageAttr('processTitle')}>{resolvedPage.processTitle}</h2> : null}
             {processAsCards ? (
               <div className="three-col" style={{marginTop: '1.5rem'}}>
-                {page.processSteps.map((step, index) => (
+                {resolvedPage.processSteps.map((step, index) => (
                   <div
                     key={step.title}
                     data-sanity={pageAttr(processStepPath(index))}
@@ -193,7 +196,7 @@ export default function SimplePageContent({
               </div>
             ) : (
               <div className="four-col" style={{marginTop: '2rem'}}>
-                {page.processSteps.map((step, index) => (
+                {resolvedPage.processSteps.map((step, index) => (
                   <div key={step.title} style={{textAlign: 'center', padding: '1.5rem 1rem'}} data-sanity={pageAttr(processStepPath(index))}>
                     <div
                       style={{
@@ -235,11 +238,11 @@ export default function SimplePageContent({
         <div className="container">
           <div className="cta-inner">
             <div>
-              <h2 data-sanity={pageAttr('ctaTitle')}>{page.ctaTitle}</h2>
-              <p data-sanity={pageAttr('ctaText')}>{page.ctaText}</p>
+              <h2 data-sanity={pageAttr('ctaTitle')}>{resolvedPage.ctaTitle}</h2>
+              <p data-sanity={pageAttr('ctaText')}>{resolvedPage.ctaText}</p>
             </div>
-            <Link href={page.ctaButtonHref} className="btn-primary" style={{background: 'white', color: 'var(--green-dark)'}} data-sanity={pageAttr('ctaButtonLabel')}>
-              {page.ctaButtonLabel}
+            <Link href={resolvedPage.ctaButtonHref} className="btn-primary" style={{background: 'white', color: 'var(--green-dark)'}} data-sanity={pageAttr('ctaButtonLabel')}>
+              {resolvedPage.ctaButtonLabel}
             </Link>
           </div>
         </div>

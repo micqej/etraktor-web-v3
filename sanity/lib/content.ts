@@ -228,7 +228,7 @@ export type ProductContent = {
 const assetUrl = (image: SanityImageLike, fallback: string) =>
   urlForImage(image)?.width(1600).fit('max').auto('format').url() || fallback
 
-const siteSettingsQuery = groq`*[_type == "siteSettings" && _id == "siteSettings"][0]{
+export const siteSettingsQuery = groq`*[_type == "siteSettings" && _id == "siteSettings"][0]{
   siteTitle,
   companyName,
   domain,
@@ -251,7 +251,7 @@ const siteSettingsQuery = groq`*[_type == "siteSettings" && _id == "siteSettings
   footerCredit
 }`
 
-const homePageQuery = groq`*[_type == "homePage" && _id == "homePage"][0]{
+export const homePageQuery = groq`*[_type == "homePage" && _id == "homePage"][0]{
   heroEyebrow,
   heroTitleLine1,
   heroTitleLine2,
@@ -337,11 +337,11 @@ const simplePageProjection = `{
   ctaButtonHref
 }`
 
-const palletsPageQuery = groq`*[_type == "palletsPage" && _id == "palletsPage"][0]${simplePageProjection}`
-const productionPageQuery = groq`*[_type == "productionPage" && _id == "productionPage"][0]${simplePageProjection}`
-const devicesPageQuery = groq`*[_type == "devicesPage" && _id == "devicesPage"][0]${simplePageProjection}`
+export const palletsPageQuery = groq`*[_type == "palletsPage" && _id == "palletsPage"][0]${simplePageProjection}`
+export const productionPageQuery = groq`*[_type == "productionPage" && _id == "productionPage"][0]${simplePageProjection}`
+export const devicesPageQuery = groq`*[_type == "devicesPage" && _id == "devicesPage"][0]${simplePageProjection}`
 
-const contactPageQuery = groq`*[_type == "contactPage" && _id == "contactPage"][0]{
+export const contactPageQuery = groq`*[_type == "contactPage" && _id == "contactPage"][0]{
   heroTag,
   heroTitle,
   heroText,
@@ -370,7 +370,7 @@ const contactPageQuery = groq`*[_type == "contactPage" && _id == "contactPage"][
   inquiryOptions
 }`
 
-const productsPageQuery = groq`*[_type == "productsPage" && _id == "productsPage"][0]{
+export const productsPageQuery = groq`*[_type == "productsPage" && _id == "productsPage"][0]{
   heroEyebrow,
   heroTitle,
   heroAccent,
