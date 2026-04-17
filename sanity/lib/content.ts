@@ -160,12 +160,30 @@ export type ContactPageContent = {
 export type ProductStat = {value: string; label: string}
 export type ProductSpec = {parameter: string; valueA?: string; valueB?: string; value?: string}
 export type ProductEquipmentGroup = {title: string; items: {label: string; type: string}[]}
+export type ProductDownload = {label: string; url: string}
 export type ProductRangeCard = {
   title: string
   badge: string
   badgeClass: 'badge-std' | 'badge-opt'
   info: string
   imageSrc: string
+}
+export type ProductCatalogItem = {
+  badge: string
+  title: string
+  subtitle: string
+  description: string
+  imageSrc: string
+  imageAlt: string
+  highlights: string[]
+  documentsTitle: string
+  documents: ProductDownload[]
+  videosTitle: string
+  videos: {youtubeId: string; label: string}[]
+  galleryTitle: string
+  galleryImages: {src: string; alt: string}[]
+  specsTitle: string
+  specs: {parameter: string; value: string}[]
 }
 
 export type ProductContent = {
@@ -184,6 +202,10 @@ export type ProductContent = {
   introTitle: string
   introParagraphs: string[]
   introImageSrc: string
+  catalogTag: string
+  catalogTitle: string
+  catalogDescription: string
+  productCatalog: ProductCatalogItem[]
   efficiencyTitleA: string
   efficiencyValueA: string
   efficiencyTitleB: string
@@ -386,6 +408,43 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
   introTitle,
   introParagraphs,
   introImage,
+  catalogTag,
+  catalogTitle,
+  catalogDescription,
+  productCatalog[]{
+    badge,
+    title,
+    subtitle,
+    description,
+    image,
+    imageAlt,
+    highlights,
+    documentsTitle,
+    documents[]{
+      label,
+      file{
+        asset->{
+          url,
+          originalFilename
+        }
+      }
+    },
+    videosTitle,
+    videos[]{
+      youtubeId,
+      label
+    },
+    galleryTitle,
+    galleryImages[]{
+      alt,
+      image
+    },
+    specsTitle,
+    specs[]{
+      parameter,
+      value
+    }
+  },
   efficiencyTitleA,
   efficiencyValueA,
   efficiencyTitleB,
@@ -835,6 +894,112 @@ export const defaultProductsPage: ProductContent = {
     'Samotná jazda na elektrickom traktore je veľmi jednoduchá. Maximálny záberový moment od nulových otáčkach je pôžitkom pri jazde.',
   ],
   introImageSrc: '/images/elektricky-malotraktor.jpg',
+  catalogTag: 'Vlastné produkty',
+  catalogTitle: 'Produkty a príslušenstvo',
+  catalogDescription:
+    'Začiatok všeobecne o elektrickom malotraktore a následne samostatné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty.',
+  productCatalog: [
+    {
+      badge: 'Elektrický malotraktor',
+      title: 'ET 2000',
+      subtitle: 'Obľúbený elektrický malotraktor pre záhradu, samosprávy a prevádzky.',
+      description:
+        'ET 2000 je kompaktný elektrický malotraktor s tichou prevádzkou, nulovými lokálnymi emisiami a nízkymi prevádzkovými nákladmi. Hodí sa na bežné práce okolo areálov, v záhradách aj v priemysle.',
+      imageSrc: '/images/elektricky-malotraktor.jpg',
+      imageAlt: 'Elektrický malotraktor ET 2000',
+      highlights: [
+        'Obrázok a popis editovateľný v Sanity',
+        'Dokumenty na stiahnutie podľa typu produktu',
+        'Samostatná galéria aj videá',
+      ],
+      documentsTitle: 'Dokumenty na stiahnutie',
+      documents: [
+        {label: 'Cenník ET 2000', url: '#'},
+        {label: 'Rozmery ET 2000', url: '#'},
+        {label: 'Technické parametre ET 2000', url: '#'},
+      ],
+      videosTitle: 'Videá ET 2000',
+      videos: [
+        {youtubeId: 'I7Z70rEkqOM', label: 'Tichý chod traktora'},
+        {youtubeId: 'Cfy4jgR9W-o', label: 'Jazda v teréne'},
+      ],
+      galleryTitle: 'Galéria ET 2000',
+      galleryImages: [
+        {src: '/images/elektricky-malotraktor.jpg', alt: 'ET 2000'},
+        {src: '/images/dojazd1.jpg', alt: 'ET 2000 detail'},
+      ],
+      specsTitle: 'Základné parametre ET 2000',
+      specs: [
+        {parameter: 'Max. rýchlosť', value: '15 km/h'},
+        {parameter: 'Hladina hluku', value: '66 dBA'},
+        {parameter: 'Účinnosť motora', value: '90%'},
+      ],
+    },
+    {
+      badge: 'Elektrický malotraktor',
+      title: 'ET 3000',
+      subtitle: 'Výkonnejšia verzia pre náročnejšie prevádzky a vyššiu záťaž.',
+      description:
+        'ET 3000 je pripravený ako samostatný produktový blok s vlastným popisom, dokumentmi, galériou a parametrami. Klient si sem bude môcť dopĺňať vlastný obsah bez zásahu do kódu.',
+      imageSrc: '/images/elektricky-malotraktor.jpg',
+      imageAlt: 'Elektrický malotraktor ET 3000',
+      highlights: [
+        'Oddelené parametre od ET 2000',
+        'Samostatné dokumenty na stiahnutie',
+        'Možnosť dopĺňať ďalšie videá a obrázky',
+      ],
+      documentsTitle: 'Dokumenty na stiahnutie',
+      documents: [
+        {label: 'Cenník ET 3000', url: '#'},
+        {label: 'Rozmery ET 3000', url: '#'},
+        {label: 'Technické parametre ET 3000', url: '#'},
+      ],
+      videosTitle: 'Videá ET 3000',
+      videos: [],
+      galleryTitle: 'Galéria ET 3000',
+      galleryImages: [
+        {src: '/images/elektricky-malotraktor.jpg', alt: 'ET 3000'},
+      ],
+      specsTitle: 'Základné parametre ET 3000',
+      specs: [
+        {parameter: 'Stav', value: 'Pripravené na doplnenie klientom'},
+      ],
+    },
+    {
+      badge: 'Príslušenstvo',
+      title: 'Príslušenstvo',
+      subtitle: 'Rozšírenia, nadstavby a ďalšie doplnky k elektrickým malotraktorom.',
+      description:
+        'Sekcia príslušenstva má vlastný obrázok, popis, dokumenty na stiahnutie, videá aj galériu. Klient si vie pridávať ďalšie položky alebo vytvoriť úplne nový produktový blok.',
+      imageSrc: '/images/prislusenstvosumar.jpg',
+      imageAlt: 'Príslušenstvo k elektrickému malotraktoru',
+      highlights: [
+        'Predná radlica, zadný záves a ďalšie doplnky',
+        'Samostatné dokumenty a videá',
+        'Možnosť pridať nový produkt XY ako ďalší blok',
+      ],
+      documentsTitle: 'Dokumenty na stiahnutie',
+      documents: [
+        {label: 'Príslušenstvo - cenník', url: '#'},
+        {label: 'Príslušenstvo - katalóg', url: '#'},
+      ],
+      videosTitle: 'Videá príslušenstva',
+      videos: [
+        {youtubeId: 'Tox78aF9JGE', label: 'Radlica na sneh'},
+        {youtubeId: '2fQrQQxhaTo', label: 'Pluh'},
+      ],
+      galleryTitle: 'Galéria príslušenstva',
+      galleryImages: [
+        {src: '/images/prislusenstvosumar.jpg', alt: 'Kompletný sortiment'},
+        {src: '/images/prislusenstvo.jpg', alt: 'Predná radlica'},
+        {src: '/images/zadnyzaves.png', alt: 'Zadný záves'},
+      ],
+      specsTitle: 'Príslušenstvo - doplňujúce informácie',
+      specs: [
+        {parameter: 'Možnosť doplnenia', value: 'Áno, cez Sanity'},
+      ],
+    },
+  ],
   efficiencyTitleA: 'Elektrický motor ET 2000',
   efficiencyValueA: '90%',
   efficiencyTitleB: 'Spaľovací motor (benzín/nafta)',
@@ -1221,6 +1386,33 @@ export function toProductsPageDocument(page: ProductContent) {
     introTag: page.introTag,
     introTitle: page.introTitle,
     introParagraphs: page.introParagraphs,
+    catalogTag: page.catalogTag,
+    catalogTitle: page.catalogTitle,
+    catalogDescription: page.catalogDescription,
+    productCatalog: page.productCatalog.map((item, index) =>
+      withKey(
+        {
+          badge: item.badge,
+          title: item.title,
+          subtitle: item.subtitle,
+          description: item.description,
+          imageAlt: item.imageAlt,
+          highlights: item.highlights,
+          documentsTitle: item.documentsTitle,
+          documents: item.documents.map((doc, docIndex) => withKey({label: doc.label}, `product-doc-${index + 1}`, docIndex)),
+          videosTitle: item.videosTitle,
+          videos: item.videos.map((video, videoIndex) => withKey(video, `product-video-${index + 1}`, videoIndex)),
+          galleryTitle: item.galleryTitle,
+          galleryImages: item.galleryImages.map((image, imageIndex) =>
+            withKey({alt: image.alt}, `product-gallery-${index + 1}`, imageIndex),
+          ),
+          specsTitle: item.specsTitle,
+          specs: item.specs.map((spec, specIndex) => withKey(spec, `product-spec-${index + 1}`, specIndex)),
+        },
+        'catalog-item',
+        index,
+      ),
+    ),
     efficiencyTitleA: page.efficiencyTitleA,
     efficiencyValueA: page.efficiencyValueA,
     efficiencyTitleB: page.efficiencyTitleB,
@@ -1365,6 +1557,40 @@ export async function getProductsPage(): Promise<ProductContent> {
     introImageSrc: assetUrl(data.introImage, defaultProductsPage.introImageSrc),
     heroStats: data.heroStats?.length ? data.heroStats : defaultProductsPage.heroStats,
     introParagraphs: data.introParagraphs?.length ? data.introParagraphs : defaultProductsPage.introParagraphs,
+    productCatalog:
+      data.productCatalog?.map((item: any, index: number) => ({
+        badge: item.badge || defaultProductsPage.productCatalog[index]?.badge || '',
+        title: item.title || defaultProductsPage.productCatalog[index]?.title || '',
+        subtitle: item.subtitle || defaultProductsPage.productCatalog[index]?.subtitle || '',
+        description: item.description || defaultProductsPage.productCatalog[index]?.description || '',
+        imageSrc: assetUrl(item.image, defaultProductsPage.productCatalog[index]?.imageSrc || '/images/elektricky-malotraktor.jpg'),
+        imageAlt: item.imageAlt || defaultProductsPage.productCatalog[index]?.imageAlt || item.title || 'Produkt',
+        highlights: item.highlights?.length ? item.highlights : defaultProductsPage.productCatalog[index]?.highlights || [],
+        documentsTitle:
+          item.documentsTitle || defaultProductsPage.productCatalog[index]?.documentsTitle || 'Dokumenty na stiahnutie',
+        documents:
+          item.documents?.map((doc: any, docIndex: number) => ({
+            label:
+              doc.label ||
+              doc.file?.asset?.originalFilename ||
+              defaultProductsPage.productCatalog[index]?.documents[docIndex]?.label ||
+              `Dokument ${docIndex + 1}`,
+            url: doc.file?.asset?.url || defaultProductsPage.productCatalog[index]?.documents[docIndex]?.url || '#',
+          })) || defaultProductsPage.productCatalog[index]?.documents || [],
+        videosTitle: item.videosTitle || defaultProductsPage.productCatalog[index]?.videosTitle || 'Videá',
+        videos: item.videos?.length ? item.videos : defaultProductsPage.productCatalog[index]?.videos || [],
+        galleryTitle: item.galleryTitle || defaultProductsPage.productCatalog[index]?.galleryTitle || 'Galéria',
+        galleryImages:
+          item.galleryImages?.map((image: any, imageIndex: number) => ({
+            src: assetUrl(image, defaultProductsPage.productCatalog[index]?.galleryImages[imageIndex]?.src || '/images/elektricky-malotraktor.jpg'),
+            alt:
+              image.alt ||
+              defaultProductsPage.productCatalog[index]?.galleryImages[imageIndex]?.alt ||
+              `${item.title || 'Produkt'} ${imageIndex + 1}`,
+          })) || defaultProductsPage.productCatalog[index]?.galleryImages || [],
+        specsTitle: item.specsTitle || defaultProductsPage.productCatalog[index]?.specsTitle || 'Parametre',
+        specs: item.specs?.length ? item.specs : defaultProductsPage.productCatalog[index]?.specs || [],
+      })) || defaultProductsPage.productCatalog,
     benefits: data.benefits?.length ? data.benefits : defaultProductsPage.benefits,
     useCases: data.useCases?.length ? data.useCases : defaultProductsPage.useCases,
     dimensionImages:
