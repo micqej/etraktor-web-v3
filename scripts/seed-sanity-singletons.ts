@@ -13,6 +13,19 @@ import {
   toSimplePageDocument,
 } from '@/sanity/lib/content'
 
+type SeedDocument = {
+  _id: string
+  _type: string
+  [key: string]: unknown
+}
+
+function withKey<T extends Record<string, unknown>>(value: T, prefix: string, index: number) {
+  return {
+    _key: `${prefix}-${index + 1}`,
+    ...value,
+  }
+}
+
 const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || 'eypnbw53'
 
@@ -49,9 +62,9 @@ const documents: SeedDocument[] = [
     domain: defaultSiteSettings.domain,
     contactLabel: defaultSiteSettings.contactLabel,
     referencesTag: defaultSiteSettings.referencesTag,
-    references: defaultSiteSettings.references.map((reference) => ({alt: reference.alt})),
-    navItems: defaultSiteSettings.navItems,
-    footerLinks: defaultSiteSettings.footerLinks,
+    references: defaultSiteSettings.references.map((reference, index) => withKey({alt: reference.alt}, 'reference', index)),
+    navItems: defaultSiteSettings.navItems.map((item, index) => withKey(item, 'nav-item', index)),
+    footerLinks: defaultSiteSettings.footerLinks.map((item, index) => withKey(item, 'footer-link', index)),
     footerAddress: defaultSiteSettings.footerAddress,
     footerCredit: defaultSiteSettings.footerCredit,
   },
@@ -68,19 +81,25 @@ const documents: SeedDocument[] = [
     heroPrimaryHref: defaultHomePage.heroPrimaryHref,
     heroSecondaryLabel: defaultHomePage.heroSecondaryLabel,
     heroSecondaryHref: defaultHomePage.heroSecondaryHref,
-    heroStats: defaultHomePage.heroStats,
+    heroStats: defaultHomePage.heroStats.map((item, index) => withKey(item, 'home-hero-stat', index)),
     servicesTag: defaultHomePage.servicesTag,
     servicesTitle: defaultHomePage.servicesTitle,
     servicesDescription: defaultHomePage.servicesDescription,
-    services: defaultHomePage.services.map((service) => ({
-      tag: service.tag,
-      title: service.title,
-      description: service.description,
-      buttonLabel: service.buttonLabel,
-      buttonHref: service.buttonHref,
-      imageAlign: service.imageAlign,
-      imageFit: service.imageFit,
-    })),
+    services: defaultHomePage.services.map((service, index) =>
+      withKey(
+        {
+          tag: service.tag,
+          title: service.title,
+          description: service.description,
+          buttonLabel: service.buttonLabel,
+          buttonHref: service.buttonHref,
+          imageAlign: service.imageAlign,
+          imageFit: service.imageFit,
+        },
+        'service',
+        index,
+      ),
+    ),
     extrasTag: defaultHomePage.extrasTag,
     extrasTitle: defaultHomePage.extrasTitle,
     extras: defaultHomePage.extras,
@@ -136,8 +155,3 @@ run().catch((error) => {
   console.error(error)
   process.exit(1)
 })
-type SeedDocument = {
-  _id: string
-  _type: string
-  [key: string]: unknown
-}

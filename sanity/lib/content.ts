@@ -1113,36 +1113,61 @@ function mapSimplePage(data: any, fallback: SimplePageContent): SimplePageConten
   }
 }
 
+function withKey<T extends Record<string, unknown>>(value: T, prefix: string, index: number) {
+  return {
+    _key: `${prefix}-${index + 1}`,
+    ...value,
+  }
+}
+
 export function toSimplePageDocument(page: SimplePageContent) {
   return {
     heroTag: page.heroTag,
     heroTitle: page.heroTitle,
     heroDescription: page.heroDescription,
-    sections: page.sections.map((section) => ({
-      tag: section.tag,
-      title: section.title,
-      description: section.description,
-      buttonLabel: section.buttonLabel,
-      buttonHref: section.buttonHref,
-      imageAlign: section.imageAlign,
-      imageFit: section.imageFit,
-      bullets: section.bullets,
-    })),
+    sections: page.sections.map((section, index) =>
+      withKey(
+        {
+          tag: section.tag,
+          title: section.title,
+          description: section.description,
+          buttonLabel: section.buttonLabel,
+          buttonHref: section.buttonHref,
+          imageAlign: section.imageAlign,
+          imageFit: section.imageFit,
+          bullets: section.bullets,
+        },
+        'section',
+        index,
+      ),
+    ),
     galleryTag: page.galleryTag,
     galleryTitle: page.galleryTitle,
     galleryDescription: page.galleryDescription,
-    galleryCards: page.galleryCards.map((card) => ({
-      title: card.title,
-      description: card.description,
-      alt: card.imageAlt,
-    })),
+    galleryCards: page.galleryCards.map((card, index) =>
+      withKey(
+        {
+          title: card.title,
+          description: card.description,
+          alt: card.imageAlt,
+        },
+        'gallery-card',
+        index,
+      ),
+    ),
     processTag: page.processTag,
     processTitle: page.processTitle,
-    processSteps: page.processSteps.map((step) => ({
-      number: step.number,
-      title: step.title,
-      description: step.description,
-    })),
+    processSteps: page.processSteps.map((step, index) =>
+      withKey(
+        {
+          number: step.number,
+          title: step.title,
+          description: step.description,
+        },
+        'process-step',
+        index,
+      ),
+    ),
     ctaTitle: page.ctaTitle,
     ctaText: page.ctaText,
     ctaButtonLabel: page.ctaButtonLabel,
@@ -1192,7 +1217,7 @@ export function toProductsPageDocument(page: ProductContent) {
     heroPrimaryHref: page.heroPrimaryHref,
     heroSecondaryLabel: page.heroSecondaryLabel,
     heroSecondaryHref: page.heroSecondaryHref,
-    heroStats: page.heroStats,
+    heroStats: page.heroStats.map((item, index) => withKey(item, 'hero-stat', index)),
     introTag: page.introTag,
     introTitle: page.introTitle,
     introParagraphs: page.introParagraphs,
@@ -1205,42 +1230,69 @@ export function toProductsPageDocument(page: ProductContent) {
     benefits: page.benefits,
     useCasesTag: page.useCasesTag,
     useCasesTitle: page.useCasesTitle,
-    useCases: page.useCases,
+    useCases: page.useCases.map((item, index) => withKey(item, 'use-case', index)),
     dimensionsTag: page.dimensionsTag,
     dimensionsTitle: page.dimensionsTitle,
-    dimensionImages: page.dimensionImages.map((image) => ({alt: image.alt})),
-    basicSpecs: page.basicSpecs,
-    batterySpecs: page.batterySpecs,
-    chargingSpecs: page.chargingSpecs,
-    equipmentGroups: page.equipmentGroups,
+    dimensionImages: page.dimensionImages.map((image, index) => withKey({alt: image.alt}, 'dimension-image', index)),
+    basicSpecs: page.basicSpecs.map((item, index) => withKey(item, 'basic-spec', index)),
+    batterySpecs: page.batterySpecs.map((item, index) => withKey(item, 'battery-spec', index)),
+    chargingSpecs: page.chargingSpecs.map((item, index) => withKey(item, 'charging-spec', index)),
+    equipmentGroups: page.equipmentGroups.map((group, groupIndex) =>
+      withKey(
+        {
+          title: group.title,
+          items: group.items.map((item, itemIndex) => withKey(item, `equipment-item-${groupIndex + 1}`, itemIndex)),
+        },
+        'equipment-group',
+        groupIndex,
+      ),
+    ),
     rangeTag: page.rangeTag,
     rangeTitle: page.rangeTitle,
-    rangeCards: page.rangeCards.map((card) => ({
-      title: card.title,
-      badge: card.badge,
-      badgeClass: card.badgeClass,
-      info: card.info,
-    })),
+    rangeCards: page.rangeCards.map((card, index) =>
+      withKey(
+        {
+          title: card.title,
+          badge: card.badge,
+          badgeClass: card.badgeClass,
+          info: card.info,
+        },
+        'range-card',
+        index,
+      ),
+    ),
     accessoriesTag: page.accessoriesTag,
     accessoriesTitle: page.accessoriesTitle,
-    accessories: page.accessories.map((item) => ({
-      title: item.title,
-      description: item.description,
-      alt: item.imageAlt,
-    })),
+    accessories: page.accessories.map((item, index) =>
+      withKey(
+        {
+          title: item.title,
+          description: item.description,
+          alt: item.imageAlt,
+        },
+        'accessory',
+        index,
+      ),
+    ),
     certificatesTag: page.certificatesTag,
     certificatesTitle: page.certificatesTitle,
-    certificates: page.certificates.map((item) => ({
-      title: item.title,
-      alt: item.alt,
-    })),
+    certificates: page.certificates.map((item, index) =>
+      withKey(
+        {
+          title: item.title,
+          alt: item.alt,
+        },
+        'certificate',
+        index,
+      ),
+    ),
     galleryTag: page.galleryTag,
     galleryTitle: page.galleryTitle,
     galleryDescription: page.galleryDescription,
-    galleryImages: page.galleryImages.map((image) => ({alt: image.alt})),
+    galleryImages: page.galleryImages.map((image, index) => withKey({alt: image.alt}, 'gallery-image', index)),
     videosTag: page.videosTag,
     videosTitle: page.videosTitle,
-    videos: page.videos,
+    videos: page.videos.map((item, index) => withKey(item, 'video', index)),
     ctaTitle: page.ctaTitle,
     ctaText: page.ctaText,
     ctaPrimaryLabel: page.ctaPrimaryLabel,
