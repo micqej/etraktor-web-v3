@@ -389,7 +389,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         />
       )) : null}
 
-      {!hasCatalog ? <section className="bg">
+      <section className="bg">
         <div className="container">
           <div className="two-col">
             <div>
@@ -423,9 +423,9 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
             </div>
           </div>
         </div>
-      </section> : null}
+      </section>
 
-      {!hasCatalog ? <section className="white" id="parametre">
+      <section className="white" id="parametre">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('dimensionsTag')}>{resolvedPage.dimensionsTag}</span>
           <h2 className="section-title" data-sanity={pageAttr('dimensionsTitle')}>{resolvedPage.dimensionsTitle}</h2>
@@ -443,9 +443,9 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
           </div>
           <Tabs page={resolvedPage} />
         </div>
-      </section> : null}
+      </section>
 
-      {!hasCatalog ? <section className="bg">
+      <section className="bg">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('rangeTag')}>{resolvedPage.rangeTag}</span>
           <h2 className="section-title" data-sanity={pageAttr('rangeTitle')}>{resolvedPage.rangeTitle}</h2>
@@ -463,9 +463,9 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
             ))}
           </div>
         </div>
-      </section> : null}
+      </section>
 
-      {!hasCatalog ? <section className="white">
+      <section className="white">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('accessoriesTag')}>{resolvedPage.accessoriesTag}</span>
           <h2 className="section-title" data-sanity={pageAttr('accessoriesTitle')}>{resolvedPage.accessoriesTitle}</h2>
@@ -481,9 +481,9 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
             ))}
           </div>
         </div>
-      </section> : null}
+      </section>
 
-      {!hasCatalog ? <section className="white">
+      <section className="white">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('certificatesTag')}>{resolvedPage.certificatesTag}</span>
           <h2 className="section-title" data-sanity={pageAttr('certificatesTitle')}>{resolvedPage.certificatesTitle}</h2>
@@ -496,9 +496,9 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
             ))}
           </div>
         </div>
-      </section> : null}
+      </section>
 
-      {!hasCatalog ? <section className="green-dark" id="galeria">
+      <section className="green-dark" id="galeria">
         <div className="container">
           <span className="tag" data-sanity={pageAttr('galleryTag')}>{resolvedPage.galleryTag}</span>
           <h2 className="section-title" data-sanity={pageAttr('galleryTitle')}>{resolvedPage.galleryTitle}</h2>
@@ -512,15 +512,15 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
             ))}
           </div>
         </div>
-      </section> : null}
+      </section>
 
-      {!hasCatalog ? <section style={{padding: '5rem 0', background: '#111111', overflow: 'hidden'}}>
+      <section style={{padding: '5rem 0', background: '#111111', overflow: 'hidden'}}>
         <div style={{maxWidth: 1180, margin: '0 auto', padding: '0 2rem 2rem'}}>
           <span className="tag" style={{borderColor: 'rgba(255,255,255,0.3)', color: 'white', background: 'rgba(255,255,255,0.15)'}} data-sanity={pageAttr('videosTag')}>{resolvedPage.videosTag}</span>
           <h2 className="section-title" style={{color: 'white'}} data-sanity={pageAttr('videosTitle')}>{resolvedPage.videosTitle}</h2>
         </div>
         <VideoSlider videos={resolvedPage.videos} />
-      </section> : null}
+      </section>
 
       <section className="cta-banner">
         <div className="container">
