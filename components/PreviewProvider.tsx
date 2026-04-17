@@ -2,7 +2,7 @@
 
 import {LiveQueryProvider} from 'next-sanity/preview'
 
-import {sanityClient} from '@/sanity/lib/client'
+import {getSanityClient} from '@/sanity/lib/client'
 
 type PreviewProviderProps = {
   children: React.ReactNode
@@ -11,7 +11,7 @@ type PreviewProviderProps = {
 
 export default function PreviewProvider({children, token}: PreviewProviderProps) {
   return (
-    <LiveQueryProvider client={sanityClient} token={token}>
+    <LiveQueryProvider client={getSanityClient(true)} token={token}>
       {children}
     </LiveQueryProvider>
   )

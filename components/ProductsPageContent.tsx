@@ -10,8 +10,15 @@ import {LightboxModal} from '@/components/Lightbox'
 import Nav from '@/components/Nav'
 import RefsSection from '@/components/RefsSection'
 import {mapLiveProductsPage} from '@/sanity/lib/liveMappers'
-import type {ProductCatalogItem, ProductContent, ProductEquipmentGroup, ProductSpec, SiteSettingsContent} from '@/sanity/lib/content'
+import type {
+  ProductCatalogItem,
+  ProductContent,
+  ProductEquipmentGroup,
+  ProductSpec,
+  SiteSettingsContent,
+} from '@/sanity/lib/content'
 import {productsPageQuery} from '@/sanity/lib/queries'
+import {youtubeWatchUrl} from '@/sanity/lib/youtube'
 
 function CheckIcon() {
   return (
@@ -19,6 +26,10 @@ function CheckIcon() {
       <polyline points="20 6 9 17 4 12" />
     </svg>
   )
+}
+
+function TypeBadge({type}: {type: string}) {
+  return <span className={type.toLowerCase() === 'opcia' ? 'badge-opt' : 'badge-std'}>{type}</span>
 }
 
 function VideoSlider({videos}: Pick<ProductContent, 'videos'>) {
@@ -35,14 +46,21 @@ function VideoSlider({videos}: Pick<ProductContent, 'videos'>) {
   }, [cur])
 
   const nav = (delta: number) => {
-    const perView = typeof window !== 'undefined' && window.innerWidth <= 600 ? 1 : typeof window !== 'undefined' && window.innerWidth <= 900 ? 2 : 3
+    const perView =
+      typeof window !== 'undefined' && window.innerWidth <= 600
+        ? 1
+        : typeof window !== 'undefined' && window.innerWidth <= 900
+          ? 2
+          : 3
     const max = Math.max(0, videos.length - perView)
     setCur((value) => Math.max(0, Math.min(value + delta, max)))
   }
 
   return (
     <div className="vs-outer">
-      <button className="vs-arrow vs-prev" onClick={() => nav(-1)}>&#8249;</button>
+      <button className="vs-arrow vs-prev" onClick={() => nav(-1)} type="button">
+        &#8249;
+      </button>
       <div className="vs-track-wrap">
         <div className="vs-track" ref={trackRef}>
           {videos.map((video) => (
@@ -61,7 +79,9 @@ function VideoSlider({videos}: Pick<ProductContent, 'videos'>) {
           ))}
         </div>
       </div>
-      <button className="vs-arrow vs-next" onClick={() => nav(1)}>&#8250;</button>
+      <button className="vs-arrow vs-next" onClick={() => nav(1)} type="button">
+        &#8250;
+      </button>
     </div>
   )
 }
@@ -118,7 +138,9 @@ function EquipmentTable({groups}: {groups: ProductEquipmentGroup[]}) {
           ...group.items.map((item) => (
             <tr key={`${group.title}-${item.label}`}>
               <td>{item.label}</td>
-              <td><span className={item.type.toLowerCase() === 'opcia' ? 'badge-opt' : 'badge-std'}>{item.type}</span></td>
+              <td>
+                <TypeBadge type={item.type} />
+              </td>
             </tr>
           )),
         ])}
@@ -133,10 +155,18 @@ function Tabs({page}: {page: ProductContent}) {
   return (
     <div>
       <div className="tabs">
-        <button className={`tab-btn${active === 'basic' ? ' active' : ''}`} onClick={() => setActive('basic')}>Základné</button>
-        <button className={`tab-btn${active === 'battery' ? ' active' : ''}`} onClick={() => setActive('battery')}>Batérie</button>
-        <button className={`tab-btn${active === 'charging' ? ' active' : ''}`} onClick={() => setActive('charging')}>Nabíjanie</button>
-        <button className={`tab-btn${active === 'equipment' ? ' active' : ''}`} onClick={() => setActive('equipment')}>Výbava</button>
+        <button className={`tab-btn${active === 'basic' ? ' active' : ''}`} onClick={() => setActive('basic')} type="button">
+          Základné
+        </button>
+        <button className={`tab-btn${active === 'battery' ? ' active' : ''}`} onClick={() => setActive('battery')} type="button">
+          Batérie
+        </button>
+        <button className={`tab-btn${active === 'charging' ? ' active' : ''}`} onClick={() => setActive('charging')} type="button">
+          Nabíjanie
+        </button>
+        <button className={`tab-btn${active === 'equipment' ? ' active' : ''}`} onClick={() => setActive('equipment')} type="button">
+          Výbava
+        </button>
       </div>
 
       {active === 'basic' ? <SpecsTable rows={page.basicSpecs} /> : null}
@@ -159,20 +189,30 @@ function ProductCatalogSection({
   onOpenLightbox: (images: string[], startIndex: number) => void
 }) {
   const basePath = item._key ? `productCatalog[_key=="${item._key}"]` : `productCatalog[${index}]`
-  const galleryImages = item.galleryImages.map((image) => image.src)
-  const hasDownloadableDocuments = item.documents.some((document) => document.url && document.url !== '#')
+  const availableDocuments = item.documents.filter((document) => document.url && document.url !== '#')
+  const videoLinks = item.videos
+    .map((video) => ({...video, href: youtubeWatchUrl(video.youtubeId)}))
+    .filter((video) => Boolean(video.href))
+  const additionalImages = item.galleryImages
+    .map((image, imageIndex) => ({...image, originalIndex: imageIndex}))
+    .filter((image) => image.src !== item.imageSrc)
+  const lightboxImages = [item.imageSrc, ...additionalImages.map((image) => image.src)]
+
   const documentPath = (docIndex: number) => {
     const key = item.documents[docIndex]?._key
     return key ? `${basePath}.documents[_key=="${key}"]` : `${basePath}.documents[${docIndex}]`
   }
+
   const galleryPath = (imageIndex: number) => {
     const key = item.galleryImages[imageIndex]?._key
     return key ? `${basePath}.galleryImages[_key=="${key}"]` : `${basePath}.galleryImages[${imageIndex}]`
   }
+
   const videoPath = (videoIndex: number) => {
     const key = item.videos[videoIndex]?._key
     return key ? `${basePath}.videos[_key=="${key}"]` : `${basePath}.videos[${videoIndex}]`
   }
+
   const specPath = (specIndex: number) => {
     const key = item.specs[specIndex]?._key
     return key ? `${basePath}.specs[_key=="${key}"]` : `${basePath}.specs[${specIndex}]`
@@ -183,25 +223,47 @@ function ProductCatalogSection({
       <div className="container">
         <div className="two-col" style={{alignItems: 'start'}}>
           <div>
-            <span className="tag" data-sanity={pageAttr(`${basePath}.badge`)}>{item.badge}</span>
-            <h2 className="section-title" data-sanity={pageAttr(`${basePath}.title`)}>{item.title}</h2>
-            <p style={{fontWeight: 700, marginBottom: '1rem', color: 'var(--green-dark)'}} data-sanity={pageAttr(`${basePath}.subtitle`)}>
+            <span className="tag" data-sanity={pageAttr(`${basePath}.badge`)}>
+              {item.badge}
+            </span>
+            <h2 className="section-title" data-sanity={pageAttr(`${basePath}.title`)}>
+              {item.title}
+            </h2>
+            <p
+              style={{fontWeight: 700, marginBottom: '1rem', color: 'var(--green-dark)'}}
+              data-sanity={pageAttr(`${basePath}.subtitle`)}
+            >
               {item.subtitle}
             </p>
             <p data-sanity={pageAttr(`${basePath}.description`)}>{item.description}</p>
+
             {item.highlights.length ? (
               <div className="check-list" style={{marginTop: '1.25rem'}}>
                 {item.highlights.map((highlight, highlightIndex) => (
-                  <div key={`${item.title}-${highlightIndex}`} className="check-item" data-sanity={pageAttr(`${basePath}.highlights[${highlightIndex}]`)}>
+                  <div
+                    key={`${item.title}-${highlightIndex}`}
+                    className="check-item"
+                    data-sanity={pageAttr(`${basePath}.highlights[${highlightIndex}]`)}
+                  >
                     <CheckIcon />
                     <span>{highlight}</span>
                   </div>
                 ))}
               </div>
             ) : null}
-            {hasDownloadableDocuments ? (
+
+            {availableDocuments.length ? (
               <div style={{marginTop: '1.75rem'}}>
-                <h3 style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.6rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}} data-sanity={pageAttr(`${basePath}.documentsTitle`)}>
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed',sans-serif",
+                    fontSize: '1.6rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    marginBottom: '0.75rem',
+                  }}
+                  data-sanity={pageAttr(`${basePath}.documentsTitle`)}
+                >
                   {item.documentsTitle}
                 </h3>
                 <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
@@ -222,17 +284,90 @@ function ProductCatalogSection({
                 </div>
               </div>
             ) : null}
+
+            {videoLinks.length ? (
+              <div style={{marginTop: '1.75rem'}}>
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed',sans-serif",
+                    fontSize: '1.6rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    marginBottom: '0.75rem',
+                  }}
+                  data-sanity={pageAttr(`${basePath}.videosTitle`)}
+                >
+                  {item.videosTitle}
+                </h3>
+                <div style={{display: 'flex', gap: '0.75rem', flexWrap: 'wrap'}}>
+                  {videoLinks.map((video, videoIndex) => (
+                    <a
+                      key={`${video.youtubeId}-${videoIndex}`}
+                      href={video.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-outline"
+                      data-sanity={pageAttr(videoPath(videoIndex))}
+                    >
+                      {video.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
+
           <div>
             <img
               src={item.imageSrc}
               alt={item.imageAlt}
               data-sanity={pageAttr(`${basePath}.image`)}
-              style={{width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', maxHeight: 400, objectFit: 'cover'}}
+              style={{
+                width: '100%',
+                borderRadius: 'var(--radius)',
+                boxShadow: 'var(--shadow)',
+                maxHeight: 400,
+                objectFit: 'cover',
+                cursor: 'pointer',
+              }}
+              onClick={() => onOpenLightbox(lightboxImages, 0)}
             />
+
+            {additionalImages.length ? (
+              <div style={{marginTop: '1rem'}}>
+                <div style={{display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0.75rem'}}>
+                  {additionalImages.map((image, imageIndex) => (
+                    <div
+                      key={`${image.src}-${imageIndex}`}
+                      className="gi-new"
+                      onClick={() => onOpenLightbox(lightboxImages, imageIndex + 1)}
+                      data-sanity={pageAttr(galleryPath(image.originalIndex))}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        loading="lazy"
+                        data-sanity={pageAttr(galleryPath(image.originalIndex))}
+                      />
+                      <div className="gi-overlay" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             {item.specs.length ? (
               <div style={{marginTop: '1.5rem'}}>
-                <h3 style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.6rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem'}} data-sanity={pageAttr(`${basePath}.specsTitle`)}>
+                <h3
+                  style={{
+                    fontFamily: "'Barlow Condensed',sans-serif",
+                    fontSize: '1.6rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    marginBottom: '0.75rem',
+                  }}
+                  data-sanity={pageAttr(`${basePath}.specsTitle`)}
+                >
                   {item.specsTitle}
                 </h3>
                 <table className="spec-table">
@@ -249,43 +384,6 @@ function ProductCatalogSection({
             ) : null}
           </div>
         </div>
-
-        {item.galleryImages.length ? (
-          <div style={{marginTop: '3rem'}}>
-            <h3 style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.6rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1rem'}} data-sanity={pageAttr(`${basePath}.galleryTitle`)}>
-              {item.galleryTitle}
-            </h3>
-            <div className="gallery-grid-new">
-              {item.galleryImages.map((image, imageIndex) => (
-                <div
-                  key={`${image.src}-${imageIndex}`}
-                  className="gi-new"
-                  onClick={() => onOpenLightbox(galleryImages, imageIndex)}
-                  data-sanity={pageAttr(galleryPath(imageIndex))}
-                >
-                  <img src={image.src} alt={image.alt} loading="lazy" data-sanity={pageAttr(galleryPath(imageIndex))} />
-                  <div className="gi-overlay" />
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {item.videos.length ? (
-          <div style={{marginTop: '3rem'}}>
-            <h3 style={{fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.6rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1rem'}} data-sanity={pageAttr(`${basePath}.videosTitle`)}>
-              {item.videosTitle}
-            </h3>
-            <VideoSlider videos={item.videos} />
-            <div style={{display: 'none'}}>
-              {item.videos.map((video, videoIndex) => (
-                <span key={`${video.youtubeId}-${videoIndex}`} data-sanity={pageAttr(videoPath(videoIndex))}>
-                  {video.label}
-                </span>
-              ))}
-            </div>
-          </div>
-        ) : null}
       </div>
     </section>
   )
@@ -305,6 +403,26 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
   const [lightbox, setLightbox] = useState<{images: string[]; index: number} | null>(null)
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
 
+  const heroStatPath = (index: number) => {
+    const key = resolvedPage.heroStats[index]?._key
+    return key ? `heroStats[_key=="${key}"]` : `heroStats[${index}]`
+  }
+
+  const introStatPath = (index: number) => {
+    const key = resolvedPage.introStats[index]?._key
+    return key ? `introStats[_key=="${key}"]` : `introStats[${index}]`
+  }
+
+  const comfortItemPath = (index: number) => {
+    const key = resolvedPage.comfortItems[index]?._key
+    return key ? `comfortItems[_key=="${key}"]` : `comfortItems[${index}]`
+  }
+
+  const comfortImagePath = (index: number) => {
+    const key = resolvedPage.comfortImages[index]?._key
+    return key ? `comfortImages[_key=="${key}"]` : `comfortImages[${index}]`
+  }
+
   return (
     <>
       <Nav siteSettings={siteSettings} />
@@ -319,13 +437,27 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         <div className="hero-content">
           <div className="hero-grid">
             <div className="hero-left">
-              <p className="hero-eyebrow" data-sanity={pageAttr('heroEyebrow')}>{resolvedPage.heroEyebrow}</p>
-              <h1 className="hero-title"><span data-sanity={pageAttr('heroTitle')}>{resolvedPage.heroTitle}</span><br /><span data-sanity={pageAttr('heroAccent')}>{resolvedPage.heroAccent}</span></h1>
-              <p className="hero-subtitle" data-sanity={pageAttr('heroSubtitle')}>{resolvedPage.heroSubtitle}</p>
-              <p className="hero-desc" data-sanity={pageAttr('heroDescription')}>{resolvedPage.heroDescription}</p>
+              <p className="hero-eyebrow" data-sanity={pageAttr('heroEyebrow')}>
+                {resolvedPage.heroEyebrow}
+              </p>
+              <h1 className="hero-title">
+                <span data-sanity={pageAttr('heroTitle')}>{resolvedPage.heroTitle}</span>
+                <br />
+                <span data-sanity={pageAttr('heroAccent')}>{resolvedPage.heroAccent}</span>
+              </h1>
+              <p className="hero-subtitle" data-sanity={pageAttr('heroSubtitle')}>
+                {resolvedPage.heroSubtitle}
+              </p>
+              <p className="hero-desc" data-sanity={pageAttr('heroDescription')}>
+                {resolvedPage.heroDescription}
+              </p>
               <div className="hero-btns">
-                <Link href={resolvedPage.heroPrimaryHref} className="btn-primary" data-sanity={pageAttr('heroPrimaryLabel')}>{resolvedPage.heroPrimaryLabel}</Link>
-                <a href={resolvedPage.heroSecondaryHref} className="btn-outline" data-sanity={pageAttr('heroSecondaryLabel')}>{resolvedPage.heroSecondaryLabel}</a>
+                <Link href={resolvedPage.heroPrimaryHref} className="btn-primary" data-sanity={pageAttr('heroPrimaryLabel')}>
+                  {resolvedPage.heroPrimaryLabel}
+                </Link>
+                <a href={resolvedPage.heroSecondaryHref} className="btn-outline" data-sanity={pageAttr('heroSecondaryLabel')}>
+                  {resolvedPage.heroSecondaryLabel}
+                </a>
               </div>
             </div>
             <div>
@@ -337,9 +469,13 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
           <div className="container">
             <div className="hero-stats">
               {resolvedPage.heroStats.map((stat, index) => (
-                <div className="hstat" key={`${stat.value}-${stat.label}`} data-sanity={pageAttr(`heroStats[${index}]`)}>
-                  <div className="hstat-val" data-sanity={pageAttr(`heroStats[${index}].value`)}>{stat.value}</div>
-                  <div className="hstat-label" data-sanity={pageAttr(`heroStats[${index}].label`)}>{stat.label}</div>
+                <div className="hstat" key={`${stat.value}-${stat.label}`} data-sanity={pageAttr(heroStatPath(index))}>
+                  <div className="hstat-val" data-sanity={pageAttr(`${heroStatPath(index)}.value`)}>
+                    {stat.value}
+                  </div>
+                  <div className="hstat-label" data-sanity={pageAttr(`${heroStatPath(index)}.label`)}>
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -351,53 +487,80 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         <div className="container">
           <div className="two-col">
             <div>
-              <span className="tag" data-sanity={pageAttr('introTag')}>{resolvedPage.introTag}</span>
-              <h2 className="section-title" data-sanity={pageAttr('introTitle')}>{resolvedPage.introTitle}</h2>
+              <span className="tag" data-sanity={pageAttr('introTag')}>
+                {resolvedPage.introTag}
+              </span>
+              <h2 className="section-title" data-sanity={pageAttr('introTitle')}>
+                {resolvedPage.introTitle}
+              </h2>
               {resolvedPage.introParagraphs.map((paragraph, index) => (
-                <p key={paragraph} style={{marginBottom: '1rem'}} data-sanity={pageAttr(`introParagraphs[${index}]`)}>{paragraph}</p>
+                <p key={paragraph} style={{marginBottom: '1rem'}} data-sanity={pageAttr(`introParagraphs[${index}]`)}>
+                  {paragraph}
+                </p>
               ))}
               <div className="eff-item">
-                <div className="eff-row"><span className="eff-name" data-sanity={pageAttr('efficiencyTitleA')}>{resolvedPage.efficiencyTitleA}</span><span className="eff-pct" data-sanity={pageAttr('efficiencyValueA')}>{resolvedPage.efficiencyValueA}</span></div>
-                <div className="eff-bar-bg"><div className="eff-bar green" style={{width: resolvedPage.efficiencyValueA}} /></div>
+                <div className="eff-row">
+                  <span className="eff-name" data-sanity={pageAttr('efficiencyTitleA')}>
+                    {resolvedPage.efficiencyTitleA}
+                  </span>
+                  <span className="eff-pct" data-sanity={pageAttr('efficiencyValueA')}>
+                    {resolvedPage.efficiencyValueA}
+                  </span>
+                </div>
+                <div className="eff-bar-bg">
+                  <div className="eff-bar green" style={{width: resolvedPage.efficiencyValueA}} />
+                </div>
               </div>
               <div className="eff-item" style={{marginTop: '1rem'}}>
-                <div className="eff-row"><span className="eff-name" data-sanity={pageAttr('efficiencyTitleB')}>{resolvedPage.efficiencyTitleB}</span><span className="eff-pct" style={{color: '#78909c'}} data-sanity={pageAttr('efficiencyValueB')}>{resolvedPage.efficiencyValueB}</span></div>
-                <div className="eff-bar-bg"><div className="eff-bar gray" style={{width: '18%'}} /></div>
+                <div className="eff-row">
+                  <span className="eff-name" data-sanity={pageAttr('efficiencyTitleB')}>
+                    {resolvedPage.efficiencyTitleB}
+                  </span>
+                  <span className="eff-pct" style={{color: '#78909c'}} data-sanity={pageAttr('efficiencyValueB')}>
+                    {resolvedPage.efficiencyValueB}
+                  </span>
+                </div>
+                <div className="eff-bar-bg">
+                  <div className="eff-bar gray" style={{width: '18%'}} />
+                </div>
               </div>
             </div>
             <div>
-              <img src={resolvedPage.introImageSrc} alt={resolvedPage.heroAccent} style={{width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', objectFit: 'cover', maxHeight: 320}} data-sanity={pageAttr('introImage')} />
+              {resolvedPage.introStats.length ? (
+                <div className="stats-row" style={{marginBottom: '1.5rem'}}>
+                  {resolvedPage.introStats.map((stat, index) => (
+                    <div className="stat-card" key={`${stat.value}-${stat.label}`} data-sanity={pageAttr(introStatPath(index))}>
+                      <div className="stat-card-val" data-sanity={pageAttr(`${introStatPath(index)}.value`)}>
+                        {stat.value}
+                      </div>
+                      <div className="stat-card-label" data-sanity={pageAttr(`${introStatPath(index)}.label`)}>
+                        {stat.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              <img
+                src={resolvedPage.introImageSrc}
+                alt={resolvedPage.heroAccent}
+                style={{width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', objectFit: 'cover', maxHeight: 360}}
+                data-sanity={pageAttr('introImage')}
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {hasCatalog ? (
-        <section className="bg">
-          <div className="container">
-            <span className="tag" data-sanity={pageAttr('catalogTag')}>{resolvedPage.catalogTag}</span>
-            <h2 className="section-title" data-sanity={pageAttr('catalogTitle')}>{resolvedPage.catalogTitle}</h2>
-            <p className="section-desc" data-sanity={pageAttr('catalogDescription')}>{resolvedPage.catalogDescription}</p>
-          </div>
-        </section>
-      ) : null}
-
-      {hasCatalog ? resolvedPage.productCatalog.map((item, index) => (
-        <ProductCatalogSection
-          key={`${item.title}-${index}`}
-          item={item}
-          index={index}
-          pageAttr={pageAttr}
-          onOpenLightbox={(images, startIndex) => setLightbox({images, index: startIndex})}
-        />
-      )) : null}
-
       <section className="bg">
         <div className="container">
           <div className="two-col">
             <div>
-              <span className="tag" data-sanity={pageAttr('benefitsTag')}>{resolvedPage.benefitsTag}</span>
-              <h2 className="section-title" data-sanity={pageAttr('benefitsTitle')}>{resolvedPage.benefitsTitle}</h2>
+              <span className="tag" data-sanity={pageAttr('benefitsTag')}>
+                {resolvedPage.benefitsTag}
+              </span>
+              <h2 className="section-title" data-sanity={pageAttr('benefitsTitle')}>
+                {resolvedPage.benefitsTitle}
+              </h2>
               <div className="check-list">
                 {resolvedPage.benefits.map((item, index) => (
                   <div className="check-item" key={item} data-sanity={pageAttr(`benefits[${index}]`)}>
@@ -408,17 +571,27 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               </div>
             </div>
             <div>
-              <span className="tag" data-sanity={pageAttr('useCasesTag')}>{resolvedPage.useCasesTag}</span>
-              <h2 className="section-title" data-sanity={pageAttr('useCasesTitle')}>{resolvedPage.useCasesTitle}</h2>
+              <span className="tag" data-sanity={pageAttr('useCasesTag')}>
+                {resolvedPage.useCasesTag}
+              </span>
+              <h2 className="section-title" data-sanity={pageAttr('useCasesTitle')}>
+                {resolvedPage.useCasesTitle}
+              </h2>
               <div className="features-grid" style={{gridTemplateColumns: '1fr 1fr', marginTop: 0}}>
                 {resolvedPage.useCases.map((item, index) => (
                   <div className="feature-item" key={item.title} data-sanity={pageAttr(`useCases[${index}]`)}>
                     <div className="feature-icon">
-                      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /></svg>
+                      <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                      </svg>
                     </div>
                     <div>
-                      <div className="feature-title" data-sanity={pageAttr(`useCases[${index}].title`)}>{item.title}</div>
-                      <div className="feature-desc" data-sanity={pageAttr(`useCases[${index}].description`)}>{item.description}</div>
+                      <div className="feature-title" data-sanity={pageAttr(`useCases[${index}].title`)}>
+                        {item.title}
+                      </div>
+                      <div className="feature-desc" data-sanity={pageAttr(`useCases[${index}].description`)}>
+                        {item.description}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -430,8 +603,12 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
 
       <section className="white" id="parametre">
         <div className="container">
-          <span className="tag" data-sanity={pageAttr('dimensionsTag')}>{resolvedPage.dimensionsTag}</span>
-          <h2 className="section-title" data-sanity={pageAttr('dimensionsTitle')}>{resolvedPage.dimensionsTitle}</h2>
+          <span className="tag" data-sanity={pageAttr('dimensionsTag')}>
+            {resolvedPage.dimensionsTag}
+          </span>
+          <h2 className="section-title" data-sanity={pageAttr('dimensionsTitle')}>
+            {resolvedPage.dimensionsTitle}
+          </h2>
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem', marginBottom: '2.5rem'}}>
             {resolvedPage.dimensionImages.map((image, index) => (
               <img
@@ -450,17 +627,36 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
 
       <section className="bg">
         <div className="container">
-          <span className="tag" data-sanity={pageAttr('rangeTag')}>{resolvedPage.rangeTag}</span>
-          <h2 className="section-title" data-sanity={pageAttr('rangeTitle')}>{resolvedPage.rangeTitle}</h2>
+          <span className="tag" data-sanity={pageAttr('rangeTag')}>
+            {resolvedPage.rangeTag}
+          </span>
+          <h2 className="section-title" data-sanity={pageAttr('rangeTitle')}>
+            {resolvedPage.rangeTitle}
+          </h2>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem'}}>
             {resolvedPage.rangeCards.map((card, index) => (
-              <div className="img-card" key={card.title} onClick={() => setLightbox({images: resolvedPage.rangeCards.map((item) => item.imageSrc), index})} data-sanity={pageAttr(`rangeCards[${index}]`)}>
-                <img src={card.imageSrc} alt={card.title} style={{width: '100%', height: 'auto', minHeight: 160, objectFit: 'contain', background: '#f5f7f5'}} data-sanity={pageAttr(`rangeCards[${index}].image`)} />
+              <div
+                className="img-card"
+                key={card.title}
+                onClick={() => setLightbox({images: resolvedPage.rangeCards.map((item) => item.imageSrc), index})}
+                data-sanity={pageAttr(`rangeCards[${index}]`)}
+              >
+                <img
+                  src={card.imageSrc}
+                  alt={card.title}
+                  style={{width: '100%', height: 'auto', minHeight: 160, objectFit: 'contain', background: '#f5f7f5'}}
+                  data-sanity={pageAttr(`rangeCards[${index}].image`)}
+                />
                 <div className="img-card-body">
                   <div className="img-card-title">
-                    <span data-sanity={pageAttr(`rangeCards[${index}].title`)}>{card.title}</span> <span className={card.badgeClass} style={{marginLeft: 6}} data-sanity={pageAttr(`rangeCards[${index}].badge`)}>{card.badge}</span>
+                    <span data-sanity={pageAttr(`rangeCards[${index}].title`)}>{card.title}</span>{' '}
+                    <span className={card.badgeClass} style={{marginLeft: 6}} data-sanity={pageAttr(`rangeCards[${index}].badge`)}>
+                      {card.badge}
+                    </span>
                   </div>
-                  <div className="img-card-desc" data-sanity={pageAttr(`rangeCards[${index}].info`)}>{card.info}</div>
+                  <div className="img-card-desc" data-sanity={pageAttr(`rangeCards[${index}].info`)}>
+                    {card.info}
+                  </div>
                 </div>
               </div>
             ))}
@@ -468,17 +664,58 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         </div>
       </section>
 
+      {hasCatalog ? (
+        <section className="white">
+          <div className="container">
+            <span className="tag" data-sanity={pageAttr('catalogTag')}>
+              {resolvedPage.catalogTag}
+            </span>
+            <h2 className="section-title" data-sanity={pageAttr('catalogTitle')}>
+              {resolvedPage.catalogTitle}
+            </h2>
+            <p className="section-desc" data-sanity={pageAttr('catalogDescription')}>
+              {resolvedPage.catalogDescription}
+            </p>
+          </div>
+        </section>
+      ) : null}
+
+      {hasCatalog
+        ? resolvedPage.productCatalog.map((item, index) => (
+            <ProductCatalogSection
+              key={`${item.title}-${index}`}
+              item={item}
+              index={index}
+              pageAttr={pageAttr}
+              onOpenLightbox={(images, startIndex) => setLightbox({images, index: startIndex})}
+            />
+          ))
+        : null}
+
       <section className="white">
         <div className="container">
-          <span className="tag" data-sanity={pageAttr('accessoriesTag')}>{resolvedPage.accessoriesTag}</span>
-          <h2 className="section-title" data-sanity={pageAttr('accessoriesTitle')}>{resolvedPage.accessoriesTitle}</h2>
+          <span className="tag" data-sanity={pageAttr('accessoriesTag')}>
+            {resolvedPage.accessoriesTag}
+          </span>
+          <h2 className="section-title" data-sanity={pageAttr('accessoriesTitle')}>
+            {resolvedPage.accessoriesTitle}
+          </h2>
           <div className="three-col">
             {resolvedPage.accessories.map((item, index) => (
               <div className="img-card" key={item.title} data-sanity={pageAttr(`accessories[${index}]`)}>
-                <img src={item.imageSrc} alt={item.imageAlt || item.title} style={{width: '100%', height: 200, objectFit: 'cover'}} data-sanity={pageAttr(`accessories[${index}].image`)} />
+                <img
+                  src={item.imageSrc}
+                  alt={item.imageAlt || item.title}
+                  style={{width: '100%', height: 200, objectFit: 'cover'}}
+                  data-sanity={pageAttr(`accessories[${index}].image`)}
+                />
                 <div className="img-card-body">
-                  <div className="img-card-title" data-sanity={pageAttr(`accessories[${index}].title`)}>{item.title}</div>
-                  <div className="img-card-desc" data-sanity={pageAttr(`accessories[${index}].description`)}>{item.description}</div>
+                  <div className="img-card-title" data-sanity={pageAttr(`accessories[${index}].title`)}>
+                    {item.title}
+                  </div>
+                  <div className="img-card-desc" data-sanity={pageAttr(`accessories[${index}].description`)}>
+                    {item.description}
+                  </div>
                 </div>
               </div>
             ))}
@@ -486,15 +723,82 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         </div>
       </section>
 
+      <section className="bg">
+        <div className="container">
+          <span className="tag" data-sanity={pageAttr('comfortTag')}>
+            {resolvedPage.comfortTag}
+          </span>
+          <h2 className="section-title" data-sanity={pageAttr('comfortTitle')}>
+            {resolvedPage.comfortTitle}
+          </h2>
+          <div className="two-col" style={{alignItems: 'start'}}>
+            <div>
+              <div className="check-list">
+                {resolvedPage.comfortItems.map((item, index) => (
+                  <div className="check-item" key={`${item.label}-${index}`} data-sanity={pageAttr(comfortItemPath(index))}>
+                    <CheckIcon />
+                    <span>
+                      <span data-sanity={pageAttr(`${comfortItemPath(index)}.label`)}>{item.label}</span>{' '}
+                      <span style={{marginLeft: 8}} data-sanity={pageAttr(`${comfortItemPath(index)}.type`)}>
+                        <TypeBadge type={item.type} />
+                      </span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem'}}>
+              {resolvedPage.comfortImages.map((image, index) => (
+                <img
+                  key={image.src}
+                  src={image.src}
+                  alt={image.alt}
+                  style={{
+                    borderRadius: 'var(--radius)',
+                    boxShadow: 'var(--shadow)',
+                    cursor: 'pointer',
+                    width: '100%',
+                    objectFit: 'contain',
+                    background: 'white',
+                    padding: '0.5rem',
+                    gridColumn: index === 0 ? 'span 2' : undefined,
+                  }}
+                  data-sanity={pageAttr(comfortImagePath(index))}
+                  onClick={() => setLightbox({images: resolvedPage.comfortImages.map((item) => item.src), index})}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="white">
         <div className="container">
-          <span className="tag" data-sanity={pageAttr('certificatesTag')}>{resolvedPage.certificatesTag}</span>
-          <h2 className="section-title" data-sanity={pageAttr('certificatesTitle')}>{resolvedPage.certificatesTitle}</h2>
+          <span className="tag" data-sanity={pageAttr('certificatesTag')}>
+            {resolvedPage.certificatesTag}
+          </span>
+          <h2 className="section-title" data-sanity={pageAttr('certificatesTitle')}>
+            {resolvedPage.certificatesTitle}
+          </h2>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', maxWidth: 600}}>
             {resolvedPage.certificates.map((item, index) => (
-              <div className="img-card" key={item.title} onClick={() => setLightbox({images: resolvedPage.certificates.map((cert) => cert.src), index})} data-sanity={pageAttr(`certificates[${index}]`)}>
-                <img src={item.src} alt={item.alt} style={{width: '100%', height: 220, objectFit: 'contain', padding: '1rem', background: 'white'}} data-sanity={pageAttr(`certificates[${index}].image`)} />
-                <div className="img-card-body"><div className="img-card-title" data-sanity={pageAttr(`certificates[${index}].title`)}>{item.title}</div></div>
+              <div
+                className="img-card"
+                key={item.title}
+                onClick={() => setLightbox({images: resolvedPage.certificates.map((cert) => cert.src), index})}
+                data-sanity={pageAttr(`certificates[${index}]`)}
+              >
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  style={{width: '100%', height: 220, objectFit: 'contain', padding: '1rem', background: 'white'}}
+                  data-sanity={pageAttr(`certificates[${index}].image`)}
+                />
+                <div className="img-card-body">
+                  <div className="img-card-title" data-sanity={pageAttr(`certificates[${index}].title`)}>
+                    {item.title}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -503,12 +807,23 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
 
       <section className="green-dark" id="galeria">
         <div className="container">
-          <span className="tag" data-sanity={pageAttr('galleryTag')}>{resolvedPage.galleryTag}</span>
-          <h2 className="section-title" data-sanity={pageAttr('galleryTitle')}>{resolvedPage.galleryTitle}</h2>
-          <p className="section-desc" style={{color: 'rgba(255,255,255,0.7)'}} data-sanity={pageAttr('galleryDescription')}>{resolvedPage.galleryDescription}</p>
+          <span className="tag" data-sanity={pageAttr('galleryTag')}>
+            {resolvedPage.galleryTag}
+          </span>
+          <h2 className="section-title" data-sanity={pageAttr('galleryTitle')}>
+            {resolvedPage.galleryTitle}
+          </h2>
+          <p className="section-desc" style={{color: 'rgba(255,255,255,0.7)'}} data-sanity={pageAttr('galleryDescription')}>
+            {resolvedPage.galleryDescription}
+          </p>
           <div className="gallery-grid-new">
             {resolvedPage.galleryImages.map((image, index) => (
-              <div className="gi-new" key={image.src} onClick={() => setLightbox({images: resolvedPage.galleryImages.map((item) => item.src), index})} data-sanity={pageAttr(`galleryImages[${index}]`)}>
+              <div
+                className="gi-new"
+                key={image.src}
+                onClick={() => setLightbox({images: resolvedPage.galleryImages.map((item) => item.src), index})}
+                data-sanity={pageAttr(`galleryImages[${index}]`)}
+              >
                 <img src={image.src} alt={image.alt} loading="lazy" data-sanity={pageAttr(`galleryImages[${index}]`)} />
                 <div className="gi-overlay" />
               </div>
@@ -519,8 +834,16 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
 
       <section style={{padding: '5rem 0', background: '#111111', overflow: 'hidden'}}>
         <div style={{maxWidth: 1180, margin: '0 auto', padding: '0 2rem 2rem'}}>
-          <span className="tag" style={{borderColor: 'rgba(255,255,255,0.3)', color: 'white', background: 'rgba(255,255,255,0.15)'}} data-sanity={pageAttr('videosTag')}>{resolvedPage.videosTag}</span>
-          <h2 className="section-title" style={{color: 'white'}} data-sanity={pageAttr('videosTitle')}>{resolvedPage.videosTitle}</h2>
+          <span
+            className="tag"
+            style={{borderColor: 'rgba(255,255,255,0.3)', color: 'white', background: 'rgba(255,255,255,0.15)'}}
+            data-sanity={pageAttr('videosTag')}
+          >
+            {resolvedPage.videosTag}
+          </span>
+          <h2 className="section-title" style={{color: 'white'}} data-sanity={pageAttr('videosTitle')}>
+            {resolvedPage.videosTitle}
+          </h2>
         </div>
         <VideoSlider videos={resolvedPage.videos} />
       </section>
@@ -533,10 +856,17 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               <p data-sanity={pageAttr('ctaText')}>{resolvedPage.ctaText}</p>
             </div>
             <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
-              <Link href={resolvedPage.ctaPrimaryHref} className="btn-primary" style={{background: 'white', color: 'var(--green-dark)'}} data-sanity={pageAttr('ctaPrimaryLabel')}>
+              <Link
+                href={resolvedPage.ctaPrimaryHref}
+                className="btn-primary"
+                style={{background: 'white', color: 'var(--green-dark)'}}
+                data-sanity={pageAttr('ctaPrimaryLabel')}
+              >
                 {resolvedPage.ctaPrimaryLabel}
               </Link>
-              <a href={resolvedPage.ctaSecondaryHref} className="btn-outline" data-sanity={pageAttr('ctaSecondaryLabel')}>{resolvedPage.ctaSecondaryLabel}</a>
+              <a href={resolvedPage.ctaSecondaryHref} className="btn-outline" data-sanity={pageAttr('ctaSecondaryLabel')}>
+                {resolvedPage.ctaSecondaryLabel}
+              </a>
             </div>
           </div>
         </div>

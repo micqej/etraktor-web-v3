@@ -252,6 +252,12 @@ async function syncProductsPage(id: string) {
     ),
   )
 
+  const comfortImages = await Promise.all(
+    (current.comfortImages || []).map((item: any, index: number) =>
+      withImageField(item, defaultProductsPage.comfortImages[index]?.src || ''),
+    ),
+  )
+
   await client
     .patch(id)
     .set({
@@ -263,6 +269,7 @@ async function syncProductsPage(id: string) {
       accessories,
       certificates,
       galleryImages,
+      comfortImages,
     })
     .commit()
 }

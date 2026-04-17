@@ -5,6 +5,7 @@ import type {
   SimplePageContent,
 } from '@/sanity/lib/content'
 import {urlForImage} from '@/sanity/lib/image'
+import {normalizeYouTubeId, uniqueYouTubeVideos} from '@/sanity/lib/youtube'
 
 const resolveImageSource = (image: unknown) => {
   if (!image || typeof image !== 'object') return image
@@ -185,6 +186,14 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
           }))
         : initial.heroStats,
     introParagraphs: data.introParagraphs?.length ? data.introParagraphs : initial.introParagraphs,
+    introStats:
+      data.introStats?.length
+        ? data.introStats.map((item: any, index: number) => ({
+            _key: item._key,
+            value: item.value || initial.introStats[index]?.value || '',
+            label: item.label || initial.introStats[index]?.label || '',
+          }))
+        : initial.introStats,
     productCatalog:
       data.productCatalog?.map((item: any, index: number) => ({
         _key: item._key,
@@ -207,14 +216,15 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
             url: doc.file?.asset?.url || initial.productCatalog[index]?.documents[docIndex]?.url || '',
           })) || initial.productCatalog[index]?.documents || [],
         videosTitle: item.videosTitle || initial.productCatalog[index]?.videosTitle || 'Videá',
-        videos:
+        videos: uniqueYouTubeVideos(
           item.videos?.length
             ? item.videos.map((video: any) => ({
                 _key: video._key,
-                youtubeId: video.youtubeId,
+                youtubeId: normalizeYouTubeId(video.youtubeId),
                 label: video.label,
               }))
             : initial.productCatalog[index]?.videos || [],
+        ),
         galleryTitle: item.galleryTitle || initial.productCatalog[index]?.galleryTitle || 'Galéria',
         galleryImages:
           item.galleryImages?.map((image: any, imageIndex: number) => ({
@@ -269,6 +279,29 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
         src: assetUrl(item, initial.galleryImages[index]?.src || '/images/elektricky-malotraktor.jpg'),
         alt: item.alt || initial.galleryImages[index]?.alt || `Galéria ${index + 1}`,
       })) || initial.galleryImages,
-    videos: data.videos?.length ? data.videos : initial.videos,
+    comfortTag: data.comfortTag || initial.comfortTag,
+    comfortTitle: data.comfortTitle || initial.comfortTitle,
+    comfortItems:
+      data.comfortItems?.length
+        ? data.comfortItems.map((item: any, index: number) => ({
+            _key: item._key,
+            label: item.label || initial.comfortItems[index]?.label || '',
+            type: item.type || initial.comfortItems[index]?.type || 'štandard',
+          }))
+        : initial.comfortItems,
+    comfortImages:
+      data.comfortImages?.map((item: any, index: number) => ({
+        _key: item._key,
+        src: assetUrl(item.image, initial.comfortImages[index]?.src || '/images/prislusenstvo2.png'),
+        alt: item.alt || initial.comfortImages[index]?.alt || `Výbava ${index + 1}`,
+      })) || initial.comfortImages,
+    videos: uniqueYouTubeVideos(
+      data.videos?.length
+        ? data.videos.map((video: any) => ({
+            youtubeId: normalizeYouTubeId(video.youtubeId),
+            label: video.label,
+          }))
+        : initial.videos,
+    ),
   }
 }

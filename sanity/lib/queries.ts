@@ -161,6 +161,7 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
   introTag,
   introTitle,
   introParagraphs,
+  introStats,
   introImage,
   catalogTag,
   catalogTitle,
@@ -257,6 +258,18 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
   galleryImages[]{
     alt,
     asset->
+  },
+  comfortTag,
+  comfortTitle,
+  comfortItems[]{
+    _key,
+    label,
+    type
+  },
+  comfortImages[]{
+    _key,
+    alt,
+    image
   },
   videosTag,
   videosTitle,

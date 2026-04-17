@@ -1,6 +1,6 @@
 import {createClient} from 'next-sanity'
 
-import {apiVersion, dataset, projectId, studioUrl} from '@/sanity/env'
+import {apiVersion, dataset, projectId, studioUrlAbsolute} from '@/sanity/env'
 import {token} from '@/sanity/lib/token'
 
 export function getSanityClient(preview = false) {
@@ -15,7 +15,8 @@ export function getSanityClient(preview = false) {
     useCdn: false,
     perspective: useDrafts ? 'previewDrafts' : 'published',
     stega: {
-      studioUrl,
+      // Use an absolute Studio URL so Visual Editing links stay correct on nested routes and Vercel aliases.
+      studioUrl: studioUrlAbsolute,
     },
     token: useDrafts ? token : undefined,
   })

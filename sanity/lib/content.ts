@@ -5,6 +5,7 @@ import {groq} from 'next-sanity'
 import {getSanityClient} from '@/sanity/lib/client'
 import {urlForImage} from '@/sanity/lib/image'
 import {token} from '@/sanity/lib/token'
+import {normalizeYouTubeId, uniqueYouTubeVideos} from '@/sanity/lib/youtube'
 
 type SanityImageLike = unknown
 
@@ -160,10 +161,11 @@ export type ContactPageContent = {
   inquiryOptions: string[]
 }
 
-export type ProductStat = {value: string; label: string}
+export type ProductStat = {_key?: string; value: string; label: string}
 export type ProductSpec = {parameter: string; valueA?: string; valueB?: string; value?: string}
 export type ProductEquipmentGroup = {title: string; items: {label: string; type: string}[]}
 export type ProductDownload = {_key?: string; label: string; url: string}
+export type ProductComfortItem = {_key?: string; label: string; type: string}
 export type ProductRangeCard = {
   title: string
   badge: string
@@ -205,6 +207,7 @@ export type ProductContent = {
   introTag: string
   introTitle: string
   introParagraphs: string[]
+  introStats: ProductStat[]
   introImageSrc: string
   catalogTag: string
   catalogTitle: string
@@ -240,6 +243,10 @@ export type ProductContent = {
   galleryTitle: string
   galleryDescription: string
   galleryImages: {src: string; alt: string}[]
+  comfortTag: string
+  comfortTitle: string
+  comfortItems: ProductComfortItem[]
+  comfortImages: {_key?: string; src: string; alt: string}[]
   videosTag: string
   videosTitle: string
   videos: {youtubeId: string; label: string}[]
@@ -425,6 +432,7 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
   introTag,
   introTitle,
   introParagraphs,
+  introStats,
   introImage,
   catalogTag,
   catalogTitle,
@@ -521,6 +529,17 @@ export const productsPageQuery = groq`*[_type == "productsPage"][0]{
   galleryTitle,
   galleryDescription,
   galleryImages[]{
+    alt,
+    image
+  },
+  comfortTag,
+  comfortTitle,
+  comfortItems[]{
+    _key,
+    label,
+    type
+  },
+  comfortImages[]{
     alt,
     image
   },
@@ -912,11 +931,17 @@ export const defaultProductsPage: ProductContent = {
     'Elektromotor má niekoľko súčastí, pri činnosti nedochádza k treniu, takže jeho životnosť je bez ohľadu na ložiská takmer neobmedzená.',
     'Samotná jazda na elektrickom traktore je veľmi jednoduchá. Maximálny záberový moment od nulových otáčkach je pôžitkom pri jazde. Brzdenie je s 90% postačujúce elektromotorom, ktorý spätne dobíja akumulátory (rekuperuje).',
   ],
+  introStats: [
+    {value: '90%', label: 'Účinnosť'},
+    {value: '0', label: 'Emisie'},
+    {value: '66 dBA', label: 'Hluk'},
+    {value: '~∞', label: 'Životnosť'},
+  ],
   introImageSrc: '/images/elektricky-malotraktor.jpg',
-  catalogTag: 'Vlastné produkty',
-  catalogTitle: 'Produkty a príslušenstvo',
+  catalogTag: 'Produkty a dokumenty',
+  catalogTitle: 'ET 2000, ET 3000 a ďalšie produkty',
   catalogDescription:
-    'Začiatok všeobecne o elektrickom malotraktore a následne samostatné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty.',
+    'Samostatné editovateľné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty. V každom bloku môže klient meniť hlavný obrázok, text, dokumenty na stiahnutie a video odkazy.',
   productCatalog: [
     {
       badge: 'Elektrický malotraktor',
@@ -927,9 +952,9 @@ export const defaultProductsPage: ProductContent = {
       imageSrc: '/images/elektricky-malotraktor.jpg',
       imageAlt: 'Elektrický malotraktor ET 2000',
       highlights: [
-        'Obrázok a popis editovateľný v Sanity',
+        'Samostatný blok s vlastným obrázkom a textom',
         'Dokumenty na stiahnutie podľa typu produktu',
-        'Samostatná galéria aj videá',
+        'Video odkazy a doplnkové fotografie editovateľné v Sanity',
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
       documents: [
@@ -967,7 +992,7 @@ export const defaultProductsPage: ProductContent = {
       highlights: [
         'Oddelené parametre od ET 2000',
         'Samostatné dokumenty na stiahnutie',
-        'Možnosť dopĺňať ďalšie videá a obrázky',
+        'Možnosť dopĺňať vlastné video odkazy a obrázky',
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
       documents: [
@@ -998,7 +1023,7 @@ export const defaultProductsPage: ProductContent = {
       imageAlt: 'Príslušenstvo k elektrickému malotraktoru',
       highlights: [
         'Predná radlica, zadný záves a ďalšie doplnky',
-        'Samostatné dokumenty a videá',
+        'Samostatné dokumenty a video odkazy',
         'Možnosť pridať nový produkt XY ako ďalší blok',
       ],
       documentsTitle: 'Dokumenty na stiahnutie',
@@ -1166,6 +1191,23 @@ export const defaultProductsPage: ProductContent = {
       imageSrc: '/images/zadnyzaves.png',
       imageAlt: 'Zadný záves',
     },
+  ],
+  comfortTag: 'Výbava a kabína',
+  comfortTitle: 'Komfort elektrického malotraktora',
+  comfortItems: [
+    {label: 'Odprúžené sedadlo s opierkami', type: 'štandard'},
+    {label: 'Spätné zrkadlá', type: 'štandard'},
+    {label: 'Informačný display', type: 'štandard'},
+    {label: 'Rádio FM/MP3 + 2 reproduktory', type: 'opcia'},
+    {label: 'Kabína so stieračom a ostrekovačom', type: 'opcia'},
+    {label: 'Maják', type: 'opcia'},
+    {label: 'Ťažná guľa 50 mm', type: 'opcia'},
+    {label: 'Hydraulické čerpadlo 380 bar / 12 cm³', type: 'opcia'},
+  ],
+  comfortImages: [
+    {src: '/images/prislusenstvo2.png', alt: 'Výbava 1'},
+    {src: '/images/prislusenstvo3.png', alt: 'Výbava 2'},
+    {src: '/images/prislusenstvo4.png', alt: 'Výbava 3'},
   ],
   certificatesTag: 'Normy a certifikácia',
   certificatesTitle: 'Certifikované zariadenie',
@@ -1433,6 +1475,7 @@ export function toProductsPageDocument(page: ProductContent) {
     introTag: page.introTag,
     introTitle: page.introTitle,
     introParagraphs: page.introParagraphs,
+    introStats: page.introStats.map((item, index) => withKey(item, 'intro-stat', index)),
     catalogTag: page.catalogTag,
     catalogTitle: page.catalogTitle,
     catalogDescription: page.catalogDescription,
@@ -1529,6 +1572,10 @@ export function toProductsPageDocument(page: ProductContent) {
     galleryTitle: page.galleryTitle,
     galleryDescription: page.galleryDescription,
     galleryImages: page.galleryImages.map((image, index) => withKey({alt: image.alt}, 'gallery-image', index)),
+    comfortTag: page.comfortTag,
+    comfortTitle: page.comfortTitle,
+    comfortItems: page.comfortItems.map((item, index) => withKey(item, 'comfort-item', index)),
+    comfortImages: page.comfortImages.map((image, index) => withKey({alt: image.alt}, 'comfort-image', index)),
     videosTag: page.videosTag,
     videosTitle: page.videosTitle,
     videos: page.videos.map((item, index) => withKey(item, 'video', index)),
@@ -1604,6 +1651,14 @@ export async function getProductsPage(): Promise<ProductContent> {
     introImageSrc: assetUrl(data.introImage, defaultProductsPage.introImageSrc),
     heroStats: data.heroStats?.length ? data.heroStats : defaultProductsPage.heroStats,
     introParagraphs: data.introParagraphs?.length ? data.introParagraphs : defaultProductsPage.introParagraphs,
+    introStats:
+      data.introStats?.length
+        ? data.introStats.map((item: any, index: number) => ({
+            _key: item._key,
+            value: item.value || defaultProductsPage.introStats[index]?.value || '',
+            label: item.label || defaultProductsPage.introStats[index]?.label || '',
+          }))
+        : defaultProductsPage.introStats,
     productCatalog:
       data.productCatalog?.map((item: any, index: number) => ({
         _key: item._key,
@@ -1627,14 +1682,15 @@ export async function getProductsPage(): Promise<ProductContent> {
             url: doc.file?.asset?.url || defaultProductsPage.productCatalog[index]?.documents[docIndex]?.url || '',
           })) || defaultProductsPage.productCatalog[index]?.documents || [],
         videosTitle: item.videosTitle || defaultProductsPage.productCatalog[index]?.videosTitle || 'Videá',
-        videos:
+        videos: uniqueYouTubeVideos(
           item.videos?.length
             ? item.videos.map((video: any) => ({
                 _key: video._key,
-                youtubeId: video.youtubeId,
+                youtubeId: normalizeYouTubeId(video.youtubeId),
                 label: video.label,
               }))
             : defaultProductsPage.productCatalog[index]?.videos || [],
+        ),
         galleryTitle: item.galleryTitle || defaultProductsPage.productCatalog[index]?.galleryTitle || 'Galéria',
         galleryImages:
           item.galleryImages?.map((image: any, imageIndex: number) => ({
@@ -1695,6 +1751,29 @@ export async function getProductsPage(): Promise<ProductContent> {
         src: assetUrl(item.image, defaultProductsPage.galleryImages[index]?.src || '/images/elektricky-malotraktor.jpg'),
         alt: item.alt || defaultProductsPage.galleryImages[index]?.alt || `Galéria ${index + 1}`,
       })) || defaultProductsPage.galleryImages,
-    videos: data.videos?.length ? data.videos : defaultProductsPage.videos,
+    comfortTag: data.comfortTag || defaultProductsPage.comfortTag,
+    comfortTitle: data.comfortTitle || defaultProductsPage.comfortTitle,
+    comfortItems:
+      data.comfortItems?.length
+        ? data.comfortItems.map((item: any, index: number) => ({
+            _key: item._key,
+            label: item.label || defaultProductsPage.comfortItems[index]?.label || '',
+            type: item.type || defaultProductsPage.comfortItems[index]?.type || 'štandard',
+          }))
+        : defaultProductsPage.comfortItems,
+    comfortImages:
+      data.comfortImages?.map((item: any, index: number) => ({
+        _key: item._key,
+        src: assetUrl(item.image, defaultProductsPage.comfortImages[index]?.src || '/images/prislusenstvo2.png'),
+        alt: item.alt || defaultProductsPage.comfortImages[index]?.alt || `Výbava ${index + 1}`,
+      })) || defaultProductsPage.comfortImages,
+    videos: uniqueYouTubeVideos(
+      data.videos?.length
+        ? data.videos.map((video: any) => ({
+            youtubeId: normalizeYouTubeId(video.youtubeId),
+            label: video.label,
+          }))
+        : defaultProductsPage.videos,
+    ),
   }
 }

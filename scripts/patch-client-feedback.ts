@@ -1,6 +1,7 @@
 import {createClient} from 'next-sanity'
 
 import {defaultProductsPage} from '@/sanity/lib/content'
+import {normalizeYouTubeId, uniqueYouTubeVideos} from '@/sanity/lib/youtube'
 
 const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || 'eypnbw53'
@@ -141,12 +142,25 @@ async function patchProductsPage() {
 
   const productCatalog = current.productCatalog.map((item: ExistingDoc, index: number) => {
     const labels = labelSets[item.title]
-    if (!labels) return item
+    const sanitizedVideos = uniqueYouTubeVideos(
+      (item.videos || []).map((video: ExistingDoc) => ({
+        ...video,
+        youtubeId: normalizeYouTubeId(video.youtubeId),
+      })),
+    )
+
+    if (!labels) {
+      return {
+        ...item,
+        videos: sanitizedVideos,
+      }
+    }
 
     return {
       ...item,
       documentsTitle: item.documentsTitle || 'Dokumenty na stiahnutie',
       documents: mergeDocumentLabels(item.documents, labels, `product-doc-${index + 1}`),
+      videos: sanitizedVideos,
     }
   })
 
@@ -161,15 +175,39 @@ async function patchProductsPage() {
     }
   })
 
+  const comfortImages = defaultProductsPage.comfortImages.map((image, index) => {
+    const currentImage = current.comfortImages?.[index]
+    const fallbackImage = current.galleryImages?.[index + 6]
+
+    return {
+      _key: currentImage?._key || `comfort-image-${index + 1}`,
+      alt: image.alt,
+      ...(currentImage?.image
+        ? {image: currentImage.image}
+        : fallbackImage?.asset
+          ? {image: fallbackImage}
+          : {}),
+    }
+  })
+
   await client
     .patch('productsPage')
     .set({
       introParagraphs: defaultProductsPage.introParagraphs,
-      catalogTag: 'Vlastné produkty',
-      catalogTitle: 'Produkty a príslušenstvo',
+      introStats: defaultProductsPage.introStats,
+      catalogTag: defaultProductsPage.catalogTag,
+      catalogTitle: defaultProductsPage.catalogTitle,
       catalogDescription:
-        'Začiatok všeobecne o elektrickom malotraktore a následne samostatné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty.',
+        defaultProductsPage.catalogDescription,
       productCatalog,
+      comfortTag: defaultProductsPage.comfortTag,
+      comfortTitle: defaultProductsPage.comfortTitle,
+      comfortItems: defaultProductsPage.comfortItems.map((item, index) => ({
+        _key: current.comfortItems?.[index]?._key || `comfort-item-${index + 1}`,
+        label: item.label,
+        type: item.type,
+      })),
+      comfortImages,
       galleryImages,
     })
     .commit()
@@ -178,14 +216,24 @@ async function patchProductsPage() {
     .patch('drafts.productsPage')
     .set({
       introParagraphs: defaultProductsPage.introParagraphs,
-      catalogTag: 'Vlastné produkty',
-      catalogTitle: 'Produkty a príslušenstvo',
+      introStats: defaultProductsPage.introStats,
+      catalogTag: defaultProductsPage.catalogTag,
+      catalogTitle: defaultProductsPage.catalogTitle,
       catalogDescription:
-        'Začiatok všeobecne o elektrickom malotraktore a následne samostatné bloky pre ET 2000, ET 3000, príslušenstvo a ďalšie produkty.',
+        defaultProductsPage.catalogDescription,
       productCatalog,
+      comfortTag: defaultProductsPage.comfortTag,
+      comfortTitle: defaultProductsPage.comfortTitle,
+      comfortItems: defaultProductsPage.comfortItems.map((item, index) => ({
+        _key: current.comfortItems?.[index]?._key || `comfort-item-${index + 1}`,
+        label: item.label,
+        type: item.type,
+      })),
+      comfortImages,
       galleryImages,
     })
     .commit()
+    .catch(() => undefined)
 }
 
 async function run() {

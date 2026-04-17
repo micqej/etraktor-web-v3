@@ -7,8 +7,11 @@ export const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || 'eypnbw53'
 
 export const studioUrl = '/admin'
+export const studioUrlFallback = '/studio'
 
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.SANITY_STUDIO_PREVIEW_URL ||
   'https://etraktor-web-v3.vercel.app'
+
+export const studioUrlAbsolute = new URL(studioUrl, siteUrl).toString()

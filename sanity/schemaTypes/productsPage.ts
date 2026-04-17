@@ -115,6 +115,7 @@ export const productsPageType = defineType({
     {name: 'benefits', title: 'Výhody'},
     {name: 'dimensions', title: 'Rozmery'},
     {name: 'gallery', title: 'Galéria'},
+    {name: 'comfort', title: 'Komfort'},
     {name: 'video', title: 'Videá'},
     {name: 'specs', title: 'Parametre'},
     {name: 'cta', title: 'CTA'},
@@ -162,6 +163,23 @@ export const productsPageType = defineType({
       of: [defineArrayMember({type: 'text'})],
     }),
     defineField({
+      name: 'introStats',
+      title: 'Karty nad úvodným obrázkom',
+      type: 'array',
+      group: 'intro',
+      description: 'Krátke štatistiky ako 90% účinnosť, 0 emisie alebo ~∞ životnosť.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'value', title: 'Hodnota', type: 'string'}),
+            defineField({name: 'label', title: 'Popis', type: 'string'}),
+          ],
+          preview: {select: {title: 'value', subtitle: 'label'}},
+        }),
+      ],
+    }),
+    defineField({
       name: 'introImage',
       title: 'Úvodný obrázok',
       type: 'image',
@@ -177,7 +195,7 @@ export const productsPageType = defineType({
       type: 'array',
       group: 'catalog',
       description:
-        'Samostatné bloky pre ET 2000, ET 3000, príslušenstvo alebo nový produkt. Každý blok má vlastný obrázok, text, dokumenty, videá, galériu a parametre.',
+        'Samostatné bloky pre ET 2000, ET 3000, príslušenstvo alebo nový produkt. Každý blok má vlastný obrázok, text, dokumenty na stiahnutie, video odkazy a doplnkové obrázky.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -420,6 +438,55 @@ export const productsPageType = defineType({
     defineField({name: 'galleryTag', title: 'Tag fotogalérie', type: 'string', group: 'gallery'}),
     defineField({name: 'galleryTitle', title: 'Nadpis fotogalérie', type: 'string', group: 'gallery'}),
     defineField({name: 'galleryDescription', title: 'Popis fotogalérie', type: 'text', rows: 3, group: 'gallery'}),
+    defineField({name: 'comfortTag', title: 'Tag komfortu', type: 'string', group: 'comfort'}),
+    defineField({name: 'comfortTitle', title: 'Nadpis komfortu', type: 'string', group: 'comfort'}),
+    defineField({
+      name: 'comfortItems',
+      title: 'Položky komfortu a výbavy',
+      type: 'array',
+      group: 'comfort',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'label', title: 'Položka', type: 'string'}),
+            defineField({
+              name: 'type',
+              title: 'Typ',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Štandard', value: 'štandard'},
+                  {title: 'Opcia', value: 'opcia'},
+                ],
+              },
+            }),
+          ],
+          preview: {select: {title: 'label', subtitle: 'type'}},
+        }),
+      ],
+    }),
+    defineField({
+      name: 'comfortImages',
+      title: 'Obrázky komfortu',
+      type: 'array',
+      group: 'comfort',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'alt', title: 'Alt text', type: 'string'}),
+            defineField({
+              name: 'image',
+              title: 'Obrázok',
+              type: 'image',
+              options: {hotspot: true},
+            }),
+          ],
+          preview: {select: {title: 'alt', media: 'image'}},
+        }),
+      ],
+    }),
     defineField({
       name: 'basicSpecs',
       title: 'Základné parametre',
