@@ -1,5 +1,21 @@
-import { LankwitzerPrototype } from "@/components/lankwitzer-prototype";
+import {
+  AboutBlock,
+  ContactBlock,
+  HeroBlock,
+  ProductsBlock,
+  SegmentGridBlock,
+  UsefulBlock,
+} from "@/components/page-blocks";
 
 export default function Home() {
-  return <LankwitzerPrototype />;
+  return (
+    <>
+      <HeroBlock />
+      <SegmentGridBlock />
+      <ProductsBlock />
+      <UsefulBlock />
+      <AboutBlock />
+      <ContactBlock />
+    </>
+  );
 }
