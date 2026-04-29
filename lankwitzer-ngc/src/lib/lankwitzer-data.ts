@@ -30,7 +30,7 @@ export const segments: Segment[] = [
   {
     title: "Automotive",
     slug: "automotive",
-    image: "https://lankwitzer.sk/wp-content/uploads/2019/08/Automotive-main-2-900x601.jpg",
+    image: "/lankwitzer-pl-assets/33e886_dd6d0e69871b4628a0557b405457387c~mv2.jpg",
     pdf: "/client-files/ACE  EN.pdf",
     text: "Riešenia pre automotive výrobu, priemyselné procesy a náročnú povrchovú kvalitu.",
   },
