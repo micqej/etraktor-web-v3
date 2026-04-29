@@ -5,7 +5,7 @@ import { aboutBullets, contactDetails, productCategories, removedItems, segments
 
 export function HeroBlock() {
   return (
-    <section className="hero-dark">
+    <section className="hero-dark" id="top">
       <div className="shell hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">Komplexné riešenia povrchových úprav</p>
@@ -46,7 +46,7 @@ export function HeroBlock() {
 
 export function SegmentGridBlock() {
   return (
-    <section className="page-section">
+    <section className="page-section" id="segmenty">
       <div className="shell">
         <div className="section-heading">
           <span>Segmenty</span>
@@ -78,7 +78,7 @@ export function SegmentGridBlock() {
 
 export function ProductsBlock() {
   return (
-    <section className="page-section section-alt">
+    <section className="page-section section-alt" id="produkty">
       <div className="shell">
         <div className="section-heading">
           <span>Produkty</span>
@@ -100,7 +100,7 @@ export function ProductsBlock() {
 
 export function UsefulBlock() {
   return (
-    <section className="page-section">
+    <section className="page-section" id="uzitocne">
       <div className="shell">
         <div className="section-heading">
           <span>Užitočné</span>
@@ -132,7 +132,7 @@ export function UsefulBlock() {
 
 export function AboutBlock() {
   return (
-    <section className="page-section section-alt">
+    <section className="page-section section-alt" id="o-nas">
       <div className="shell about-grid">
         <div className="section-heading left">
           <span>O nás</span>
@@ -154,7 +154,7 @@ export function AboutBlock() {
 
 export function ContactBlock() {
   return (
-    <section className="page-section">
+    <section className="page-section" id="kontakt">
       <div className="shell">
         <div className="section-heading">
           <span>Kontakt</span>
