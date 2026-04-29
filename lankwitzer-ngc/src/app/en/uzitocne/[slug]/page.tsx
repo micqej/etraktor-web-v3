@@ -9,7 +9,7 @@ export function generateStaticParams() {
     .map((item) => ({ slug: item.slug }));
 }
 
-export default async function UsefulDetailPage({
+export default async function UsefulEnDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -19,5 +19,5 @@ export default async function UsefulDetailPage({
 
   if (!item || item.slug === "kalkulacia-spotrieb") notFound();
 
-  return <UsefulDetailContent item={item} locale="sk" />;
+  return <UsefulDetailContent item={item} locale="en" />;
 }

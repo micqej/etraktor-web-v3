@@ -1,146 +1,148 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { aboutBullets, contactDetails, productCategories, removedItems, segments, usefulItems } from "@/lib/lankwitzer-data";
+import {
+  aboutBullets,
+  contactDetails,
+  getLocalePath,
+  productCategories,
+  removedItems,
+  segments,
+  siteCopy,
+  usefulItems,
+  type Locale,
+} from "@/lib/lankwitzer-data";
 
-export function HeroBlock() {
+export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
+  const copy = siteCopy[locale];
+
   return (
-    <section className="hero-dark" id="top">
-      <div className="shell hero-grid">
-        <div className="hero-copy">
-          <p className="eyebrow">Komplexné riešenia povrchových úprav</p>
-          <h1>Tmavší, ostrejší a technickejší smer pre nový Lankwitzer web</h1>
-          <p className="hero-lead">
-            Web posúvam bližšie k charakteru značky: hranaté bloky, silný kontrast, farby z loga a technickejší font namiesto jemného korporátneho looku.
-          </p>
-          <p className="hero-body">
-            Zároveň je to už rozbité na samostatné podstránky, nie len jednu prezentáciu. Produkty a užitočné majú dropdown menu a kalkulačka žije na vlastnej route.
-          </p>
-          <div className="hero-actions">
-            <Link href="/produkty" className="button button-primary">
-              Produkty
-            </Link>
-            <Link href="/uzitocne/kalkulacia-spotrieb" className="button button-secondary">
-              Kalkulácia spotrieb
-            </Link>
+    <>
+      <section className="hero-dark" id="top">
+        <div className="shell hero-grid">
+          <div className="hero-copy">
+            <p className="eyebrow">{copy.heroEyebrow}</p>
+            <h1>{copy.heroTitle}</h1>
+            <p className="hero-lead">{copy.heroLead}</p>
+            <p className="hero-body">{copy.heroBody}</p>
+            <div className="hero-actions">
+              <Link href={copy.productsHref} className="button button-primary">
+                {copy.heroPrimary}
+              </Link>
+              <Link href={copy.calculatorHref} className="button button-secondary">
+                {copy.heroSecondary}
+              </Link>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="hero-frame">
+              <Image
+                src="/site-assets/Produkty-2.jpg"
+                alt="Lankwitzer products"
+                fill
+                sizes="(max-width: 1000px) 100vw, 45vw"
+              />
+            </div>
+            <div className="hero-panel">
+              <strong>{copy.heroPanelTitle}</strong>
+              <span>{copy.heroPanelText}</span>
+            </div>
           </div>
         </div>
-        <div className="hero-visual">
-          <div className="hero-frame">
-            <Image
-              src="https://lankwitzer.sk/wp-content/uploads/2019/08/Produkty-2.jpg"
-              alt="Lankwitzer products"
-              fill
-              sizes="(max-width: 1000px) 100vw, 45vw"
-            />
+      </section>
+
+      <section className="page-section" id="segmenty">
+        <div className="shell">
+          <div className="section-heading">
+            <span>{copy.segmentsTitle}</span>
+            <h2>{copy.segmentsHeading}</h2>
+            <p>{copy.segmentsText}</p>
           </div>
-          <div className="hero-panel">
-            <strong>Čo zostáva</strong>
-            <span>Segmenty, produkty, užitočné, kontakt a upravené O nás.</span>
+          <div className="card-grid">
+            {segments.map((segment) => (
+              <article key={segment.slug} className="feature-card">
+                <div className="media-wrap">
+                  <Image src={segment.image} alt={segment.title[locale]} fill sizes="(max-width: 860px) 100vw, 33vw" />
+                </div>
+                <div className="card-body">
+                  <h3>{segment.title[locale]}</h3>
+                  <p>{segment.text[locale]}</p>
+                  <a href={segment.pdf} target="_blank" rel="noreferrer" className="text-link">
+                    PDF
+                  </a>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-export function SegmentGridBlock() {
-  return (
-    <section className="page-section" id="segmenty">
-      <div className="shell">
-        <div className="section-heading">
-          <span>Segmenty</span>
-          <h2>Šesť nosných segmentov na hlavnej stránke</h2>
-          <p>
-            Držím sa klientského dokumentu: Železnice, Automotive, ACE, Kontajnery a oceľové konštrukcie, Obaly a plasty a nový Betón.
-          </p>
-        </div>
-        <div className="card-grid">
-          {segments.map((segment) => (
-            <article key={segment.slug} className="feature-card">
-              <div className="media-wrap">
-                <Image src={segment.image} alt={segment.title} fill sizes="(max-width: 860px) 100vw, 33vw" />
-              </div>
-              <div className="card-body">
-                <h3>{segment.title}</h3>
-                <p>{segment.text}</p>
-                <a href={segment.pdf} target="_blank" rel="noreferrer" className="text-link">
-                  Otvoriť PDF
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function ProductsBlock() {
-  return (
-    <section className="page-section section-alt" id="produkty">
-      <div className="shell">
-        <div className="section-heading">
-          <span>Produkty</span>
-          <h2>Produktové podskupiny ako vlastné podstránky</h2>
-          <p>Na ďalší krok dávajú najväčší zmysel detailné podstránky so silným CTA, technickými PDF a obchodným textom.</p>
-        </div>
-        <div className="card-grid compact">
-          {productCategories.map((item) => (
-            <Link key={item.slug} href={`/produkty/${item.slug}`} className="info-tile">
-              <strong>{item.title}</strong>
-              <p>{item.text}</p>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function UsefulBlock() {
-  return (
-    <section className="page-section" id="uzitocne">
-      <div className="shell">
-        <div className="section-heading">
-          <span>Užitočné</span>
-          <h2>Technické podklady, ktoré sa majú zachovať</h2>
-          <p>Kalkulačka, lesk náterov, vzorkovník RAL a korózne systémy ISO ostávajú. Prevodníky a certifikáty sú pripravené na vyradenie.</p>
-        </div>
-        <div className="two-column-grid">
-          <div className="stack-list">
-            {usefulItems.map((item) => (
-              <Link key={item.slug} href={`/uzitocne/${item.slug}`} className="line-card">
-                <strong>{item.title}</strong>
-                <p>{item.text}</p>
+      <section className="page-section section-alt" id="produkty">
+        <div className="shell">
+          <div className="section-heading">
+            <span>{copy.productsTitle}</span>
+            <h2>{copy.productsHeading}</h2>
+            <p>{copy.productsText}</p>
+          </div>
+          <div className="card-grid compact">
+            {productCategories.map((item) => (
+              <Link key={item.slug} href={getLocalePath(locale, `/produkty/${item.slug}`)} className="info-tile">
+                <strong>{item.title[locale]}</strong>
+                <p>{item.summary[locale]}</p>
               </Link>
             ))}
           </div>
-          <div className="stack-list muted">
-            {removedItems.map((item) => (
-              <div key={item.slug} className="line-card line-card-off">
-                <strong>{item.title}</strong>
-                <p>{item.text}</p>
-              </div>
-            ))}
+        </div>
+      </section>
+
+      <section className="page-section" id="uzitocne">
+        <div className="shell">
+          <div className="section-heading">
+            <span>{copy.usefulTitle}</span>
+            <h2>{copy.usefulHeading}</h2>
+            <p>{copy.usefulText}</p>
+          </div>
+          <div className="two-column-grid">
+            <div className="stack-list">
+              {usefulItems.map((item) => (
+                <Link key={item.slug} href={getLocalePath(locale, `/uzitocne/${item.slug}`)} className="line-card">
+                  <strong>{item.title[locale]}</strong>
+                  <p>{item.summary[locale]}</p>
+                </Link>
+              ))}
+            </div>
+            <div className="stack-list muted">
+              {removedItems.map((item) => (
+                <div key={item.slug} className="line-card line-card-off">
+                  <strong>{item.title[locale]}</strong>
+                  <p>{item.summary[locale]}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <AboutBlock locale={locale} />
+      <ContactBlock locale={locale} />
+    </>
   );
 }
 
-export function AboutBlock() {
+export function AboutBlock({ locale = "sk" }: { locale?: Locale }) {
+  const copy = siteCopy[locale];
+
   return (
     <section className="page-section section-alt" id="o-nas">
       <div className="shell about-grid">
         <div className="section-heading left">
-          <span>O nás</span>
-          <h2>Najsilnejšia obchodná časť má byť vo vnútri webu viac viditeľná</h2>
-          <p>Laboratórium už nejde ako samostatná stránka. O to viac treba na webe zvýrazniť, čo ponúkajú a v čom sú dobrí.</p>
+          <span>{copy.aboutTitle}</span>
+          <h1>{copy.aboutHeading}</h1>
+          <p>{copy.aboutText}</p>
         </div>
         <div className="bullet-panel">
-          {aboutBullets.map((item) => (
+          {aboutBullets[locale].map((item) => (
             <div key={item} className="bullet-row">
               <i />
               <p>{item}</p>
@@ -152,14 +154,16 @@ export function AboutBlock() {
   );
 }
 
-export function ContactBlock() {
+export function ContactBlock({ locale = "sk" }: { locale?: Locale }) {
+  const copy = siteCopy[locale];
+
   return (
     <section className="page-section" id="kontakt">
       <div className="shell">
         <div className="section-heading">
-          <span>Kontakt</span>
-          <h2>Jednoduchá, praktická, obchodná kontaktná stránka</h2>
-          <p>Tu sa v ostrej verzii oplatí doplniť formulár, mapu a kontaktné osoby. Základné firemné údaje však majú byť okamžite viditeľné.</p>
+          <span>{copy.contactTitle}</span>
+          <h1>{copy.contactHeading}</h1>
+          <p>{copy.contactText}</p>
         </div>
         <div className="contact-grid">
           <div className="contact-panel">
@@ -174,6 +178,15 @@ export function ContactBlock() {
             <strong>IČO {contactDetails.ico}</strong>
             <p>IČ DPH: {contactDetails.icDph}</p>
           </div>
+        </div>
+        <div className="contact-cta">
+          <div>
+            <strong>{copy.contactCtaTitle}</strong>
+            <p>{copy.contactCtaText}</p>
+          </div>
+          <a href={`mailto:${contactDetails.email}`} className="button button-primary">
+            {copy.contactCtaButton}
+          </a>
         </div>
       </div>
     </section>

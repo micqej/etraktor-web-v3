@@ -1,5 +1,5 @@
 import { ContactBlock } from "@/components/page-blocks";
 
 export default function ContactPage() {
-  return <ContactBlock />;
+  return <ContactBlock locale="sk" />;
 }

@@ -7,7 +7,7 @@ export function generateStaticParams() {
   return productCategories.map((item) => ({ slug: item.slug }));
 }
 
-export default async function ProductDetail({
+export default async function ProductEnDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -17,5 +17,5 @@ export default async function ProductDetail({
 
   if (!item) notFound();
 
-  return <ProductDetailPage item={item} locale="sk" />;
+  return <ProductDetailPage item={item} locale="en" />;
 }

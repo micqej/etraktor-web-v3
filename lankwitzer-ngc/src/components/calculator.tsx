@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import type { Locale } from "@/lib/lankwitzer-data";
+
 type CalculatorInput = {
   area: number;
   solids: number;
@@ -24,9 +26,44 @@ const initialCalculator: CalculatorInput = {
   lossPercent: 40,
 };
 
-function formatNumber(value: number, decimals = 2) {
+const labels = {
+  sk: {
+    area: "Plocha (m2)",
+    solids: "Objemový obsah sušiny (%)",
+    dft: "DFT - hrúbka suchého náteru (μm)",
+    density: "Hustota (g/ml)",
+    paintPrice: "Cena 1 kg farby vrátane tužidla (EUR)",
+    thinnerPrice: "Cena 1 l riedidla (EUR)",
+    thinningPercent: "Riedenie (%)",
+    lossPercent: "Koeficient strát (%)",
+    theoreticalCoverage: "Teoretická výdatnosť",
+    practicalCoverage: "Praktická výdatnosť",
+    paintUse: "Spotreba farby",
+    thinnerUse: "Spotreba riedidla",
+    sqmCost: "Cena za 1 m2",
+    totalCost: "Celková cena",
+  },
+  en: {
+    area: "Area (m2)",
+    solids: "Volume solids (%)",
+    dft: "DFT - dry film thickness (μm)",
+    density: "Density (g/ml)",
+    paintPrice: "Price per 1 kg incl. hardener (EUR)",
+    thinnerPrice: "Price per 1 l of thinner (EUR)",
+    thinningPercent: "Thinning (%)",
+    lossPercent: "Loss coefficient (%)",
+    theoreticalCoverage: "Theoretical coverage",
+    practicalCoverage: "Practical coverage",
+    paintUse: "Paint consumption",
+    thinnerUse: "Thinner consumption",
+    sqmCost: "Cost per 1 m2",
+    totalCost: "Total cost",
+  },
+};
+
+function formatNumber(value: number, locale: Locale, decimals = 2) {
   if (!Number.isFinite(value)) return "0.00";
-  return new Intl.NumberFormat("sk-SK", {
+  return new Intl.NumberFormat(locale === "sk" ? "sk-SK" : "en-GB", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(value);
@@ -56,17 +93,20 @@ function CalculatorField({
   );
 }
 
-export function Calculator() {
+export function Calculator({ locale = "sk" }: { locale?: Locale }) {
   const [calc, setCalc] = useState<CalculatorInput>(initialCalculator);
+  const copy = labels[locale];
 
   const results = useMemo(() => {
     const theoreticalCoverage = (10 * calc.solids) / (calc.dft * calc.density);
     const practicalCoverage = theoreticalCoverage * (1 - calc.lossPercent / 100);
-    const paintUse = calc.area / practicalCoverage;
+    const paintUse = practicalCoverage > 0 ? calc.area / practicalCoverage : 0;
     const thinnerUse = paintUse * (calc.thinningPercent / 100);
     const sqmCost =
-      (1 / practicalCoverage) * calc.paintPrice +
-      (1 / practicalCoverage) * calc.thinnerPrice * (calc.thinningPercent / 100);
+      practicalCoverage > 0
+        ? (1 / practicalCoverage) * calc.paintPrice +
+          (1 / practicalCoverage) * calc.thinnerPrice * (calc.thinningPercent / 100)
+        : 0;
     const totalCost = paintUse * calc.paintPrice + thinnerUse * calc.thinnerPrice;
 
     return {
@@ -84,42 +124,42 @@ export function Calculator() {
       <div className="calculator-form-card">
         <div className="calc-grid">
           <CalculatorField
-            label="Plocha (m2)"
+            label={copy.area}
             value={calc.area}
             onChange={(value) => setCalc((prev) => ({ ...prev, area: value }))}
           />
           <CalculatorField
-            label="Objemový obsah sušiny (%)"
+            label={copy.solids}
             value={calc.solids}
             onChange={(value) => setCalc((prev) => ({ ...prev, solids: value }))}
           />
           <CalculatorField
-            label="DFT - hrúbka suchého náteru (μm)"
+            label={copy.dft}
             value={calc.dft}
             onChange={(value) => setCalc((prev) => ({ ...prev, dft: value }))}
           />
           <CalculatorField
-            label="Hustota (g/ml)"
+            label={copy.density}
             value={calc.density}
             onChange={(value) => setCalc((prev) => ({ ...prev, density: value }))}
           />
           <CalculatorField
-            label="Cena 1 kg farby vrátane tužidla (EUR)"
+            label={copy.paintPrice}
             value={calc.paintPrice}
             onChange={(value) => setCalc((prev) => ({ ...prev, paintPrice: value }))}
           />
           <CalculatorField
-            label="Cena 1 l riedidla (EUR)"
+            label={copy.thinnerPrice}
             value={calc.thinnerPrice}
             onChange={(value) => setCalc((prev) => ({ ...prev, thinnerPrice: value }))}
           />
           <CalculatorField
-            label="Riedenie (%)"
+            label={copy.thinningPercent}
             value={calc.thinningPercent}
             onChange={(value) => setCalc((prev) => ({ ...prev, thinningPercent: value }))}
           />
           <CalculatorField
-            label="Koeficient strát (%)"
+            label={copy.lossPercent}
             value={calc.lossPercent}
             onChange={(value) => setCalc((prev) => ({ ...prev, lossPercent: value }))}
           />
@@ -128,28 +168,28 @@ export function Calculator() {
 
       <div className="calculator-results-card">
         <div className="result-card">
-          <span>Teoretická výdatnosť</span>
-          <strong>{formatNumber(results.theoreticalCoverage)} m2/kg</strong>
+          <span>{copy.theoreticalCoverage}</span>
+          <strong>{formatNumber(results.theoreticalCoverage, locale)} m2/kg</strong>
         </div>
         <div className="result-card">
-          <span>Praktická výdatnosť</span>
-          <strong>{formatNumber(results.practicalCoverage)} m2/kg</strong>
+          <span>{copy.practicalCoverage}</span>
+          <strong>{formatNumber(results.practicalCoverage, locale)} m2/kg</strong>
         </div>
         <div className="result-card">
-          <span>Spotreba farby</span>
-          <strong>{formatNumber(results.paintUse)} kg</strong>
+          <span>{copy.paintUse}</span>
+          <strong>{formatNumber(results.paintUse, locale)} kg</strong>
         </div>
         <div className="result-card">
-          <span>Spotreba riedidla</span>
-          <strong>{formatNumber(results.thinnerUse)} l</strong>
+          <span>{copy.thinnerUse}</span>
+          <strong>{formatNumber(results.thinnerUse, locale)} l</strong>
         </div>
         <div className="result-card">
-          <span>Cena za 1 m2</span>
-          <strong>{formatNumber(results.sqmCost)} EUR</strong>
+          <span>{copy.sqmCost}</span>
+          <strong>{formatNumber(results.sqmCost, locale)} EUR</strong>
         </div>
         <div className="result-card result-card-strong">
-          <span>Celková cena</span>
-          <strong>{formatNumber(results.totalCost)} EUR</strong>
+          <span>{copy.totalCost}</span>
+          <strong>{formatNumber(results.totalCost, locale)} EUR</strong>
         </div>
       </div>
     </div>
