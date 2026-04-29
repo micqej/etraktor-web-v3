@@ -431,45 +431,6 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
         </div>
       </section>
 
-      <section className="bg">
-        <div className="container">
-          <span className="tag" data-sanity={pageAttr('rangeTag')}>
-            {resolvedPage.rangeTag}
-          </span>
-          <h2 className="section-title" data-sanity={pageAttr('rangeTitle')}>
-            {resolvedPage.rangeTitle}
-          </h2>
-          <div className="range-grid">
-            {resolvedPage.rangeCards.map((card, index) => (
-              <div
-                className="img-card"
-                key={card.title}
-                onClick={() => setLightbox({images: resolvedPage.rangeCards.map((item) => item.imageSrc), index})}
-                data-sanity={pageAttr(`rangeCards[${index}]`)}
-              >
-                <img
-                  src={card.imageSrc}
-                  alt={card.title}
-                  className="range-card-image"
-                  data-sanity={pageAttr(`rangeCards[${index}].image`)}
-                />
-                <div className="img-card-body">
-                  <div className="img-card-title">
-                    <span data-sanity={pageAttr(`rangeCards[${index}].title`)}>{card.title}</span>{' '}
-                    <span className={card.badgeClass} style={{marginLeft: 6}} data-sanity={pageAttr(`rangeCards[${index}].badge`)}>
-                      {card.badge}
-                    </span>
-                  </div>
-                  <div className="img-card-desc" data-sanity={pageAttr(`rangeCards[${index}].info`)}>
-                    {card.info}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {hasCatalog
         ? visibleProductCatalog.map(({item, catalogIndex}, displayIndex) => (
             <ProductCatalogSection

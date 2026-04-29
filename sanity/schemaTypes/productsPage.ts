@@ -73,7 +73,7 @@ export const productsPageType = defineType({
     {name: 'intro', title: 'Úvod'},
     {name: 'catalog', title: 'Dokumenty a fotografie'},
     {name: 'benefits', title: 'Výhody a využitie'},
-    {name: 'gallery', title: 'Dojazd a galérie'},
+    {name: 'gallery', title: 'Galérie a certifikáty'},
     {name: 'video', title: 'Videá'},
     {name: 'cta', title: 'CTA'},
   ],
@@ -218,42 +218,6 @@ export const productsPageType = defineType({
             defineField({name: 'label', title: 'Názov videa', type: 'string'}),
           ],
           preview: {select: {title: 'label', subtitle: 'youtubeId'}},
-        }),
-      ],
-    }),
-    defineField({name: 'rangeTag', title: 'Tag dojazdu', type: 'string', group: 'gallery'}),
-    defineField({name: 'rangeTitle', title: 'Nadpis dojazdu', type: 'string', group: 'gallery'}),
-    defineField({
-      name: 'rangeCards',
-      title: 'Karty dojazdu',
-      type: 'array',
-      group: 'gallery',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'title', title: 'Nadpis', type: 'string'}),
-            defineField({name: 'badge', title: 'Badge text', type: 'string'}),
-            defineField({
-              name: 'badgeClass',
-              title: 'Badge štýl',
-              type: 'string',
-              options: {
-                list: [
-                  {title: 'Štandard', value: 'badge-std'},
-                  {title: 'Opcia', value: 'badge-opt'},
-                ],
-              },
-            }),
-            defineField({name: 'info', title: 'Popis', type: 'text', rows: 3}),
-            defineField({
-              name: 'image',
-              title: 'Obrázok',
-              type: 'image',
-              options: {hotspot: true},
-            }),
-          ],
-          preview: {select: {title: 'title', subtitle: 'badge', media: 'image'}},
         }),
       ],
     }),
