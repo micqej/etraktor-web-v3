@@ -7,7 +7,6 @@ import {
   contactDetails,
   getLocalePath,
   productCategories,
-  removedItems,
   segments,
   siteCopy,
   usefulItems,
@@ -19,13 +18,16 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
 
   return (
     <>
-      <section className="hero-dark" id="top">
-        <div className="shell hero-grid">
-          <div className="hero-copy">
+      <section className="home-hero" id="top">
+        <div className="home-hero-media">
+          <Image src="/site-assets/Automotive-main-2-900x601.jpg" alt="Lankwitzer hero" fill priority sizes="100vw" />
+        </div>
+        <div className="home-hero-overlay" />
+        <div className="shell home-hero-grid">
+          <div className="home-hero-copy">
             <p className="eyebrow">{copy.heroEyebrow}</p>
             <h1>{copy.heroTitle}</h1>
             <p className="hero-lead">{copy.heroLead}</p>
-            <p className="hero-body">{copy.heroBody}</p>
             <div className="hero-actions">
               <Link href={copy.productsHref} className="button button-primary">
                 {copy.heroPrimary}
@@ -36,18 +38,16 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
             </div>
           </div>
 
-          <div className="hero-visual">
-            <div className="hero-frame">
-              <Image
-                src="/site-assets/Produkty-2.jpg"
-                alt="Lankwitzer products"
-                fill
-                sizes="(max-width: 1000px) 100vw, 45vw"
-              />
+          <div className="home-hero-side">
+            <div className="hero-stat-card">
+              <span>SEGMENTY</span>
+              <strong>6</strong>
+              <p>{locale === "sk" ? "Kľúčových oblastí použitia na hlavnej stránke." : "Core application segments on the homepage."}</p>
             </div>
-            <div className="hero-panel">
-              <strong>{copy.heroPanelTitle}</strong>
-              <span>{copy.heroPanelText}</span>
+            <div className="hero-stat-card accent">
+              <span>{locale === "sk" ? "SLUŽBY" : "SERVICES"}</span>
+              <strong>RAL / ISO / DFT</strong>
+              <p>{locale === "sk" ? "Kalkulácia, poradenstvo a technické podklady v jednom mieste." : "Calculation, consultancy and technical resources in one place."}</p>
             </div>
           </div>
         </div>
@@ -60,16 +60,18 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
             <h2>{copy.segmentsHeading}</h2>
             <p>{copy.segmentsText}</p>
           </div>
-          <div className="card-grid">
+
+          <div className="segment-grid">
             {segments.map((segment) => (
-              <article key={segment.slug} className="feature-card">
-                <div className="media-wrap">
+              <article key={segment.slug} className="segment-card">
+                <div className="segment-card-media">
                   <Image src={segment.image} alt={segment.title[locale]} fill sizes="(max-width: 860px) 100vw, 33vw" />
                 </div>
-                <div className="card-body">
+                <div className="segment-card-overlay" />
+                <div className="segment-card-body">
                   <h3>{segment.title[locale]}</h3>
                   <p>{segment.text[locale]}</p>
-                  <a href={segment.pdf} target="_blank" rel="noreferrer" className="text-link">
+                  <a href={segment.pdf} target="_blank" rel="noreferrer" className="segment-link">
                     PDF
                   </a>
                 </div>
@@ -86,9 +88,11 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
             <h2>{copy.productsHeading}</h2>
             <p>{copy.productsText}</p>
           </div>
-          <div className="card-grid compact">
+
+          <div className="product-strip">
             {productCategories.map((item) => (
-              <Link key={item.slug} href={getLocalePath(locale, `/produkty/${item.slug}`)} className="info-tile">
+              <Link key={item.slug} href={getLocalePath(locale, `/produkty/${item.slug}`)} className="product-strip-card">
+                <div className="product-strip-bg" />
                 <strong>{item.title[locale]}</strong>
                 <p>{item.summary[locale]}</p>
               </Link>
@@ -102,25 +106,20 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
           <div className="section-heading">
             <span>{copy.usefulTitle}</span>
             <h2>{copy.usefulHeading}</h2>
-            <p>{copy.usefulText}</p>
           </div>
-          <div className="two-column-grid">
-            <div className="stack-list">
-              {usefulItems.map((item) => (
-                <Link key={item.slug} href={getLocalePath(locale, `/uzitocne/${item.slug}`)} className="line-card">
-                  <strong>{item.title[locale]}</strong>
-                  <p>{item.summary[locale]}</p>
-                </Link>
-              ))}
-            </div>
-            <div className="stack-list muted">
-              {removedItems.map((item) => (
-                <div key={item.slug} className="line-card line-card-off">
-                  <strong>{item.title[locale]}</strong>
-                  <p>{item.summary[locale]}</p>
-                </div>
-              ))}
-            </div>
+
+          <div className="useful-showcase">
+            {usefulItems.map((item, index) => (
+              <Link
+                key={item.slug}
+                href={getLocalePath(locale, `/uzitocne/${item.slug}`)}
+                className={`useful-card useful-card-${(index % 4) + 1}`}
+              >
+                <div className="useful-card-pattern" />
+                <strong>{item.title[locale]}</strong>
+                <p>{item.summary[locale]}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -136,15 +135,16 @@ export function AboutBlock({ locale = "sk" }: { locale?: Locale }) {
 
   return (
     <section className="page-section section-alt" id="o-nas">
-      <div className="shell about-grid">
-        <div className="section-heading left">
+      <div className="shell about-slab">
+        <div className="about-copy">
           <span>{copy.aboutTitle}</span>
-          <h1>{copy.aboutHeading}</h1>
+          <h2>{copy.aboutHeading}</h2>
           <p>{copy.aboutText}</p>
         </div>
-        <div className="bullet-panel">
+
+        <div className="about-list">
           {aboutBullets[locale].map((item) => (
-            <div key={item} className="bullet-row">
+            <div key={item} className="about-list-item">
               <i />
               <p>{item}</p>
             </div>
@@ -160,43 +160,36 @@ export function ContactBlock({ locale = "sk" }: { locale?: Locale }) {
 
   return (
     <section className="page-section" id="kontakt">
-      <div className="shell">
-        <div className="section-heading">
-          <span>{copy.contactTitle}</span>
-          <h1>{copy.contactHeading}</h1>
-          <p>{copy.contactText}</p>
-        </div>
-        <div className="contact-page-grid">
-          <div className="detail-main">
-            <div className="contact-grid">
-              <div className="contact-panel">
-                <strong>{contactDetails.company}</strong>
-                <p>{contactDetails.address}</p>
-              </div>
-              <div className="contact-panel">
-                <strong>{contactDetails.email}</strong>
-                <p>{contactDetails.phones.join(", ")}</p>
-              </div>
-              <div className="contact-panel">
-                <strong>IČO {contactDetails.ico}</strong>
-                <p>IČ DPH: {contactDetails.icDph}</p>
-              </div>
-              <div className="contact-panel">
-                <strong>{locale === "sk" ? "Telefón a fax" : "Phone and fax"}</strong>
-                <p>{contactDetails.phones[2]} | fax: {contactDetails.fax}</p>
-              </div>
+      <div className="shell contact-home-wrap">
+        <div className="contact-home-info">
+          <div className="section-heading">
+            <span>{copy.contactTitle}</span>
+            <h2>{copy.contactHeading}</h2>
+            <p>{copy.contactText}</p>
+          </div>
+
+          <div className="contact-rail">
+            <div className="contact-panel">
+              <strong>{contactDetails.company}</strong>
+              <p>{contactDetails.address}</p>
+            </div>
+            <div className="contact-panel">
+              <strong>{contactDetails.email}</strong>
+              <p>{contactDetails.phones.join(", ")}</p>
+            </div>
+            <div className="contact-panel">
+              <strong>{locale === "sk" ? "Telefón a fax" : "Phone and fax"}</strong>
+              <p>{contactDetails.phones[2]} | fax: {contactDetails.fax}</p>
+            </div>
+            <div className="contact-panel">
+              <strong>IČO {contactDetails.ico}</strong>
+              <p>IČ DPH: {contactDetails.icDph}</p>
             </div>
           </div>
-          <ContactForm locale={locale} />
         </div>
-        <div className="contact-cta">
-          <div>
-            <strong>{copy.contactCtaTitle}</strong>
-            <p>{copy.contactCtaText}</p>
-          </div>
-          <a href={`mailto:${contactDetails.email}`} className="button button-primary">
-            {copy.contactCtaButton}
-          </a>
+
+        <div className="contact-home-form">
+          <ContactForm locale={locale} />
         </div>
       </div>
     </section>

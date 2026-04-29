@@ -5,44 +5,29 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { getLocalePath, productCategories, siteCopy, usefulItems, type Locale } from "@/lib/lankwitzer-data";
+import { productCategories, siteCopy, usefulItems, type Locale } from "@/lib/lankwitzer-data";
 
-function Dropdown({
-  label,
+function MenuColumn({
+  title,
   items,
   basePath,
   locale,
-  isOpen,
-  onOpen,
-  onClose,
+  onNavigate,
 }: {
-  label: string;
+  title: string;
   items: { title: { sk: string; en: string }; slug: string }[];
   basePath: string;
   locale: Locale;
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
+  onNavigate: () => void;
 }) {
   return (
-    <div className="nav-dropdown" onMouseEnter={onOpen} onMouseLeave={onClose}>
-      <button
-        type="button"
-        className={`nav-dropdown-trigger${isOpen ? " active" : ""}`}
-        aria-expanded={isOpen}
-        onClick={() => (isOpen ? onClose() : onOpen())}
-      >
-        {label}
-      </button>
-      {isOpen ? (
-        <div className="nav-dropdown-menu">
-          {items.map((item) => (
-            <Link key={item.slug} href={getLocalePath(locale, `${basePath}/${item.slug}`)} onClick={onClose}>
-              {item.title[locale]}
-            </Link>
-          ))}
-        </div>
-      ) : null}
+    <div className="mega-column">
+      <strong>{title}</strong>
+      {items.map((item) => (
+        <Link key={item.slug} href={`${basePath}/${item.slug}`} onClick={onNavigate}>
+          {item.title[locale]}
+        </Link>
+      ))}
     </div>
   );
 }
@@ -51,47 +36,119 @@ export function SiteHeader() {
   const pathname = usePathname();
   const locale: Locale = pathname.startsWith("/en") ? "en" : "sk";
   const copy = siteCopy[locale];
-  const switchHref = locale === "sk" ? "/en" : "/";
   const [activeMenu, setActiveMenu] = useState<"products" | "useful" | null>(null);
+
+  const nav = locale === "sk"
+    ? {
+        home: "/",
+        about: "/o-nas",
+        products: "/produkty",
+        useful: "/uzitocne",
+        contact: "/kontakt",
+        switchHref: "/en",
+        labels: {
+          home: "Domov",
+          about: "O nás",
+          products: "Produkty",
+          useful: "Užitočné",
+          contact: "Kontakt",
+        },
+      }
+    : {
+        home: "/en",
+        about: "/en/o-nas",
+        products: "/en/produkty",
+        useful: "/en/uzitocne",
+        contact: "/en/kontakt",
+        switchHref: "/",
+        labels: {
+          home: "Home",
+          about: "About",
+          products: "Products",
+          useful: "Useful",
+          contact: "Contact",
+        },
+      };
 
   return (
     <header className="site-header">
       <div className="shell nav-shell">
-        <Link href={copy.homeHref} className="brand-link" aria-label={copy.siteTitle}>
+        <Link href={nav.home} className="brand-link" aria-label={copy.siteTitle}>
           <Image
             src="/site-assets/Lankwitzer_Logo-2017-RGB.png"
             alt="Lankwitzer logo"
-            width={182}
-            height={48}
+            width={194}
+            height={52}
             priority
           />
         </Link>
 
         <nav className="main-nav">
-          <Link href={copy.homeHref}>{locale === "sk" ? "Domov" : "Home"}</Link>
-          <Link href={copy.aboutHref}>{locale === "sk" ? "O nás" : "About"}</Link>
-          <Dropdown
-            label={locale === "sk" ? "Produkty" : "Products"}
-            items={productCategories}
-            basePath="/produkty"
-            locale={locale}
-            isOpen={activeMenu === "products"}
-            onOpen={() => setActiveMenu("products")}
-            onClose={() => setActiveMenu((current) => (current === "products" ? null : current))}
-          />
-          <Dropdown
-            label={locale === "sk" ? "Užitočné" : "Useful"}
-            items={usefulItems}
-            basePath="/uzitocne"
-            locale={locale}
-            isOpen={activeMenu === "useful"}
-            onOpen={() => setActiveMenu("useful")}
-            onClose={() => setActiveMenu((current) => (current === "useful" ? null : current))}
-          />
-          <Link href={copy.contactHref}>{locale === "sk" ? "Kontakt" : "Contact"}</Link>
+          <Link href={nav.home}>{nav.labels.home}</Link>
+          <Link href={nav.about}>{nav.labels.about}</Link>
+
+          <div
+            className="nav-dropdown"
+            onMouseEnter={() => setActiveMenu("products")}
+            onMouseLeave={() => setActiveMenu(null)}
+          >
+            <Link href={nav.products} className="nav-parent-link">
+              {nav.labels.products}
+            </Link>
+            <button
+              type="button"
+              className={`nav-dropdown-trigger${activeMenu === "products" ? " active" : ""}`}
+              aria-label={nav.labels.products}
+              onClick={() => setActiveMenu(activeMenu === "products" ? null : "products")}
+            >
+              +
+            </button>
+            {activeMenu === "products" ? (
+              <div className="mega-menu">
+                <MenuColumn
+                  title={locale === "sk" ? "Produktové skupiny" : "Product groups"}
+                  items={productCategories}
+                  basePath={nav.products}
+                  locale={locale}
+                  onNavigate={() => setActiveMenu(null)}
+                />
+              </div>
+            ) : null}
+          </div>
+
+          <div
+            className="nav-dropdown"
+            onMouseEnter={() => setActiveMenu("useful")}
+            onMouseLeave={() => setActiveMenu(null)}
+          >
+            <Link href={nav.useful} className="nav-parent-link">
+              {nav.labels.useful}
+            </Link>
+            <button
+              type="button"
+              className={`nav-dropdown-trigger${activeMenu === "useful" ? " active" : ""}`}
+              aria-label={nav.labels.useful}
+              onClick={() => setActiveMenu(activeMenu === "useful" ? null : "useful")}
+            >
+              +
+            </button>
+            {activeMenu === "useful" ? (
+              <div className="mega-menu">
+                <MenuColumn
+                  title={locale === "sk" ? "Technické podklady" : "Technical resources"}
+                  items={usefulItems}
+                  basePath={nav.useful}
+                  locale={locale}
+                  onNavigate={() => setActiveMenu(null)}
+                />
+              </div>
+            ) : null}
+          </div>
+
+          <Link href={nav.contact}>{nav.labels.contact}</Link>
         </nav>
 
-        <Link href={switchHref} className="lang-badge">
+        <Link href={nav.switchHref} className="lang-badge">
           {copy.langSwitch}
         </Link>
       </div>

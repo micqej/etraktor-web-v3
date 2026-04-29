@@ -44,33 +44,33 @@ export function ContactForm({ locale = "sk" }: { locale?: Locale }) {
   }
 
   return (
-    <div className="content-panel form-panel">
-      <div className="section-heading compact">
+    <div className="contact-form-shell">
+      <div className="contact-form-head">
         <span>{copy.contactTitle}</span>
-        <h2>{copy.formTitle}</h2>
+        <h3>{copy.formTitle}</h3>
         <p>{copy.formText}</p>
       </div>
 
-      <div className="form-grid">
-        <label className="calc-field">
+      <div className="contact-form-grid">
+        <label className="contact-field">
           <span>{copy.formName}</span>
           <input value={form.name} onChange={(event) => updateField("name", event.target.value)} />
         </label>
-        <label className="calc-field">
+        <label className="contact-field">
           <span>{copy.formCompany}</span>
           <input value={form.company} onChange={(event) => updateField("company", event.target.value)} />
         </label>
-        <label className="calc-field">
+        <label className="contact-field">
           <span>{copy.formEmail}</span>
           <input type="email" value={form.email} onChange={(event) => updateField("email", event.target.value)} />
         </label>
-        <label className="calc-field">
+        <label className="contact-field">
           <span>{copy.formPhone}</span>
           <input value={form.phone} onChange={(event) => updateField("phone", event.target.value)} />
         </label>
-        <label className="calc-field form-message-field">
+        <label className="contact-field contact-field-message">
           <span>{copy.formMessage}</span>
-          <textarea value={form.message} onChange={(event) => updateField("message", event.target.value)} rows={6} />
+          <textarea value={form.message} onChange={(event) => updateField("message", event.target.value)} rows={5} />
         </label>
       </div>
 
