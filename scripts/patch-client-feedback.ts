@@ -1,6 +1,6 @@
 import {createClient} from 'next-sanity'
 
-import {defaultProductsPage} from '@/sanity/lib/content'
+import {defaultHomePage, defaultProductsPage} from '@/sanity/lib/content'
 import {normalizeYouTubeId, uniqueYouTubeVideos} from '@/sanity/lib/youtube'
 
 const projectId =
@@ -61,6 +61,16 @@ async function patchHomePage() {
   const patch: ExistingDoc = {
     heroTitleLine2: 'spoločnosť',
   }
+
+  patch.heroPrimaryLabel = defaultHomePage.heroPrimaryLabel
+  patch.heroDescription = defaultHomePage.heroDescription
+  patch.heroStats = [
+    ...(current.heroStats || defaultHomePage.heroStats).map((item: ExistingDoc, index: number) => ({
+      _key: item?._key || `home-hero-stat-${index + 1}`,
+      value: defaultHomePage.heroStats[index]?.value || item?.value || '',
+      label: defaultHomePage.heroStats[index]?.label || item?.label || '',
+    })),
+  ]
 
   if (services) {
     patch.services = services
@@ -133,45 +143,35 @@ async function patchProductsPage() {
       'Príslušenstvo ET 3000',
       'Certifikáty ET 3000',
     ],
-    Príslušenstvo: [
-      'Katalóg príslušenstva',
-      'Cenník príslušenstva',
-      'Kompatibilita ET 2000 / ET 3000',
-    ],
   }
 
-  const productCatalog = current.productCatalog.map((item: ExistingDoc, index: number) => {
-    const labels = labelSets[item.title]
-    const defaults = defaultProductsPage.productCatalog.find((product) => product.title === item.title)
+  const productCatalog = defaultProductsPage.productCatalog.map((defaults, index) => {
+    const currentItem =
+      current.productCatalog.find((item: ExistingDoc) => item.title === defaults.title) || {}
+    const labels = labelSets[defaults.title] || defaults.documents.map((document) => document.label)
     const sanitizedVideos = uniqueYouTubeVideos(
-      (item.videos || []).map((video: ExistingDoc) => ({
+      (currentItem.videos || []).map((video: ExistingDoc) => ({
         ...video,
         youtubeId: normalizeYouTubeId(video.youtubeId),
       })),
     )
 
-    if (!labels) {
-      return {
-        ...item,
-        videos: sanitizedVideos,
-      }
-    }
-
     return {
-      ...item,
-      documentsTitle: defaults?.documentsTitle || item.documentsTitle || 'Dokumenty na stiahnutie',
-      documents: mergeDocumentLabels(item.documents, labels, `product-doc-${index + 1}`),
+      ...currentItem,
+      _key: currentItem._key || `catalog-item-${index + 1}`,
+      badge: currentItem.badge || defaults.badge,
+      title: defaults.title,
+      documentsTitle: defaults.documentsTitle,
+      documents: mergeDocumentLabels(currentItem.documents, labels, `product-doc-${index + 1}`),
+      videos: sanitizedVideos,
       specs:
-        item.title === 'ET 3000'
-          ? (defaults?.specs || []).map((spec, specIndex) => ({
-              _key: item.specs?.[specIndex]?._key || `product-spec-${index + 1}-${specIndex + 1}`,
+        defaults.title === 'ET 3000'
+          ? defaults.specs.map((spec, specIndex) => ({
+              _key: currentItem.specs?.[specIndex]?._key || `product-spec-${index + 1}-${specIndex + 1}`,
               parameter: spec.parameter,
               value: spec.value,
             }))
-          : item.title === 'Príslušenstvo'
-            ? []
-            : item.specs,
-      videos: sanitizedVideos,
+          : currentItem.specs,
     }
   })
 
@@ -204,8 +204,17 @@ async function patchProductsPage() {
   await client
     .patch('productsPage')
     .set({
+      heroAccent: defaultProductsPage.heroAccent,
+      heroSecondaryHref: defaultProductsPage.heroSecondaryHref,
+      heroStats: (current.heroStats || defaultProductsPage.heroStats).map((item: ExistingDoc, index: number) => ({
+        _key: item?._key || `product-hero-stat-${index + 1}`,
+        value: defaultProductsPage.heroStats[index]?.value || item?.value || '',
+        label: defaultProductsPage.heroStats[index]?.label || item?.label || '',
+      })),
       introParagraphs: defaultProductsPage.introParagraphs,
       introStats: defaultProductsPage.introStats,
+      benefitsTitle: defaultProductsPage.benefitsTitle,
+      benefits: defaultProductsPage.benefits,
       catalogTag: defaultProductsPage.catalogTag,
       catalogTitle: defaultProductsPage.catalogTitle,
       catalogDescription: defaultProductsPage.catalogDescription,
@@ -227,8 +236,17 @@ async function patchProductsPage() {
   await client
     .patch('drafts.productsPage')
     .set({
+      heroAccent: defaultProductsPage.heroAccent,
+      heroSecondaryHref: defaultProductsPage.heroSecondaryHref,
+      heroStats: (current.heroStats || defaultProductsPage.heroStats).map((item: ExistingDoc, index: number) => ({
+        _key: item?._key || `product-hero-stat-${index + 1}`,
+        value: defaultProductsPage.heroStats[index]?.value || item?.value || '',
+        label: defaultProductsPage.heroStats[index]?.label || item?.label || '',
+      })),
       introParagraphs: defaultProductsPage.introParagraphs,
       introStats: defaultProductsPage.introStats,
+      benefitsTitle: defaultProductsPage.benefitsTitle,
+      benefits: defaultProductsPage.benefits,
       catalogTag: defaultProductsPage.catalogTag,
       catalogTitle: defaultProductsPage.catalogTitle,
       catalogDescription: defaultProductsPage.catalogDescription,

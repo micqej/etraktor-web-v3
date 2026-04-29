@@ -640,8 +640,8 @@ export const defaultHomePage: HomePageContent = {
   heroTitleAccent: 'v strojárstve',
   heroSubtitle: 'Vývoj • Výroba • Certifikácia',
   heroDescription:
-    'Od myšlienky po realizáciu. Vyvíjame nové produkty, transportné palety, jednoúčelové zariadenia a vlastný elektrický malotraktor ET 2000.',
-  heroPrimaryLabel: 'eTRAKTOR ET 2000',
+    'Od myšlienky po realizáciu. Vyvíjame nové produkty, transportné palety, jednoúčelové zariadenia a vlastný elektrický malotraktor eTRAKTOR.',
+  heroPrimaryLabel: 'eTRAKTOR',
   heroPrimaryHref: '/produkty',
   heroSecondaryLabel: 'Kontaktujte nás',
   heroSecondaryHref: '/kontakt',
@@ -650,7 +650,7 @@ export const defaultHomePage: HomePageContent = {
   heroStats: [
     {value: '2019', label: 'Rok založenia'},
     {value: 'A–Z', label: 'Vývoj produktov'},
-    {value: 'ET 2000', label: 'Vlastný produkt'},
+    {value: 'eTRAKTOR', label: 'Vlastné produkty'},
     {value: 'TISR', label: 'Certifikácia'},
   ],
   servicesTag: 'Čo robíme',
@@ -909,7 +909,7 @@ export const defaultContactPage: ContactPageContent = {
 export const defaultProductsPage: ProductContent = {
   heroEyebrow: 'Vlastný produkt Etraktor, s.r.o.',
   heroTitle: 'Elektrický malotraktor',
-  heroAccent: 'ET 2000',
+  heroAccent: '',
   heroSubtitle: 'Traktor, ktorý šetrí Vašu peňaženku i životné prostredie!',
   heroDescription:
     'Nulové emisie, tichá prevádzka a minimálne prevádzkové náklady. Moderná alternatíva k spaľovacím motorom pre záhradu, poľnohospodárstvo aj priemysel.',
@@ -922,7 +922,7 @@ export const defaultProductsPage: ProductContent = {
     {value: '90%', label: 'Účinnosť motora'},
     {value: '0', label: 'Lokálnych emisií'},
     {value: '66 dBA', label: 'Hladina hluku'},
-    {value: '15 km/h', label: 'Max. rýchlosť'},
+    {value: '18 km/h', label: 'Max. rýchlosť'},
   ],
   introTag: 'Inteligentnejší pohon',
   introTitle: 'Prečo elektrický malotraktor?',
@@ -1022,9 +1022,9 @@ export const defaultProductsPage: ProductContent = {
   efficiencyTitleB: 'Spaľovací motor (benzín/nafta)',
   efficiencyValueB: '15–20%',
   benefitsTag: 'Výhody zariadenia',
-  benefitsTitle: 'Výhody ET 2000',
+  benefitsTitle: 'Výhody elektrického malotraktora',
   benefits: [
-    'Vysoký výkon – maximálny záberový moment od nulových otáčok, plynulá regulácia 0–15 km/h',
+    'Vysoký výkon – maximálny záberový moment od nulových otáčok, plynulá regulácia 0–18 km/h',
     'Tichá prevádzka – len 66 dBA, vhodný do obytných zón a uzavretých priestorov',
     'Nulové emisie – žiadne miestne emisie z výfuku, ideálny pre sklady a skleníky',
     'Jednoduchá obsluha – komfortná jazda, automatická regulácia rýchlosti',
@@ -1262,20 +1262,26 @@ export async function getHomePage(): Promise<HomePageContent> {
 
   if (!data) return defaultHomePage
 
+  const heroStats =
+    data.heroStats?.length
+      ? data.heroStats.map((item: any, index: number) => ({
+          _key: item._key,
+          value: index === 2 ? defaultHomePage.heroStats[2].value : item.value || defaultHomePage.heroStats[index]?.value || '',
+          label: index === 2 ? defaultHomePage.heroStats[2].label : item.label || defaultHomePage.heroStats[index]?.label || '',
+        }))
+      : defaultHomePage.heroStats
+
   return {
     ...defaultHomePage,
     ...data,
+    heroPrimaryLabel:
+      data.heroPrimaryLabel?.toLowerCase().includes('etraktor')
+        ? defaultHomePage.heroPrimaryLabel
+        : data.heroPrimaryLabel || defaultHomePage.heroPrimaryLabel,
     heroBackgroundImageSrc: assetUrl(data.heroBackgroundImage, defaultHomePage.heroBackgroundImageSrc),
     heroProductImageSrc: assetUrl(data.heroProductImage, defaultHomePage.heroProductImageSrc),
     aboutImageSrc: assetUrl(data.aboutImage, defaultHomePage.aboutImageSrc),
-    heroStats:
-      data.heroStats?.length
-        ? data.heroStats.map((item: any, index: number) => ({
-            _key: item._key,
-            value: item.value || defaultHomePage.heroStats[index]?.value || '',
-            label: item.label || defaultHomePage.heroStats[index]?.label || '',
-          }))
-        : defaultHomePage.heroStats,
+    heroStats,
     services:
       data.services?.length
         ? data.services.map((service: any, index: number) => ({
@@ -1612,12 +1618,27 @@ export async function getProductsPage(): Promise<ProductContent> {
 
   if (!data) return defaultProductsPage
 
+  const heroStats =
+    data.heroStats?.length
+      ? data.heroStats.map((item: any, index: number) => ({
+          _key: item._key,
+          value: index === 3 ? defaultProductsPage.heroStats[3].value : item.value || defaultProductsPage.heroStats[index]?.value || '',
+          label: index === 3 ? defaultProductsPage.heroStats[3].label : item.label || defaultProductsPage.heroStats[index]?.label || '',
+        }))
+      : defaultProductsPage.heroStats
+
+  const benefits =
+    data.benefits?.length
+      ? data.benefits.map((item: string, index: number) => (index === 0 ? defaultProductsPage.benefits[0] : item || defaultProductsPage.benefits[index] || ''))
+      : defaultProductsPage.benefits
+
   return {
     ...defaultProductsPage,
     ...data,
+    heroAccent: defaultProductsPage.heroAccent,
     heroImageSrc: assetUrl(data.heroImage, defaultProductsPage.heroImageSrc),
     introImageSrc: assetUrl(data.introImage, defaultProductsPage.introImageSrc),
-    heroStats: data.heroStats?.length ? data.heroStats : defaultProductsPage.heroStats,
+    heroStats,
     introParagraphs: data.introParagraphs?.length ? data.introParagraphs : defaultProductsPage.introParagraphs,
     introStats:
       data.introStats?.length
@@ -1682,7 +1703,8 @@ export async function getProductsPage(): Promise<ProductContent> {
               }))
             : defaultProductsPage.productCatalog[index]?.specs || [],
       })) || defaultProductsPage.productCatalog,
-    benefits: data.benefits?.length ? data.benefits : defaultProductsPage.benefits,
+    benefitsTitle: defaultProductsPage.benefitsTitle,
+    benefits,
     useCases: data.useCases?.length ? data.useCases : defaultProductsPage.useCases,
     dimensionImages:
       data.dimensionImages?.map((item: any, index: number) => ({

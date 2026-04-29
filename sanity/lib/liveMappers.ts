@@ -58,20 +58,26 @@ export function mapLiveSiteSettings(initial: SiteSettingsContent, data: any): Si
 export function mapLiveHomePage(initial: HomePageContent, data: any): HomePageContent {
   if (!data) return initial
 
+  const heroStats =
+    data.heroStats?.length
+      ? data.heroStats.map((item: any, index: number) => ({
+          _key: item._key,
+          value: index === 2 ? initial.heroStats[2]?.value || item.value || '' : item.value || initial.heroStats[index]?.value || '',
+          label: index === 2 ? initial.heroStats[2]?.label || item.label || '' : item.label || initial.heroStats[index]?.label || '',
+        }))
+      : initial.heroStats
+
   return {
     ...initial,
     ...data,
+    heroPrimaryLabel:
+      data.heroPrimaryLabel?.toLowerCase().includes('etraktor')
+        ? initial.heroPrimaryLabel
+        : data.heroPrimaryLabel || initial.heroPrimaryLabel,
     heroBackgroundImageSrc: assetUrl(data.heroBackgroundImage, initial.heroBackgroundImageSrc),
     heroProductImageSrc: assetUrl(data.heroProductImage, initial.heroProductImageSrc),
     aboutImageSrc: assetUrl(data.aboutImage, initial.aboutImageSrc),
-    heroStats:
-      data.heroStats?.length
-        ? data.heroStats.map((item: any, index: number) => ({
-            _key: item._key,
-            value: item.value || initial.heroStats[index]?.value || '',
-            label: item.label || initial.heroStats[index]?.label || '',
-          }))
-        : initial.heroStats,
+    heroStats,
     services:
       data.services?.length
         ? data.services.map((service: any, index: number) => ({
@@ -138,11 +144,25 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
     return data as ProductContent
   }
 
+  const heroStats =
+    data.heroStats?.length
+      ? data.heroStats.map((item: any, index: number) => ({
+          _key: item._key,
+          value: index === 3 ? initial.heroStats[3]?.value || item.value || '' : item.value || initial.heroStats[index]?.value || '',
+          label: index === 3 ? initial.heroStats[3]?.label || item.label || '' : item.label || initial.heroStats[index]?.label || '',
+        }))
+      : initial.heroStats
+
+  const benefits =
+    data.benefits?.length
+      ? data.benefits.map((item: string, index: number) => (index === 0 ? initial.benefits[0] : item || initial.benefits[index] || ''))
+      : initial.benefits
+
   return {
     ...initial,
     heroEyebrow: data.heroEyebrow || initial.heroEyebrow,
     heroTitle: data.heroTitle || initial.heroTitle,
-    heroAccent: data.heroAccent || initial.heroAccent,
+    heroAccent: initial.heroAccent,
     heroSubtitle: data.heroSubtitle || initial.heroSubtitle,
     heroDescription: data.heroDescription || initial.heroDescription,
     heroPrimaryLabel: data.heroPrimaryLabel || initial.heroPrimaryLabel,
@@ -159,7 +179,7 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
     catalogTitle: data.catalogTitle || initial.catalogTitle,
     catalogDescription: data.catalogDescription || initial.catalogDescription,
     benefitsTag: data.benefitsTag || initial.benefitsTag,
-    benefitsTitle: data.benefitsTitle || initial.benefitsTitle,
+    benefitsTitle: initial.benefitsTitle,
     useCasesTag: data.useCasesTag || initial.useCasesTag,
     useCasesTitle: data.useCasesTitle || initial.useCasesTitle,
     dimensionsTag: data.dimensionsTag || initial.dimensionsTag,
@@ -177,14 +197,7 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
     videosTitle: data.videosTitle || initial.videosTitle,
     heroImageSrc: assetUrl(data.heroImage, initial.heroImageSrc),
     introImageSrc: assetUrl(data.introImage, initial.introImageSrc),
-    heroStats:
-      data.heroStats?.length
-        ? data.heroStats.map((item: any, index: number) => ({
-            _key: item._key,
-            value: item.value || initial.heroStats[index]?.value || '',
-            label: item.label || initial.heroStats[index]?.label || '',
-          }))
-        : initial.heroStats,
+    heroStats,
     introParagraphs: data.introParagraphs?.length ? data.introParagraphs : initial.introParagraphs,
     introStats:
       data.introStats?.length
@@ -242,7 +255,7 @@ export function mapLiveProductsPage(initial: ProductContent, data: any): Product
               }))
             : initial.productCatalog[index]?.specs || [],
       })) || initial.productCatalog,
-    benefits: data.benefits?.length ? data.benefits : initial.benefits,
+    benefits,
     useCases: data.useCases?.length ? data.useCases : initial.useCases,
     dimensionImages:
       data.dimensionImages?.map((item: any, index: number) => ({

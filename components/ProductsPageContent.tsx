@@ -13,8 +13,6 @@ import {mapLiveProductsPage} from '@/sanity/lib/liveMappers'
 import type {
   ProductCatalogItem,
   ProductContent,
-  ProductEquipmentGroup,
-  ProductSpec,
   SiteSettingsContent,
 } from '@/sanity/lib/content'
 import {productsPageQuery} from '@/sanity/lib/queries'
@@ -36,10 +34,6 @@ function CheckIcon() {
       <polyline points="20 6 9 17 4 12" />
     </svg>
   )
-}
-
-function TypeBadge({type}: {type: string}) {
-  return <span className={type.toLowerCase() === 'opcia' ? 'badge-opt' : 'badge-std'}>{type}</span>
 }
 
 function VideoSlider({videos}: Pick<ProductContent, 'videos'>) {
@@ -96,101 +90,6 @@ function VideoSlider({videos}: Pick<ProductContent, 'videos'>) {
   )
 }
 
-function SpecsTable({rows, dual = true}: {rows: ProductSpec[]; dual?: boolean}) {
-  return (
-    <div className="spec-table-wrap">
-      <table className="spec-table">
-        <thead>
-          <tr>
-            <th>Parameter</th>
-            {dual ? (
-              <>
-                <th>2×12V DC</th>
-                <th>4×12V DC</th>
-              </>
-            ) : (
-              <th>Hodnota</th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={`${row.parameter}-${row.value || row.valueA}`}>
-              <td>{row.parameter}</td>
-              {dual ? (
-                <>
-                  <td>{row.valueA}</td>
-                  <td>{row.valueB}</td>
-                </>
-              ) : (
-                <td>{row.value}</td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function EquipmentTable({groups}: {groups: ProductEquipmentGroup[]}) {
-  return (
-    <div className="spec-table-wrap">
-      <table className="spec-table">
-        <thead>
-          <tr>
-            <th>Vybavenie</th>
-            <th>Typ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {groups.flatMap((group) => [
-            <tr className="group-row" key={group.title}>
-              <td colSpan={2}>{group.title}</td>
-            </tr>,
-            ...group.items.map((item) => (
-              <tr key={`${group.title}-${item.label}`}>
-                <td>{item.label}</td>
-                <td>
-                  <TypeBadge type={item.type} />
-                </td>
-              </tr>
-            )),
-          ])}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function Tabs({page}: {page: ProductContent}) {
-  const [active, setActive] = useState<'basic' | 'battery' | 'charging' | 'equipment'>('basic')
-
-  return (
-    <div>
-      <div className="tabs">
-        <button className={`tab-btn${active === 'basic' ? ' active' : ''}`} onClick={() => setActive('basic')} type="button">
-          Základné
-        </button>
-        <button className={`tab-btn${active === 'battery' ? ' active' : ''}`} onClick={() => setActive('battery')} type="button">
-          Batérie
-        </button>
-        <button className={`tab-btn${active === 'charging' ? ' active' : ''}`} onClick={() => setActive('charging')} type="button">
-          Nabíjanie
-        </button>
-        <button className={`tab-btn${active === 'equipment' ? ' active' : ''}`} onClick={() => setActive('equipment')} type="button">
-          Výbava
-        </button>
-      </div>
-
-      {active === 'basic' ? <SpecsTable rows={page.basicSpecs} /> : null}
-      {active === 'battery' ? <SpecsTable rows={page.batterySpecs} /> : null}
-      {active === 'charging' ? <SpecsTable rows={page.chargingSpecs} dual={false} /> : null}
-      {active === 'equipment' ? <EquipmentTable groups={page.equipmentGroups} /> : null}
-    </div>
-  )
-}
-
 function ProductCatalogSection({
   item,
   catalogIndex,
@@ -198,6 +97,7 @@ function ProductCatalogSection({
   pageAttr,
   onOpenLightbox,
   fallbackImages,
+  sectionId,
 }: {
   item: ProductCatalogItem
   catalogIndex: number
@@ -205,6 +105,7 @@ function ProductCatalogSection({
   pageAttr: (path: string) => string
   onOpenLightbox: (images: string[], startIndex: number) => void
   fallbackImages: string[]
+  sectionId?: string
 }) {
   const basePath = item._key ? `productCatalog[_key=="${item._key}"]` : `productCatalog[${catalogIndex}]`
   const availableDocuments = item.documents.filter((document) => document.url && document.url !== '#')
@@ -234,7 +135,7 @@ function ProductCatalogSection({
   }
 
   return (
-    <section className={displayIndex % 2 === 0 ? 'white' : 'bg'} data-sanity={pageAttr(basePath)}>
+    <section id={sectionId} className={displayIndex % 2 === 0 ? 'white' : 'bg'} data-sanity={pageAttr(basePath)}>
       <div className="container">
         <div className="product-doc-shell">
           <div className="product-doc-copy">
@@ -322,22 +223,13 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
     .map((item, catalogIndex) => ({item, catalogIndex}))
     .filter(({item}) => !isAccessoryCatalogItem(item))
   const hasCatalog = visibleProductCatalog.length > 0
-  const dimensionsTag =
-    resolvedPage.dimensionsTag.toLowerCase().includes('et 2000') ? 'Technické parametre' : resolvedPage.dimensionsTag
-  const accessoriesTag =
-    resolvedPage.accessoriesTag.toLowerCase().includes('rozšírené') ? 'Príslušenstvo' : resolvedPage.accessoriesTag
   const [lightbox, setLightbox] = useState<{images: string[]; index: number} | null>(null)
   const pageAttr = createDataAttribute({id: documentId, type: documentId, path: []})
-  const catalogItemPath = (index: number) => {
-    const key = resolvedPage.productCatalog[index]?._key
-    return key ? `productCatalog[_key=="${key}"]` : `productCatalog[${index}]`
-  }
-  const et3000Index = resolvedPage.productCatalog.findIndex((item) => item.title.toLowerCase().includes('et 3000'))
-  const et3000Item = et3000Index >= 0 ? resolvedPage.productCatalog[et3000Index] : null
-  const et3000Specs =
-    et3000Item?.specs.filter((spec) => spec.parameter.trim().toLowerCase() !== 'stav' && spec.value.trim()).length
-      ? et3000Item.specs.filter((spec) => spec.parameter.trim().toLowerCase() !== 'stav' && spec.value.trim())
-      : [{parameter: 'Typ zariadenia', value: 'ET 3000'}]
+  const heroAccent = resolvedPage.heroAccent?.trim()
+  const heroImageAlt = heroAccent || resolvedPage.heroTitle
+  const benefitsTitle = resolvedPage.benefitsTitle.toLowerCase().includes('2000')
+    ? 'Výhody elektrického malotraktora'
+    : resolvedPage.benefitsTitle
 
   const heroStatPath = (index: number) => {
     const key = resolvedPage.heroStats[index]?._key
@@ -347,16 +239,6 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
   const introStatPath = (index: number) => {
     const key = resolvedPage.introStats[index]?._key
     return key ? `introStats[_key=="${key}"]` : `introStats[${index}]`
-  }
-
-  const comfortItemPath = (index: number) => {
-    const key = resolvedPage.comfortItems[index]?._key
-    return key ? `comfortItems[_key=="${key}"]` : `comfortItems[${index}]`
-  }
-
-  const comfortImagePath = (index: number) => {
-    const key = resolvedPage.comfortImages[index]?._key
-    return key ? `comfortImages[_key=="${key}"]` : `comfortImages[${index}]`
   }
 
   return (
@@ -378,8 +260,12 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               </p>
               <h1 className="hero-title">
                 <span data-sanity={pageAttr('heroTitle')}>{resolvedPage.heroTitle}</span>
-                <br />
-                <span data-sanity={pageAttr('heroAccent')}>{resolvedPage.heroAccent}</span>
+                {heroAccent ? (
+                  <>
+                    <br />
+                    <span data-sanity={pageAttr('heroAccent')}>{heroAccent}</span>
+                  </>
+                ) : null}
               </h1>
               <p className="hero-subtitle" data-sanity={pageAttr('heroSubtitle')}>
                 {resolvedPage.heroSubtitle}
@@ -399,7 +285,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
             <div>
               <img
                 src={resolvedPage.heroImageSrc}
-                alt={resolvedPage.heroAccent}
+                alt={heroImageAlt}
                 className="hero-right-img zoomable-image"
                 data-sanity={pageAttr('heroImage')}
                 onClick={() => setLightbox({images: [resolvedPage.heroImageSrc], index: 0})}
@@ -484,7 +370,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               ) : null}
               <img
                 src={resolvedPage.introImageSrc}
-                alt={resolvedPage.heroAccent}
+                alt={heroImageAlt}
                 style={{width: '100%', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', objectFit: 'cover', maxHeight: 360}}
                 className="zoomable-image"
                 data-sanity={pageAttr('introImage')}
@@ -503,7 +389,7 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
                 {resolvedPage.benefitsTag}
               </span>
               <h2 className="section-title" data-sanity={pageAttr('benefitsTitle')}>
-                {resolvedPage.benefitsTitle}
+                {benefitsTitle}
               </h2>
               <div className="check-list">
                 {resolvedPage.benefits.map((item, index) => (
@@ -539,56 +425,6 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="white" id="parametre">
-        <div className="container">
-          <span className="tag" data-sanity={pageAttr('dimensionsTag')}>
-            {dimensionsTag}
-          </span>
-          <h2 className="section-title" data-sanity={pageAttr('dimensionsTitle')}>
-            {resolvedPage.dimensionsTitle}
-          </h2>
-          <div className="dimension-grid">
-            {resolvedPage.dimensionImages.map((image, index) => (
-              <img
-                key={image.src}
-                src={image.src}
-                alt={image.alt}
-                className="dimension-image zoomable-image"
-                data-sanity={pageAttr(`dimensionImages[${index}].image`)}
-                onClick={() => setLightbox({images: resolvedPage.dimensionImages.map((item) => item.src), index})}
-              />
-            ))}
-          </div>
-          <div className="tech-panels">
-            <div className="tech-panel">
-              <h3 className="subsection-title">ET 2000 špecifikácie</h3>
-              <Tabs page={resolvedPage} />
-            </div>
-            <div className="tech-panel">
-              <h3 className="subsection-title">ET 3000 špecifikácie</h3>
-              <div className="spec-table-wrap">
-                <table className="spec-table">
-                  <tbody>
-                    {et3000Specs.map((spec, specIndex) => {
-                      const basePath = et3000Index >= 0 ? catalogItemPath(et3000Index) : 'productCatalog[1]'
-                      const key = et3000Item?.specs[specIndex]?._key
-                      const specPath = key ? `${basePath}.specs[_key=="${key}"]` : `${basePath}.specs[${specIndex}]`
-
-                      return (
-                        <tr key={`${spec.parameter}-${specIndex}`} data-sanity={pageAttr(specPath)}>
-                          <td data-sanity={pageAttr(`${specPath}.parameter`)}>{spec.parameter}</td>
-                          <td data-sanity={pageAttr(`${specPath}.value`)}>{spec.value}</td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>
@@ -641,92 +477,13 @@ export default function ProductsPageContent({page, data, siteSettings, documentI
               item={item}
               catalogIndex={catalogIndex}
               displayIndex={displayIndex}
+              sectionId={displayIndex === 0 ? 'parametre' : undefined}
               pageAttr={pageAttr}
               fallbackImages={DEFAULT_PRODUCT_GALLERY}
               onOpenLightbox={(images, startIndex) => setLightbox({images, index: startIndex})}
             />
           ))
         : null}
-
-      <section className="white">
-        <div className="container">
-          <span className="tag" data-sanity={pageAttr('accessoriesTag')}>
-            {accessoriesTag}
-          </span>
-          <h2 className="section-title" data-sanity={pageAttr('accessoriesTitle')}>
-            {resolvedPage.accessoriesTitle}
-          </h2>
-          <div className="accessories-grid">
-            {resolvedPage.accessories.map((item, index) => (
-              <div
-                className="img-card accessory-card"
-                key={item.title}
-                data-sanity={pageAttr(`accessories[${index}]`)}
-                onClick={() => setLightbox({images: resolvedPage.accessories.map((card) => card.imageSrc || ''), index})}
-              >
-                <img
-                  src={item.imageSrc}
-                  alt={item.imageAlt || item.title}
-                  className="accessory-card-image zoomable-image"
-                  data-sanity={pageAttr(`accessories[${index}].image`)}
-                />
-                <div className="img-card-body">
-                  <div className="img-card-title" data-sanity={pageAttr(`accessories[${index}].title`)}>
-                    {item.title}
-                  </div>
-                  <div className="img-card-desc" data-sanity={pageAttr(`accessories[${index}].description`)}>
-                    {item.description}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg">
-        <div className="container">
-          <span className="tag" data-sanity={pageAttr('comfortTag')}>
-            {resolvedPage.comfortTag}
-          </span>
-          <h2 className="section-title" data-sanity={pageAttr('comfortTitle')}>
-            {resolvedPage.comfortTitle}
-          </h2>
-          <div className="comfort-layout">
-            <div>
-              <div className="check-list">
-                {resolvedPage.comfortItems.map((item, index) => (
-                  <div className="check-item" key={`${item.label}-${index}`} data-sanity={pageAttr(comfortItemPath(index))}>
-                    <CheckIcon />
-                    <span>
-                      <span data-sanity={pageAttr(`${comfortItemPath(index)}.label`)}>{item.label}</span>{' '}
-                      <span style={{marginLeft: 8}} data-sanity={pageAttr(`${comfortItemPath(index)}.type`)}>
-                        <TypeBadge type={item.type} />
-                      </span>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="comfort-media-grid">
-              {resolvedPage.comfortImages.map((image, index) => (
-                <div
-                  key={image.src}
-                  className="comfort-media-card"
-                  onClick={() => setLightbox({images: resolvedPage.comfortImages.map((item) => item.src), index})}
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="zoomable-image"
-                    data-sanity={pageAttr(comfortImagePath(index))}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="white">
         <div className="container">

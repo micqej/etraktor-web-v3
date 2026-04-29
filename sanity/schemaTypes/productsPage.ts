@@ -29,8 +29,6 @@ const productMediaFields = [
 const productCatalogFields = [
   defineField({name: 'badge', title: 'Badge / tag', type: 'string'}),
   defineField({name: 'title', title: 'Názov produktu', type: 'string'}),
-  defineField({name: 'subtitle', title: 'Podnadpis', type: 'string'}),
-  defineField({name: 'description', title: 'Popis', type: 'text', rows: 5}),
   defineField({
     name: 'image',
     title: 'Hlavný obrázok',
@@ -38,12 +36,6 @@ const productCatalogFields = [
     options: {hotspot: true},
   }),
   defineField({name: 'imageAlt', title: 'Alt text obrázka', type: 'string'}),
-  defineField({
-    name: 'highlights',
-    title: 'Zvýraznené body',
-    type: 'array',
-    of: [defineArrayMember({type: 'string'})],
-  }),
   defineField({name: 'documentsTitle', title: 'Nadpis dokumentov', type: 'string'}),
   defineField({
     name: 'documents',
@@ -57,22 +49,6 @@ const productCatalogFields = [
       }),
     ],
   }),
-  defineField({name: 'videosTitle', title: 'Nadpis videí', type: 'string'}),
-  defineField({
-    name: 'videos',
-    title: 'Videá',
-    type: 'array',
-    of: [
-      defineArrayMember({
-        type: 'object',
-        fields: [
-          defineField({name: 'youtubeId', title: 'YouTube ID', type: 'string'}),
-          defineField({name: 'label', title: 'Názov videa', type: 'string'}),
-        ],
-        preview: {select: {title: 'label', subtitle: 'youtubeId'}},
-      }),
-    ],
-  }),
   defineField({name: 'galleryTitle', title: 'Nadpis galérie', type: 'string'}),
   defineField({
     name: 'galleryImages',
@@ -83,25 +59,9 @@ const productCatalogFields = [
         type: 'image',
         options: {hotspot: true},
         fields: [defineField({name: 'alt', title: 'Alt text', type: 'string'})],
-      }),
-    ],
-  }),
-  defineField({name: 'specsTitle', title: 'Nadpis parametrov', type: 'string'}),
-  defineField({
-    name: 'specs',
-    title: 'Parametre',
-    type: 'array',
-    of: [
-      defineArrayMember({
-        type: 'object',
-        fields: [
-          defineField({name: 'parameter', title: 'Parameter', type: 'string'}),
-          defineField({name: 'value', title: 'Hodnota', type: 'string'}),
-        ],
-        preview: {select: {title: 'parameter', subtitle: 'value'}},
-      }),
-    ],
-  }),
+        }),
+      ],
+    }),
 ]
 
 export const productsPageType = defineType({
@@ -111,13 +71,10 @@ export const productsPageType = defineType({
   groups: [
     {name: 'hero', title: 'Hero'},
     {name: 'intro', title: 'Úvod'},
-    {name: 'catalog', title: 'Produktové sekcie'},
-    {name: 'benefits', title: 'Výhody'},
-    {name: 'dimensions', title: 'Rozmery'},
-    {name: 'gallery', title: 'Galéria'},
-    {name: 'comfort', title: 'Komfort'},
+    {name: 'catalog', title: 'Dokumenty a fotografie'},
+    {name: 'benefits', title: 'Výhody a využitie'},
+    {name: 'gallery', title: 'Dojazd a galérie'},
     {name: 'video', title: 'Videá'},
-    {name: 'specs', title: 'Parametre'},
     {name: 'cta', title: 'CTA'},
   ],
   fields: [
@@ -195,7 +152,7 @@ export const productsPageType = defineType({
       type: 'array',
       group: 'catalog',
       description:
-        'Samostatné bloky pre jednotlivé modely. Každý blok má vlastný obrázok, dokumenty na stiahnutie a galériu fotografií.',
+        'Samostatné bloky pre jednotlivé modely ET 2000 a ET 3000. Každý blok má vlastný obrázok, dokumenty na stiahnutie a galériu fotografií.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -235,29 +192,6 @@ export const productsPageType = defineType({
         }),
       ],
     }),
-    defineField({name: 'dimensionsTag', title: 'Tag rozmerov', type: 'string', group: 'dimensions'}),
-    defineField({name: 'dimensionsTitle', title: 'Nadpis rozmerov', type: 'string', group: 'dimensions'}),
-    defineField({
-      name: 'dimensionImages',
-      title: 'Obrázky rozmerov',
-      type: 'array',
-      group: 'dimensions',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'alt', title: 'Alt text', type: 'string'}),
-            defineField({
-              name: 'image',
-              title: 'Obrázok',
-              type: 'image',
-              options: {hotspot: true},
-            }),
-          ],
-          preview: {select: {title: 'alt', media: 'image'}},
-        }),
-      ],
-    }),
     defineField({
       name: 'galleryImages',
       title: 'Galéria obrázkov',
@@ -284,69 +218,6 @@ export const productsPageType = defineType({
             defineField({name: 'label', title: 'Názov videa', type: 'string'}),
           ],
           preview: {select: {title: 'label', subtitle: 'youtubeId'}},
-        }),
-      ],
-    }),
-    defineField({
-      name: 'batterySpecs',
-      title: 'Batérie',
-      type: 'array',
-      group: 'specs',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'parameter', title: 'Parameter', type: 'string'}),
-            defineField({name: 'valueA', title: '2×12V DC', type: 'string'}),
-            defineField({name: 'valueB', title: '4×12V DC', type: 'string'}),
-          ],
-          preview: {select: {title: 'parameter', subtitle: 'valueA'}},
-        }),
-      ],
-    }),
-    defineField({
-      name: 'chargingSpecs',
-      title: 'Nabíjanie',
-      type: 'array',
-      group: 'specs',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'parameter', title: 'Parameter', type: 'string'}),
-            defineField({name: 'value', title: 'Hodnota', type: 'string'}),
-          ],
-          preview: {select: {title: 'parameter', subtitle: 'value'}},
-        }),
-      ],
-    }),
-    defineField({
-      name: 'equipmentGroups',
-      title: 'Skupiny výbavy',
-      type: 'array',
-      group: 'specs',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'title', title: 'Nadpis skupiny', type: 'string'}),
-            defineField({
-              name: 'items',
-              title: 'Položky',
-              type: 'array',
-              of: [
-                defineArrayMember({
-                  type: 'object',
-                  fields: [
-                    defineField({name: 'label', title: 'Položka', type: 'string'}),
-                    defineField({name: 'type', title: 'Typ', type: 'string'}),
-                  ],
-                  preview: {select: {title: 'label', subtitle: 'type'}},
-                }),
-              ],
-            }),
-          ],
-          preview: {select: {title: 'title'}},
         }),
       ],
     }),
@@ -386,31 +257,6 @@ export const productsPageType = defineType({
         }),
       ],
     }),
-    defineField({name: 'accessoriesTag', title: 'Tag príslušenstva', type: 'string', group: 'gallery'}),
-    defineField({name: 'accessoriesTitle', title: 'Nadpis príslušenstva', type: 'string', group: 'gallery'}),
-    defineField({
-      name: 'accessories',
-      title: 'Príslušenstvo',
-      type: 'array',
-      group: 'gallery',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'title', title: 'Nadpis', type: 'string'}),
-            defineField({name: 'description', title: 'Popis', type: 'text', rows: 3}),
-            defineField({name: 'alt', title: 'Alt text', type: 'string'}),
-            defineField({
-              name: 'image',
-              title: 'Obrázok',
-              type: 'image',
-              options: {hotspot: true},
-            }),
-          ],
-          preview: {select: {title: 'title', subtitle: 'description', media: 'image'}},
-        }),
-      ],
-    }),
     defineField({name: 'certificatesTag', title: 'Tag certifikátov', type: 'string', group: 'gallery'}),
     defineField({name: 'certificatesTitle', title: 'Nadpis certifikátov', type: 'string', group: 'gallery'}),
     defineField({
@@ -438,72 +284,6 @@ export const productsPageType = defineType({
     defineField({name: 'galleryTag', title: 'Tag fotogalérie', type: 'string', group: 'gallery'}),
     defineField({name: 'galleryTitle', title: 'Nadpis fotogalérie', type: 'string', group: 'gallery'}),
     defineField({name: 'galleryDescription', title: 'Popis fotogalérie', type: 'text', rows: 3, group: 'gallery'}),
-    defineField({name: 'comfortTag', title: 'Tag komfortu', type: 'string', group: 'comfort'}),
-    defineField({name: 'comfortTitle', title: 'Nadpis komfortu', type: 'string', group: 'comfort'}),
-    defineField({
-      name: 'comfortItems',
-      title: 'Položky komfortu a výbavy',
-      type: 'array',
-      group: 'comfort',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'label', title: 'Položka', type: 'string'}),
-            defineField({
-              name: 'type',
-              title: 'Typ',
-              type: 'string',
-              options: {
-                list: [
-                  {title: 'Štandard', value: 'štandard'},
-                  {title: 'Opcia', value: 'opcia'},
-                ],
-              },
-            }),
-          ],
-          preview: {select: {title: 'label', subtitle: 'type'}},
-        }),
-      ],
-    }),
-    defineField({
-      name: 'comfortImages',
-      title: 'Obrázky komfortu',
-      type: 'array',
-      group: 'comfort',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'alt', title: 'Alt text', type: 'string'}),
-            defineField({
-              name: 'image',
-              title: 'Obrázok',
-              type: 'image',
-              options: {hotspot: true},
-            }),
-          ],
-          preview: {select: {title: 'alt', media: 'image'}},
-        }),
-      ],
-    }),
-    defineField({
-      name: 'basicSpecs',
-      title: 'Základné parametre',
-      type: 'array',
-      group: 'specs',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({name: 'parameter', title: 'Parameter', type: 'string'}),
-            defineField({name: 'valueA', title: '2×12V DC', type: 'string'}),
-            defineField({name: 'valueB', title: '4×12V DC', type: 'string'}),
-          ],
-          preview: {select: {title: 'parameter', subtitle: 'valueA'}},
-        }),
-      ],
-    }),
     defineField({name: 'videosTag', title: 'Tag videí', type: 'string', group: 'video'}),
     defineField({name: 'videosTitle', title: 'Nadpis videí', type: 'string', group: 'video'}),
     defineField({name: 'ctaTitle', title: 'CTA nadpis', type: 'string', group: 'cta'}),
