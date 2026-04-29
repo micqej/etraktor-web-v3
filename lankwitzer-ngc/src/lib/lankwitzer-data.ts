@@ -25,6 +25,7 @@ export type ProductCategory = {
   summary: LocalizedString;
   intro: LocalizedString;
   image: string;
+  bannerImage: string;
   bullets: LocalizedStringArray;
   highlights: LocalizedStringArray;
 };
@@ -34,6 +35,7 @@ export type UtilityItem = {
   title: LocalizedString;
   summary: LocalizedString;
   intro: LocalizedString;
+  bannerImage: string;
   body: LocalizedStringArray;
 };
 
@@ -124,6 +126,7 @@ export const productCategories: ProductCategory[] = [
       en: "Solvent-based systems remain the safest choice in many operations when high protection, reliable application and broad usability must go together.",
     },
     image: "/site-assets/Produkty-2.jpg",
+    bannerImage: "/site-assets/Produkty-2.jpg",
     bullets: {
       sk: [
         "Jednozložkové syntetické rýchloschnúce nátery na oceľ.",
@@ -158,6 +161,7 @@ export const productCategories: ProductCategory[] = [
       en: "Today, waterbased systems deliver performance comparable to solvent alternatives while lowering the environmental burden of production.",
     },
     image: "/site-assets/PlaSTY-main-900x600.jpg",
+    bannerImage: "/site-assets/PlaSTY-main-900x600.jpg",
     bullets: {
       sk: [
         "Výborné ochranné vlastnosti a rýchle doby zasychania.",
@@ -192,6 +196,7 @@ export const productCategories: ProductCategory[] = [
       en: "UV coatings are ideal wherever production speed, mechanical resistance and efficient material usage matter most.",
     },
     image: "/site-assets/skuska_rury-900x619.jpg",
+    bannerImage: "/site-assets/skuska_rury-900x619.jpg",
     bullets: {
       sk: [
         "Polymerizácia prebieha v priebehu niekoľkých sekúnd.",
@@ -226,6 +231,7 @@ export const productCategories: ProductCategory[] = [
       en: "EvoKure is the next step in coating technology. It does not require special application equipment, yet delivers a combination of properties unavailable in conventional coatings.",
     },
     image: "/site-assets/EVO-AMG.jpg",
+    bannerImage: "/site-assets/EVO-AMG.jpg",
     bullets: {
       sk: [
         "Bez obsahu izokyanátov a so zanedbateľným VOC.",
@@ -260,6 +266,7 @@ export const productCategories: ProductCategory[] = [
       en: "This category needs clear explanation, technical documentation and trust. That is why we present it as a dedicated expert section on the new website.",
     },
     image: "/site-assets/Kontajnery-OK-3.jpg",
+    bannerImage: "/site-assets/Kontajnery-OK-3.jpg",
     bullets: {
       sk: [
         "Vodou riediteľné aj rozpúšťadlové intumescentné systémy.",
@@ -292,6 +299,7 @@ export const productCategories: ProductCategory[] = [
       en: "The portfolio is not only about paints and coatings. The full support layer around surface preparation, cleaning and application is just as important.",
     },
     image: "/site-assets/Produkty-2.jpg",
+    bannerImage: "/site-assets/Produkty-2.jpg",
     bullets: {
       sk: [
         "Riedidlá pre jednotlivé systémy a technologické postupy.",
@@ -325,6 +333,7 @@ export const usefulItems: UtilityItem[] = [
       sk: "Pri stanovení ceny náteru nie je rozhodujúca len cena za kilogram, ale reálna spotreba na meter štvorcový pri konkrétnej hrúbke, hustote a stratovosti.",
       en: "When evaluating coating cost, the key factor is not price per kilogram alone but the real consumption per square metre at a given thickness, density and loss factor.",
     },
+    bannerImage: "/site-assets/Automotive-main-2-900x601.jpg",
     body: {
       sk: [
         "Zadajte plochu, objemový obsah sušiny, DFT, hustotu, cenu farby, cenu riedidla, riedenie a koeficient strát.",
@@ -347,6 +356,7 @@ export const usefulItems: UtilityItem[] = [
       sk: "V technickej aj obchodnej komunikácii je dôležité rozumieť tomu, čo znamená mat, pololesk alebo vysoký lesk a ako to vplýva na výsledný vzhľad povrchu.",
       en: "In technical and commercial communication, it is important to understand what matt, semi-gloss or high gloss really mean and how they affect the final appearance.",
     },
+    bannerImage: "/site-assets/Automotive-main-2-900x601.jpg",
     body: {
       sk: [
         "Lesk povrchu sa vyhodnocuje podľa toho, koľko svetla sa od povrchu odráža pri definovaných podmienkach merania.",
@@ -371,6 +381,7 @@ export const usefulItems: UtilityItem[] = [
       sk: "Farba je často prvá vec, ktorú zákazník na výrobku vníma. Preto je potrebné mať na webe jasnú orientáciu v odtieňoch a možnostiach tónovania.",
       en: "Colour is often the first thing a customer notices on a product. That is why the website should clearly explain shades and tinting options.",
     },
+    bannerImage: "/site-assets/PlaSTY-main-900x600.jpg",
     body: {
       sk: [
         "Štandardne vieme pracovať s odtieňmi RAL a podľa potreby aj s ďalšími vzorkovníkmi podľa zadania.",
@@ -395,6 +406,7 @@ export const usefulItems: UtilityItem[] = [
       sk: "Pri návrhu povrchovej úpravy je dôležité spojiť korózne prostredie, skladbu systému a požadovanú životnosť do jedného zrozumiteľného odporúčania.",
       en: "When designing a coating system, corrosion environment, system build-up and required service life must be connected into a single clear recommendation.",
     },
+    bannerImage: "/site-assets/Kontajnery-OK-3.jpg",
     body: {
       sk: [
         "ISO systémy pomáhajú zvoliť správny počet vrstiev, typ základného aj vrchného náteru a vhodnú DFT.",
@@ -463,9 +475,9 @@ export const siteCopy = {
     productsText:
       "Namiesto prázdnych placeholderov majú jednotlivé kategórie vlastný obsah, hlavné benefity a jasné technické zameranie.",
     usefulTitle: "Užitočné",
-    usefulHeading: "Praktické a technické podklady, ktoré dávajú zmysel zachovať",
+    usefulHeading: "Užitočné podklady pre výber systému, orientáciu aj kalkuláciu",
     usefulText:
-      "Zostávajú len tie sekcie, ktoré majú hodnotu pre zákazníka aj obchod: kalkulačka, lesk náterov, RAL a ISO systémy.",
+      "V tejto sekcii sú praktické nástroje a technické vysvetlenia, ktoré pomáhajú zákazníkovi rýchlejšie sa zorientovať v spotrebe, lesku, odtieňoch aj koróznych systémoch.",
     aboutTitle: "O nás",
     aboutHeading: "Nie len dodávateľ. Partner pri komplexnom riešení povrchových úprav.",
     aboutText:
@@ -486,6 +498,18 @@ export const siteCopy = {
     calculatorHeading: "Kalkulácia spotrieb",
     calculatorText:
       "Interaktívny výpočet vychádza z poslaného Excelu a je postavený na reálnych vstupoch, ktoré si zákazník zadáva sám.",
+    footerTagline: "Partner pre priemyselné nátery, technické poradenstvo a riešenia na mieru.",
+    footerProducts: "Produktové skupiny",
+    footerUseful: "Užitočné odkazy",
+    footerContact: "Kontakt",
+    formTitle: "Napíšte nám",
+    formText: "Jednoduchý dopytový formulár pre rýchly prvý kontakt. Odoslanie momentálne pripraví e-mail na adresu predaja.",
+    formName: "Meno a priezvisko",
+    formCompany: "Firma",
+    formEmail: "E-mail",
+    formPhone: "Telefón",
+    formMessage: "Správa",
+    formSubmit: "Pripraviť dopyt",
   },
   en: {
     siteTitle: "Lankwitzer Slovakia",
@@ -497,7 +521,7 @@ export const siteCopy = {
     contactHref: "/en/kontakt",
     calculatorHref: "/en/uzitocne/kalkulacia-spotrieb",
     heroEyebrow: "Complex surface finishing solutions",
-    heroTitle: "Coatings, technical guidance and tailored solutions for industry.",
+    heroTitle: "Premium coating systems for industry.",
     heroLead:
       "The new website is built around the brand's high-contrast dark identity, the client's real market segments and technical content with both business and expert value.",
     heroBody:
@@ -515,9 +539,9 @@ export const siteCopy = {
     productsText:
       "Instead of empty placeholders, every category now has its own content, core benefits and clear technical positioning.",
     usefulTitle: "Useful",
-    usefulHeading: "Technical resources worth keeping",
+    usefulHeading: "Useful resources for calculation, orientation and technical decisions",
     usefulText:
-      "Only the sections that provide real customer and business value remain: calculator, coating gloss, RAL sampler and ISO corrosion systems.",
+      "This section brings together practical tools and technical guidance that help customers understand consumption, gloss, colour selection and ISO corrosion systems.",
     aboutTitle: "About",
     aboutHeading: "Not just a supplier. A partner for complete surface finishing solutions.",
     aboutText:
@@ -538,6 +562,18 @@ export const siteCopy = {
     calculatorHeading: "Consumption calculation",
     calculatorText:
       "This interactive calculation is based on the supplied Excel file and uses real-world inputs that the customer defines directly.",
+    footerTagline: "Partner for industrial coatings, technical consultancy and tailored solutions.",
+    footerProducts: "Product groups",
+    footerUseful: "Useful links",
+    footerContact: "Contact",
+    formTitle: "Write to us",
+    formText: "A simple enquiry form for fast first contact. Submission currently prepares an email to the sales address.",
+    formName: "Full name",
+    formCompany: "Company",
+    formEmail: "Email",
+    formPhone: "Phone",
+    formMessage: "Message",
+    formSubmit: "Prepare enquiry",
   },
 };
 

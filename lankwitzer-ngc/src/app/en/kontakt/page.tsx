@@ -1,5 +1,5 @@
-import { ContactBlock } from "@/components/page-blocks";
+import { ContactSectionPage } from "@/components/detail-pages";
 
 export default function ContactEnPage() {
-  return <ContactBlock locale="en" />;
+  return <ContactSectionPage locale="en" />;
 }

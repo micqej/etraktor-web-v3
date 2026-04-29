@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Teko } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 
 const teko = Teko({
   variable: "--font-teko",
@@ -30,7 +31,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SiteHeader />
-        {children}
+        <main className="page-shell">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

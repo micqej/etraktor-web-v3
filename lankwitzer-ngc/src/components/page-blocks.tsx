@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { ContactForm } from "@/components/contact-form";
 import {
   aboutBullets,
   contactDetails,
@@ -165,19 +166,28 @@ export function ContactBlock({ locale = "sk" }: { locale?: Locale }) {
           <h1>{copy.contactHeading}</h1>
           <p>{copy.contactText}</p>
         </div>
-        <div className="contact-grid">
-          <div className="contact-panel">
-            <strong>{contactDetails.company}</strong>
-            <p>{contactDetails.address}</p>
+        <div className="contact-page-grid">
+          <div className="detail-main">
+            <div className="contact-grid">
+              <div className="contact-panel">
+                <strong>{contactDetails.company}</strong>
+                <p>{contactDetails.address}</p>
+              </div>
+              <div className="contact-panel">
+                <strong>{contactDetails.email}</strong>
+                <p>{contactDetails.phones.join(", ")}</p>
+              </div>
+              <div className="contact-panel">
+                <strong>IČO {contactDetails.ico}</strong>
+                <p>IČ DPH: {contactDetails.icDph}</p>
+              </div>
+              <div className="contact-panel">
+                <strong>{locale === "sk" ? "Telefón a fax" : "Phone and fax"}</strong>
+                <p>{contactDetails.phones[2]} | fax: {contactDetails.fax}</p>
+              </div>
+            </div>
           </div>
-          <div className="contact-panel">
-            <strong>{contactDetails.email}</strong>
-            <p>{contactDetails.phones.join(", ")}</p>
-          </div>
-          <div className="contact-panel">
-            <strong>IČO {contactDetails.ico}</strong>
-            <p>IČ DPH: {contactDetails.icDph}</p>
-          </div>
+          <ContactForm locale={locale} />
         </div>
         <div className="contact-cta">
           <div>

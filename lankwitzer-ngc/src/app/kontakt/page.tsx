@@ -1,5 +1,5 @@
-import { ContactBlock } from "@/components/page-blocks";
+import { ContactSectionPage } from "@/components/detail-pages";
 
 export default function ContactPage() {
-  return <ContactBlock locale="sk" />;
+  return <ContactSectionPage locale="sk" />;
 }
