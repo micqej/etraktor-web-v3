@@ -4,6 +4,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lankwitzer.sk",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
