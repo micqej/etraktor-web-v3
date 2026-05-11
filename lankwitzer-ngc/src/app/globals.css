@@ -129,10 +129,11 @@ textarea {
 
 .mega-menu {
   position: absolute;
-  top: calc(100% + 1rem);
+  top: 100%;
   left: 0;
   min-width: 320px;
-  padding: 1rem;
+  padding: 1rem 1rem 1rem;
+  padding-top: 1.25rem;
   background: rgba(246, 244, 239, 0.98);
   border: 1px solid rgba(25, 31, 39, 0.12);
   box-shadow: var(--shadow);
@@ -266,7 +267,7 @@ textarea {
 
 .home-hero-copy {
   max-width: 760px;
-  padding: 5rem 0 4rem;
+  padding: 3rem 0 2rem;
 }
 
 .home-hero-copy h1,
@@ -296,7 +297,7 @@ textarea {
 .home-hero-side {
   display: grid;
   gap: 1rem;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
 }
 
 .hero-stat-card {

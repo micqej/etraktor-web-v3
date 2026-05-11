@@ -22,7 +22,7 @@ function MenuColumn({
 }) {
   return (
     <div className="mega-column">
-      <strong>{title}</strong>
+      {title ? <strong>{title}</strong> : null}
       {items.map((item) => (
         <Link key={item.slug} href={`${basePath}/${item.slug}`} onClick={onNavigate}>
           {item.title[locale]}
@@ -95,18 +95,10 @@ export function SiteHeader() {
             <Link href={nav.products} className="nav-parent-link">
               {nav.labels.products}
             </Link>
-            <button
-              type="button"
-              className={`nav-dropdown-trigger${activeMenu === "products" ? " active" : ""}`}
-              aria-label={nav.labels.products}
-              onClick={() => setActiveMenu(activeMenu === "products" ? null : "products")}
-            >
-              +
-            </button>
             {activeMenu === "products" ? (
               <div className="mega-menu">
                 <MenuColumn
-                  title={locale === "sk" ? "Produktové skupiny" : "Product groups"}
+                  title=""
                   items={productCategories}
                   basePath={nav.products}
                   locale={locale}
@@ -124,18 +116,10 @@ export function SiteHeader() {
             <Link href={nav.useful} className="nav-parent-link">
               {nav.labels.useful}
             </Link>
-            <button
-              type="button"
-              className={`nav-dropdown-trigger${activeMenu === "useful" ? " active" : ""}`}
-              aria-label={nav.labels.useful}
-              onClick={() => setActiveMenu(activeMenu === "useful" ? null : "useful")}
-            >
-              +
-            </button>
             {activeMenu === "useful" ? (
               <div className="mega-menu">
                 <MenuColumn
-                  title={locale === "sk" ? "Technické podklady" : "Technical resources"}
+                  title=""
                   items={usefulItems}
                   basePath={nav.useful}
                   locale={locale}

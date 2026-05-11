@@ -40,14 +40,14 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
 
           <div className="home-hero-side">
             <div className="hero-stat-card">
-              <span>SEGMENTY</span>
-              <strong>6</strong>
-              <p>{locale === "sk" ? "Kľúčových oblastí použitia na hlavnej stránke." : "Core application segments on the homepage."}</p>
+              <span>{locale === "sk" ? "SKÚSENOSTI" : "EXPERIENCE"}</span>
+              <strong>30+</strong>
+              <p>{locale === "sk" ? "Rokov skúseností v oblasti priemyselných povrchových úprav." : "Years of experience in industrial surface finishing."}</p>
             </div>
             <div className="hero-stat-card accent">
               <span>{locale === "sk" ? "SLUŽBY" : "SERVICES"}</span>
               <strong>RAL / ISO / DFT</strong>
-              <p>{locale === "sk" ? "Kalkulácia, poradenstvo a technické podklady v jednom mieste." : "Calculation, consultancy and technical resources in one place."}</p>
+              <p>{locale === "sk" ? "Kalkulácia spotreby, poradenstvo a technické podklady v jednom mieste." : "Consumption calculation, consultancy and technical resources in one place."}</p>
             </div>
           </div>
         </div>

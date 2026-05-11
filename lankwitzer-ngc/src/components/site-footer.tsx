@@ -10,9 +10,9 @@ export function SiteFooter({ locale = "sk" }: { locale?: Locale }) {
     <footer className="site-footer">
       <div className="shell footer-grid">
         <div className="footer-brand">
-          <div className="footer-logo-wrap">
+          <Link href={locale === "sk" ? "/" : "/en"} className="footer-logo-wrap">
             <Image src="/site-assets/Lankwitzer_Logo-2017-RGB.png" alt="Lankwitzer logo" width={184} height={48} />
-          </div>
+          </Link>
           <p>{copy.footerTagline}</p>
         </div>
 

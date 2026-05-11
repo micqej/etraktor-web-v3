@@ -36,10 +36,6 @@ function PageHero({
         <h1>{title}</h1>
         <p>{text}</p>
       </div>
-      <div className="page-hero-accent accent-blue" />
-      <div className="page-hero-accent accent-orange" />
-      <div className="page-hero-accent accent-red" />
-      <div className="page-hero-accent accent-yellow" />
     </section>
   );
 }
