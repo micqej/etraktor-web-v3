@@ -70,8 +70,8 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 80;
-  background: rgba(246, 244, 239, 0.94);
-  border-bottom: 1px solid rgba(25, 31, 39, 0.1);
+  background: rgba(18, 22, 29, 0.96);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px);
 }
 
@@ -92,7 +92,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  color: #232c38;
+  color: var(--foreground);
   font-size: 1.2rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -163,13 +163,28 @@ textarea {
   transform: translateX(5px);
 }
 
+.mega-view-all {
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  color: var(--red) !important;
+  background: none !important;
+  padding: 0.3rem 0 !important;
+}
+
+.mega-divider {
+  height: 1px;
+  background: rgba(25, 31, 39, 0.12);
+  margin: 0.2rem 0;
+}
+
 .lang-badge {
   min-width: 54px;
   padding: 0.65rem 0.8rem;
   text-align: center;
-  color: #202834;
-  border: 1px solid rgba(25, 31, 39, 0.12);
-  background: white;
+  color: var(--foreground);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
   font-size: 1rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -283,8 +298,8 @@ textarea {
 }
 
 .home-hero-copy h1 {
-  font-size: clamp(4rem, 8vw, 8rem);
-  max-width: 10ch;
+  font-size: clamp(3rem, 5.5vw, 6.5rem);
+  max-width: 14ch;
 }
 
 .hero-actions {

@@ -13,16 +13,22 @@ function MenuColumn({
   basePath,
   locale,
   onNavigate,
+  viewAllLabel,
 }: {
   title: string;
   items: { title: { sk: string; en: string }; slug: string }[];
   basePath: string;
   locale: Locale;
   onNavigate: () => void;
+  viewAllLabel: string;
 }) {
   return (
     <div className="mega-column">
       {title ? <strong>{title}</strong> : null}
+      <Link href={basePath} className="mega-view-all" onClick={onNavigate}>
+        {viewAllLabel}
+      </Link>
+      <div className="mega-divider" />
       {items.map((item) => (
         <Link key={item.slug} href={`${basePath}/${item.slug}`} onClick={onNavigate}>
           {item.title[locale]}
@@ -103,6 +109,7 @@ export function SiteHeader() {
                   basePath={nav.products}
                   locale={locale}
                   onNavigate={() => setActiveMenu(null)}
+                  viewAllLabel={locale === "sk" ? "Zobraziť všetky produkty →" : "View all products →"}
                 />
               </div>
             ) : null}
@@ -124,6 +131,7 @@ export function SiteHeader() {
                   basePath={nav.useful}
                   locale={locale}
                   onNavigate={() => setActiveMenu(null)}
+                  viewAllLabel={locale === "sk" ? "Zobraziť všetky →" : "View all →"}
                 />
               </div>
             ) : null}
