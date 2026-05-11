@@ -391,13 +391,13 @@ export const usefulItems: UtilityItem[] = [
     body: {
       sk: [
         "Štandardne vieme pracovať s odtieňmi RAL, prípadne RAL Design, STN, ČSN, British Standard a ďalšími podľa zadania.",
-        "Miešanie a tónovanie farieb prebieha na zariadení FARB-EXPRESS „Just in Time".",
+        'Miešanie a tónovanie farieb prebieha na zariadení FARB-EXPRESS "Just in Time".',
         "Dodanie na miesto určenia do 24 hodín.",
         "Ak potrebujete konkrétny odtieň, kontaktujte nás – poradíme a odtieň namiešame presne podľa požiadavky.",
       ],
       en: [
         "We work with RAL, RAL Design, STN, ČSN, British Standard and other reference systems as required.",
-        "Colour mixing and tinting via the FARB-EXPRESS "Just in Time" system.",
+        "Colour mixing and tinting via the FARB-EXPRESS Just in Time system.",
         "Delivery to your location within 24 hours.",
         "If you need a specific shade, contact us — we will advise and mix it to your exact specification.",
       ],
