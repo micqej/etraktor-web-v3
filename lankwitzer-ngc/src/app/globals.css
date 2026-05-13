@@ -392,7 +392,12 @@ textarea {
 }
 
 .section-alt {
-  background: rgba(255, 255, 255, 0.02);
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 15%,
+    rgba(255, 255, 255, 0.03) 85%,
+    transparent 100%
+  );
 }
 
 .section-heading {
