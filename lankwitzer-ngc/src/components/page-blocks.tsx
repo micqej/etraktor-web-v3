@@ -18,41 +18,6 @@ export function HomePageBlocks({ locale = "sk" }: { locale?: Locale }) {
 
   return (
     <>
-      <section className="home-hero" id="top">
-        <div className="home-hero-media">
-          <Image src="/site-assets/Automotive-main-2-900x601.jpg" alt="Lankwitzer hero" fill priority sizes="100vw" />
-        </div>
-        <div className="home-hero-overlay" />
-        <div className="shell home-hero-grid">
-          <div className="home-hero-copy">
-            <p className="eyebrow">{copy.heroEyebrow}</p>
-            <h1>{copy.heroTitle}</h1>
-            <p className="hero-lead">{copy.heroLead}</p>
-            <div className="hero-actions">
-              <Link href={copy.productsHref} className="button button-primary">
-                {copy.heroPrimary}
-              </Link>
-              <Link href={copy.calculatorHref} className="button button-secondary">
-                {copy.heroSecondary}
-              </Link>
-            </div>
-          </div>
-
-          <div className="home-hero-side">
-            <div className="hero-stat-card">
-              <span>{locale === "sk" ? "SKÚSENOSTI" : "EXPERIENCE"}</span>
-              <strong>30+</strong>
-              <p>{locale === "sk" ? "Rokov skúseností v oblasti priemyselných povrchových úprav." : "Years of experience in industrial surface finishing."}</p>
-            </div>
-            <div className="hero-stat-card accent">
-              <span>{locale === "sk" ? "SLUŽBY" : "SERVICES"}</span>
-              <strong>RAL / ISO / DFT</strong>
-              <p>{locale === "sk" ? "Kalkulácia spotreby, poradenstvo a technické podklady v jednom mieste." : "Consumption calculation, consultancy and technical resources in one place."}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="page-section" id="segmenty">
         <div className="shell">
           <div className="section-heading">
@@ -174,12 +139,12 @@ export function ContactBlock({ locale = "sk" }: { locale?: Locale }) {
               <p>{contactDetails.address}</p>
             </div>
             <div className="contact-panel">
-              <strong>{contactDetails.email}</strong>
-              <p>{contactDetails.phones.join(", ")}</p>
-            </div>
-            <div className="contact-panel">
-              <strong>{locale === "sk" ? "Telefón a fax" : "Phone and fax"}</strong>
-              <p>{contactDetails.phones[2]} | fax: {contactDetails.fax}</p>
+              <strong><a href={`mailto:${contactDetails.email}`} className="contact-link">{contactDetails.email}</a></strong>
+              <p>
+                <a href={`tel:${contactDetails.phones[0].replace(/\s/g, "")}`} className="contact-link">{contactDetails.phones[0]}</a>
+                {", "}
+                <a href={`tel:${contactDetails.phones[1].replace(/\s/g, "")}`} className="contact-link">{contactDetails.phones[1]}</a>
+              </p>
             </div>
             <div className="contact-panel">
               <strong>IČO {contactDetails.ico}</strong>

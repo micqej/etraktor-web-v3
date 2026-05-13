@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Teko } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-const teko = Teko({
-  variable: "--font-teko",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Lankwitzer Slovensko Prototype",
-  description: "Prototype homepage concept for the new Lankwitzer Slovensko website.",
+  title: "Lankwitzer Slovensko",
+  description: "Komplexné náterové systémy, technické poradenstvo a riešenia na mieru pre priemyselnú výrobu.",
 };
 
 export default function RootLayout({
@@ -26,8 +22,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${teko.variable} ${geistMono.variable} h-full antialiased`}
+      lang="sk"
+      className={`${roboto.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <SiteHeader />

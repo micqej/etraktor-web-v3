@@ -12,6 +12,8 @@ import {
   type Locale,
   type ProductCategory,
   type UtilityItem,
+  type ProductSection,
+  type ContentTable,
 } from "@/lib/lankwitzer-data";
 
 function PageHero({
@@ -87,21 +89,28 @@ export function ProductDetailPage({
       <section className="page-section">
         <div className="shell detail-grid">
           <div className="detail-main">
-            <div className="content-panel image-panel">
-              <div className="detail-image">
-                <Image src={item.image} alt={item.title[locale]} fill sizes="(max-width: 1000px) 100vw, 60vw" />
-              </div>
-            </div>
-
             <div className="two-column-grid">
               <div className="content-panel">
                 <strong>{copy.detailUseCases}</strong>
                 <p>{item.intro[locale]}</p>
-                <ul className="detail-list">
-                  {item.bullets[locale].map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
+                {item.sections && item.sections.length > 0 ? (
+                  item.sections.map((section: ProductSection) => (
+                    <div key={section.title[locale]} className="detail-section">
+                      <strong className="detail-section-title">{section.title[locale]}</strong>
+                      <ul className="detail-list">
+                        {section.bullets[locale].map((bullet) => (
+                          <li key={bullet}>{bullet}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                ) : (
+                  <ul className="detail-list">
+                    {item.bullets[locale].map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
               <div className="content-panel">
                 <strong>{copy.detailBenefits}</strong>
@@ -187,15 +196,37 @@ export function UsefulDetailPage({
       <section className="page-section">
         <div className="shell detail-grid">
           <div className="detail-main">
+            {item.contentImage ? (
+              <div className="content-panel image-panel">
+                <a href={item.contentImage} target="_blank" rel="noreferrer" className="detail-image-zoom-link" title={locale === "sk" ? "Zobraziť vo väčšom rozlíšení" : "View in full resolution"}>
+                  <div className={`detail-image${item.contentImageContain ? " detail-image--contain" : ""}`}>
+                    <Image src={item.contentImage} alt={item.title[locale]} fill sizes="(max-width: 1000px) 100vw, 60vw" />
+                  </div>
+                  <span className="detail-image-zoom-hint">{locale === "sk" ? "🔍 Klikni pre zväčšenie" : "🔍 Click to enlarge"}</span>
+                </a>
+              </div>
+            ) : null}
             <div className="content-panel">
               <strong>{copy.utilityBodyTitle}</strong>
               <p>{item.intro[locale]}</p>
-              <ul className="detail-list">
-                {item.body[locale].map((paragraph) => (
-                  <li key={paragraph}>{paragraph}</li>
-                ))}
-              </ul>
+              {item.body[locale].length > 0 ? (
+                <ul className="detail-list">
+                  {item.body[locale].map((paragraph) => (
+                    <li key={paragraph}>{paragraph}</li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
+            {item.highlights ? (
+              <div className="content-panel">
+                <strong>{locale === "sk" ? "Stupne lesku pri 60° ISO 2813" : "Gloss levels at 60° ISO 2813"}</strong>
+                <div className="chip-grid" style={{ marginTop: "1rem" }}>
+                  {item.highlights[locale].map((h) => (
+                    <span key={h} className="chip">{h}</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <aside className="detail-sidebar">
@@ -214,6 +245,34 @@ export function UsefulDetailPage({
             </div>
           </aside>
         </div>
+
+        {item.tables && item.tables.length > 0 ? (
+          <div className="shell iso-tables-section">
+            {item.tables.map((table: ContentTable) => (
+              <div key={table.title[locale]} className="content-panel iso-table-block">
+                <strong>{table.title[locale]}</strong>
+                <div className="iso-table-wrap">
+                  <table className="iso-table">
+                    <thead>
+                      <tr>
+                        {table.headers.map((h) => <th key={h}>{h}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {table.rows.map((row, ri) => (
+                        <tr key={ri}>
+                          {row.map((cell, ci) => (
+                            <td key={ci} style={{ whiteSpace: ci === 0 ? "pre-line" : "normal" }}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </section>
     </>
   );
@@ -261,23 +320,37 @@ export function ContactSectionPage({ locale = "sk" }: { locale?: Locale }) {
       <section className="page-section">
         <div className="shell contact-page-grid">
           <div className="detail-main">
-            <div className="contact-grid">
-              <div className="contact-panel">
-                <strong>{contactDetails.company}</strong>
-                <p>{contactDetails.address}</p>
-              </div>
-              <div className="contact-panel">
-                <strong>{contactDetails.email}</strong>
-                <p>{contactDetails.phones.join(", ")}</p>
-              </div>
-              <div className="contact-panel">
-                <strong>IČO {contactDetails.ico}</strong>
-                <p>IČ DPH: {contactDetails.icDph}</p>
-              </div>
-              <div className="contact-panel">
-                <strong>{locale === "sk" ? "Telefón a fax" : "Phone and fax"}</strong>
-                <p>{contactDetails.phones[2]} | fax: {contactDetails.fax}</p>
-              </div>
+            <div className="content-panel contact-info-table-wrap">
+              <table className="contact-info-table">
+                <tbody>
+                  <tr>
+                    <th>{locale === "sk" ? "Firma" : "Company"}</th>
+                    <td>{contactDetails.company}</td>
+                  </tr>
+                  <tr>
+                    <th>{locale === "sk" ? "Adresa" : "Address"}</th>
+                    <td>{contactDetails.address}</td>
+                  </tr>
+                  <tr>
+                    <th>IČO / IČ DPH</th>
+                    <td>{contactDetails.ico} / {contactDetails.icDph}</td>
+                  </tr>
+                  <tr>
+                    <th>E-mail</th>
+                    <td><a href={`mailto:${contactDetails.email}`} className="contact-link">{contactDetails.email}</a></td>
+                  </tr>
+                  <tr>
+                    <th>{locale === "sk" ? "Telefón" : "Phone"}</th>
+                    <td>
+                      <a href={`tel:${contactDetails.phones[0].replace(/\s/g, "")}`} className="contact-link">{contactDetails.phones[0]}</a>
+                      {", "}
+                      <a href={`tel:${contactDetails.phones[1].replace(/\s/g, "")}`} className="contact-link">{contactDetails.phones[1]}</a>
+                      {", "}
+                      <a href={`tel:${contactDetails.phones[2].replace(/-/g, "")}`} className="contact-link">{contactDetails.phones[2]}</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
           <ContactForm locale={locale} />

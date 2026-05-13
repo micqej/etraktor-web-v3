@@ -18,6 +18,11 @@ export type Segment = {
   pdf: string;
 };
 
+export type ProductSection = {
+  title: LocalizedString;
+  bullets: LocalizedStringArray;
+};
+
 export type ProductCategory = {
   slug: string;
   title: LocalizedString;
@@ -27,7 +32,14 @@ export type ProductCategory = {
   image: string;
   bannerImage: string;
   bullets: LocalizedStringArray;
+  sections?: ProductSection[];
   highlights: LocalizedStringArray;
+};
+
+export type ContentTable = {
+  title: LocalizedString;
+  headers: string[];
+  rows: string[][];
 };
 
 export type UtilityItem = {
@@ -36,7 +48,11 @@ export type UtilityItem = {
   summary: LocalizedString;
   intro: LocalizedString;
   bannerImage: string;
+  contentImage?: string;
+  contentImageContain?: boolean;
   body: LocalizedStringArray;
+  highlights?: LocalizedStringArray;
+  tables?: ContentTable[];
 };
 
 export const contactDetails = {
@@ -62,7 +78,7 @@ export const segments: Segment[] = [
   },
   {
     slug: "automotive",
-    title: { sk: "Automotive", en: "Automotive" },
+    title: { sk: "Automotive a E-mobilita", en: "Automotive & E-mobility" },
     text: {
       sk: "Riešenia pre automotive výrobu, priemyselné procesy a náročnú povrchovú kvalitu.",
       en: "Solutions for automotive production, industrial workflows and demanding surface quality standards.",
@@ -127,26 +143,56 @@ export const productCategories: ProductCategory[] = [
     },
     image: "/site-assets/Produkty-2.jpg",
     bannerImage: "/site-assets/Produkty-2.jpg",
-    bullets: {
-      sk: [
-        "Jednozložkové syntetické rýchloschnúce nátery na oceľ.",
-        "Prezvárateľné shop-primery s atestom na zváranie (SHOP-PRIMER).",
-        "Tepelné nátery na vysoké teploty až do 600 °C.",
-        "Dvojzložkové epoxy aj PUR s obsahom zinkfosfátu, zinkového prachu alebo železitej sľudy.",
-        "Vysokosušinové systémy HIGH-SOLID.",
-        "Jednovrstvové farby (jednošichtovky) – základný aj krycí náter v jednom, aj na plasty a ľahké kovy.",
-        "Alkydové, PVC-alkydové aj 2K epoxy/akryl-polyuretánové s protikoróznou pigmentáciou.",
-      ],
-      en: [
-        "Single-component quick-drying coatings for steel.",
-        "Weldable shop primers with certified welding compatibility (SHOP-PRIMER).",
-        "Heat-resistant coatings up to 600 °C.",
-        "Two-component epoxy and PUR with zinc phosphate, zinc dust or micaceous iron oxide.",
-        "High-solids systems (HIGH-SOLID).",
-        "Single-coat systems combining primer and topcoat, also for plastics and light metals.",
-        "Alkyd, PVC-alkyd and 2K epoxy/acrylic-polyurethane with anticorrosion pigmentation.",
-      ],
-    },
+    bullets: { sk: [], en: [] },
+    sections: [
+      {
+        title: { sk: "Jednozložkové nátery", en: "Single-component coatings" },
+        bullets: {
+          sk: [
+            "Syntetické rýchlo schnúce na oceľ.",
+            "Prezvárateľné s atestom na zváranie tzv. SHOP-PRIMER.",
+            "Tepelné na vysoké teploty do 600 °C.",
+          ],
+          en: [
+            "Synthetic quick-drying for steel.",
+            "Weldable with welding certification, so-called SHOP-PRIMER.",
+            "Heat-resistant for high temperatures up to 600 °C.",
+          ],
+        },
+      },
+      {
+        title: { sk: "Dvojzložkové nátery", en: "Two-component coatings" },
+        bullets: {
+          sk: [
+            "Epoxy aj PUR s obsahom zinkfosfátu na oceľ.",
+            "Epoxidové s obsahom zinkového prachu.",
+            "Epoxidové so železitou sľudou.",
+            "Vysokosušinové HIGH-SOLID.",
+          ],
+          en: [
+            "Epoxy and PUR with zinc phosphate for steel.",
+            "Epoxy with zinc dust content.",
+            "Epoxy with micaceous iron oxide.",
+            "High-solids HIGH-SOLID systems.",
+          ],
+        },
+      },
+      {
+        title: { sk: "Jednovrstvové farby – tzv. Jednošichtovky (základný aj krycí náter v jednom) aj na plasty a ľahké kovy", en: "Single-coat systems (primer and topcoat in one) – also for plastics and light metals" },
+        bullets: {
+          sk: [
+            "Alkydové s protikoróznou pigmentáciou.",
+            "PVC-alkydové s protikoróznou pigmentáciou.",
+            "Epoxy aj akryl-polyuretánové 2-zložkové.",
+          ],
+          en: [
+            "Alkyd with anticorrosion pigmentation.",
+            "PVC-alkyd with anticorrosion pigmentation.",
+            "Epoxy and acrylic-polyurethane 2-component.",
+          ],
+        },
+      },
+    ],
     highlights: {
       sk: ["Široký záber povrchov", "Overené priemyselné systémy", "Riešenia aj pre náročné korózne prostredie"],
       en: ["Wide substrate range", "Proven industrial systems", "Solutions for demanding corrosion environments"],
@@ -238,22 +284,51 @@ export const productCategories: ProductCategory[] = [
     },
     image: "/site-assets/EVO-AMG.jpg",
     bannerImage: "/site-assets/EVO-AMG.jpg",
-    bullets: {
-      sk: [
-        "Bez obsahu izokyanátov a so zanedbateľným VOC.",
-        "Obsah sušiny na úrovni 80 % a viac.",
-        "Extrémna UV, chemická a mechanická odolnosť.",
-        "Rýchle zasychanie a rýchla expedícia výrobkov.",
-        "Cena za meter štvorcový porovnateľná alebo nižšia než pri konvenčných 2K systémoch.",
-      ],
-      en: [
-        "Free of isocyanates and with negligible VOC.",
-        "Solids content of 80% or higher.",
-        "Extreme UV, chemical and mechanical resistance.",
-        "Fast drying and quick goods dispatch.",
-        "Square-metre cost comparable to or lower than conventional 2K systems.",
-      ],
-    },
+    bullets: { sk: [], en: [] },
+    sections: [
+      {
+        title: { sk: "Výkon náteru", en: "Coating performance" },
+        bullets: {
+          sk: ["Extrémna UV, chemická a mechanická odolnosť s konvenčnými dvojzložkovými systémami."],
+          en: ["Extreme UV, chemical and mechanical resistance comparable to conventional two-component systems."],
+        },
+      },
+      {
+        title: { sk: "Produktivita", en: "Productivity" },
+        bullets: {
+          sk: ["Nízka procesná hustota.", "Obsah sušiny ≥ 80 %.", "Vysoká výdatnosť."],
+          en: ["Low process density.", "Solids content ≥ 80%.", "High yield."],
+        },
+      },
+      {
+        title: { sk: "Voliteľná spracovateľnosť", en: "Flexible processability" },
+        bullets: {
+          sk: ["Použiteľný medzi smenami.", "Vytvrdzovanie bez nutnosti prisušovania."],
+          en: ["Usable between shifts.", "Curing without forced drying required."],
+        },
+      },
+      {
+        title: { sk: "Priaznivý k životnému prostrediu", en: "Environmentally friendly" },
+        bullets: {
+          sk: ["Bez izokyanátov.", "Nízky obsah VOC."],
+          en: ["Free of isocyanates.", "Low VOC content."],
+        },
+      },
+      {
+        title: { sk: "Ekonomika", en: "Economics" },
+        bullets: {
+          sk: ["Cena náteru na 1 m² je porovnateľná až nižšia v porovnaní s konvenčnými dvojzložkovými systémami."],
+          en: ["Cost per 1 m² is comparable to or lower than conventional two-component systems."],
+        },
+      },
+      {
+        title: { sk: "User friendly", en: "User friendly" },
+        bullets: {
+          sk: ["Nízka škodlivosť pre používateľov aj životné prostredie.", "Nevyžaduje špeciálnu aplikačnú techniku ani investície."],
+          en: ["Low hazard for users and the environment.", "No special application equipment or investment required."],
+        },
+      },
+    ],
     highlights: {
       sk: ["Bez špeciálnych investícií", "Silná produktivita", "User-friendly technológia"],
       en: ["No special capital investment", "Strong productivity", "User-friendly technology"],
@@ -268,8 +343,8 @@ export const productCategories: ProductCategory[] = [
       en: "Certified intumescent systems for steel protection with fire resistance from R15 to R60.",
     },
     intro: {
-      sk: "Táto kategória potrebuje jasné vysvetlenie, technické podklady a dôveru. Preto ju na novom webe staviame ako samostatný odborný blok.",
-      en: "This category needs clear explanation, technical documentation and trust. That is why we present it as a dedicated expert section on the new website.",
+      sk: "Intumescentné nátery sú špeciálne systémy, ktoré pri požiari napenia a vytvoria izolačnú vrstvu chrániacu konštrukciu. Používajú sa na oceľové nosné konštrukcie podľa požiadaviek projektovej dokumentácie.",
+      en: "Intumescent coatings are special systems that foam up under fire, forming an insulating layer that protects the structure. They are applied to load-bearing steel structures in accordance with project documentation requirements.",
     },
     image: "/site-assets/Kontajnery-OK-3.jpg",
     bannerImage: "/site-assets/Kontajnery-OK-3.jpg",
@@ -301,23 +376,31 @@ export const productCategories: ProductCategory[] = [
       en: "Thinners, degreasers and support solutions that keep application under control.",
     },
     intro: {
-      sk: "V sortimente nie sú len laky a nátery. Rovnako dôležitý je aj celý doplnkový servis okolo prípravy povrchu, čistenia a aplikačného procesu.",
-      en: "The portfolio is not only about paints and coatings. The full support layer around surface preparation, cleaning and application is just as important.",
+      sk: "V rámci nášho sortimentu dokážeme zabezpečiť a dodať aj striekaciu techniku a ďalšie príslušenstvo potrebné pri aplikácii od renomovaných a overených výrobcov. Ak to náhodou predsa len nemáme, ozvite sa a odporučíme niekoho, kto Vám vyhovie.",
+      en: "As part of our product range, we can supply spraying equipment and other accessories required for application from reputable and proven manufacturers. If we do not have it in stock, contact us and we will recommend a supplier that suits your needs.",
     },
     image: "/site-assets/Produkty-2.jpg",
     bannerImage: "/site-assets/Produkty-2.jpg",
     bullets: {
       sk: [
-        "Riedidlá pre jednotlivé systémy a technologické postupy.",
-        "Odmasťovacie prostriedky na prípravu podkladu aj náradia.",
-        "Doplnky pre stabilnejší a čistejší aplikačný proces.",
-        "Podpora pri výbere správnej kombinácie pre konkrétnu prevádzku.",
+        "Striekacie zariadenia Airmix a Airless.",
+        "Striekacie pištole.",
+        "Trysky.",
+        "Filtre a filtračné sitá.",
+        "Filtre striekacích kabín.",
+        "Pravítka na meranie tuženia.",
+        "Viskozimetre.",
+        "Hrúbkomery mokrej aj suchej hrúbky náteru.",
       ],
       en: [
-        "Thinners for specific systems and technological procedures.",
-        "Degreasers for substrate preparation and equipment cleaning.",
-        "Support products for cleaner and more stable application.",
-        "Guidance on the right combination for each operation.",
+        "Airmix and Airless spray equipment.",
+        "Spray guns.",
+        "Nozzles.",
+        "Filters and filter screens.",
+        "Spray booth filters.",
+        "Pot life measuring rulers.",
+        "Viscometers.",
+        "Wet and dry film thickness gauges.",
       ],
     },
     highlights: {
@@ -359,22 +442,39 @@ export const usefulItems: UtilityItem[] = [
       en: "A practical explanation of the core terms and differences between coating gloss levels.",
     },
     intro: {
-      sk: "V technickej aj obchodnej komunikácii je dôležité rozumieť tomu, čo znamená mat, pololesk alebo vysoký lesk a ako to vplýva na výsledný vzhľad povrchu.",
-      en: "In technical and commercial communication, it is important to understand what matt, semi-gloss or high gloss really mean and how they affect the final appearance.",
+      sk: "Niekedy samotná voľba lesku náteru dokáže úplne zmeniť to, ako bude výrobok nakoniec vyzerať. Lesk sa meria v % a stupňoch pri konkrétnom uhle merania. Spravidla platí, že čím je lesk vyšší, tým viac svetla reflektuje od podkladu.",
+      en: "Sometimes the gloss level alone can completely change how a finished product looks. Gloss is measured in % at a specific measurement angle. As a rule, the higher the gloss, the more light is reflected from the surface.",
     },
-    bannerImage: "/site-assets/Automotive-main-2-900x601.jpg",
+    bannerImage: "/site-assets/Produkty-2.jpg",
     body: {
       sk: [
-        "Lesk povrchu sa vyhodnocuje podľa toho, koľko svetla sa od povrchu odráža pri definovaných podmienkach merania.",
-        "Rozdiely v lesku vplývajú nielen na vizuál, ale aj na to, ako povrch odhaľuje nerovnosti, znečistenie a stopy používania.",
-        "Pri výbere systému sa oplatí riešiť lesk už v návrhu, nie až na konci realizácie.",
+        "Lesklé nátery sa tiež lepšie leštia a čistia od potenciálneho znečistenia. Na druhej strane však zvýrazňujú nedostatky podkladu a predprípravy.",
+        "Matné nátery dokážu do istej miery zakryť nedostatky podkladu a nie sú také náročné na kvalitu aplikácie. Pri znečistení je však náročnejšie očistiť takto lakovaný podklad v porovnaní s lesklými.",
+        "Správna voľba stupňa lesku závisí od účelu použitia výrobku, požiadaviek zákazníka a podmienok prostredia, v ktorom bude výrobok nasadený.",
       ],
       en: [
-        "Surface gloss is evaluated by the amount of light reflected under defined measurement conditions.",
-        "Gloss level affects not only appearance but also how the surface reveals imperfections, dirt and wear traces.",
-        "It is best to define gloss during system design rather than at the end of execution.",
+        "Glossy coatings are easier to polish and clean from contamination. However, they tend to highlight surface imperfections and inadequate substrate preparation.",
+        "Matt coatings can conceal substrate defects to some extent and are less demanding on application quality. On the other hand, cleaning a matt-coated surface is more difficult compared to glossy finishes.",
+        "The right gloss level depends on the product's end use, customer requirements and the environment in which it will be deployed.",
       ],
     },
+    tables: [
+      {
+        title: {
+          sk: "Stupne lesku pri 60° – ISO 2813",
+          en: "Gloss levels at 60° – ISO 2813",
+        },
+        headers: ["Stupeň lesku", "Hodnota lesku (%)"],
+        rows: [
+          ["Hlboký mat", "< 5 %"],
+          ["Mat", "6 – 10 %"],
+          ["Polomat", "11 – 40 %"],
+          ["Pololesk", "41 – 70 %"],
+          ["Lesk", "71 – 90 %"],
+          ["Vysoký lesk", "91 – 97 %"],
+        ],
+      },
+    ],
   },
   {
     slug: "vzorkovniky",
@@ -388,6 +488,8 @@ export const usefulItems: UtilityItem[] = [
       en: "Please note: the RAL colour sampler is for orientation purposes only. The actual shade may differ due to individual monitor settings, viewing angle and lighting. For a real reference sampler, please contact us.",
     },
     bannerImage: "/site-assets/PlaSTY-main-900x600.jpg",
+    contentImage: "/site-assets/RAL-vzorkovnik.jpg",
+    contentImageContain: true,
     body: {
       sk: [
         "Štandardne vieme pracovať s odtieňmi RAL, prípadne RAL Design, STN, ČSN, British Standard a ďalšími podľa zadania.",
@@ -415,26 +517,69 @@ export const usefulItems: UtilityItem[] = [
       en: "ISO 12944 defines corrosion categories (C1–C5, Im) and prescribes the coating system build-up needed to achieve the required service life. The right system depends on the combination of corrosion class, substrate, application method and investor requirements.",
     },
     bannerImage: "/site-assets/Kontajnery-OK-3.jpg",
-    body: {
-      sk: [
-        "C1 (veľmi nízka) – interiéry s vykurovaním, napr. kancelárske budovy.",
-        "C2 (nízka) – atmosféry s nízkou úrovňou znečistenia, vidiecke oblasti.",
-        "C3 (stredná) – mestské a priemyselné prostredia s miernym SO₂, pobrežné oblasti s nízkou salinitou.",
-        "C4 (vysoká) – priemyselné oblasti a pobrežné oblasti s miernou salinitou.",
-        "C5 (veľmi vysoká) – priemyselné oblasti s vysokou vlhkosťou a agresívnou atmosférou alebo pobrežné oblasti s vysokou salinitou.",
-        "Im – ponorné prostredia (sladká voda, morská voda, pôda).",
-        "Na základe koróznej triedy a požadovanej životnosti (L: 2–5 r. / M: 5–15 r. / H: 15+ r.) vieme odporučiť optimálny náterový systém s konkrétnou DFT a počtom vrstiev.",
-      ],
-      en: [
-        "C1 (very low) – heated interiors, e.g. office buildings.",
-        "C2 (low) – atmospheres with low pollution levels, rural areas.",
-        "C3 (medium) – urban and industrial environments with moderate SO₂, low-salinity coastal areas.",
-        "C4 (high) – industrial areas and coastal areas with moderate salinity.",
-        "C5 (very high) – industrial areas with high humidity and aggressive atmosphere or high-salinity coastal areas.",
-        "Im – immersion environments (fresh water, sea water, soil).",
-        "Based on corrosion category and required durability (L: 2–5 y. / M: 5–15 y. / H: 15+ y.) we recommend the optimal coating system with specific DFT and number of coats.",
-      ],
-    },
+    body: { sk: [], en: [] },
+    tables: [
+      {
+        title: {
+          sk: "Rozdelenie koróznych tried podľa normy EN ISO 12944",
+          en: "Corrosion category classification according to EN ISO 12944",
+        },
+        headers: ["Stupeň koróznej agresivity", "Príklad typického exteriérového prostredia", "Príklad typického interiérového prostredia"],
+        rows: [
+          ["C1\nveľmi nízka", "—", "Vykurované budovy ako školy, hotely, kancelárie."],
+          ["C2\nnízka", "Atmosféra s veľmi nízkou úrovňou znečistenia, prevažne prostredie vidieka, prepravné nátery.", "Nevykurované budovy, kde môže dochádzať ku kondenzácii ako sú sklady a športové haly."],
+          ["C3\nstredná", "Mestské priemyselné atmosféry s miernym znečistením SO₂, prímorské prostredie s nízkou salinitou.", "Výrobné priestory s vysokou vlhkosťou a malým znečistením ovzdušia ako sú výroby poživatín."],
+          ["C4\nvysoká", "Priemyselné prostredie a prímorské prostredie s nižšou salinitou.", "Chemické závody, plavecké bazény, lodenice a prímorské doky."],
+          ["C5\nveľmi vysoká", "Priemyselné prostredie s vysokou vlhkosťou a agresívnou atmosférou, prímorské prostredie.", "Budovy alebo prostredia s prevažne trvalou kondenzáciou a s vysokým znečistením ovzdušia."],
+          ["CX\nextrémne vysoká", "Morské prostredie s extrémnou vysokou salinitou, silne znečistené priemyselné prostredia s vysokou teplotou.", "Budovy alebo prostredia s prevažne trvalou kondenzáciou, vysokou salinitou a veľmi agresívnou atmosférou."],
+        ],
+      },
+      {
+        title: {
+          sk: "Hrúbky a príklady 1K alkydových náterových systémov na oceľ pre jednotlivé korózne prostredia",
+          en: "Thicknesses and examples of 1K alkyd coating systems for steel for individual corrosion environments",
+        },
+        headers: ["Stupeň koróznej agresivity", "Návrh náterového systému", "Celková hrúbka systému (μ)", "Životnosť"],
+        rows: [
+          ["C1 veľmi nízka", "EvoCor380/EvoProtect384", "80", "L"],
+          ["C2 nízka", "EvoCor380/EvoProtect384", "80", "L"],
+          ["C3 stredná", "EvoCor380/EvoProtect384", "100", "L"],
+          ["C3 stredná", "EvoCor380/EvoProtect384", "160", "M"],
+          ["C3 stredná", "EvoCor380/EvoProtect384", "200", "H"],
+          ["C3 stredná", "EvoCor380/EvoProtect384", "260", "VH"],
+          ["C4 vysoká", "EvoCor380/EvoProtect384", "160", "L"],
+          ["C4 vysoká", "EvoCor380/EvoProtect384", "200", "M"],
+          ["C4 vysoká", "EvoCor380/EvoProtect384", "260", "H"],
+          ["C5+", "—", "nerealizovateľné", "VH"],
+        ],
+      },
+      {
+        title: {
+          sk: "Hrúbky a príklady 2K dvojzložkových náterových systémov na oceľ pre jednotlivé korózne prostredia",
+          en: "Thicknesses and examples of 2K two-component coating systems for steel for individual corrosion environments",
+        },
+        headers: ["Stupeň koróznej agresivity", "Návrh náterového systému", "Celková hrúbka systému (μ)", "Zinkový náter (μ)", "Životnosť"],
+        rows: [
+          ["C1 veľmi nízka", "EvoCor130/EvoProtect281", "60", "60", "L"],
+          ["C2 nízka", "EvoCor130/EvoProtect281", "60", "60", "L"],
+          ["C2 nízka", "EvoCor130/EvoProtect281", "80", "60", "M"],
+          ["C2 nízka", "EvoCor130/EvoProtect281", "100", "60", "H"],
+          ["C2 nízka", "EvoCor130/EvoProtect281", "180", "60", "VH"],
+          ["C3 stredná", "EvoCor130/EvoProtect281", "100", "60", "L"],
+          ["C3 stredná", "EvoCor130/EvoProtect281", "120", "60", "M"],
+          ["C3 stredná", "EvoCor130/EvoProtect281", "180", "160", "H"],
+          ["C3 stredná", "EvoCor130/EvoProtect281", "240", "200", "VH"],
+          ["C4 vysoká", "EvoCor130/EvoProtect281", "120", "60", "L"],
+          ["C4 vysoká", "EvoCor130/EvoProtect281", "180", "160", "M"],
+          ["C4 vysoká", "EvoCor130/EvoProtect281", "240", "200", "H"],
+          ["C4 vysoká", "EvoCor130/EvoProtect281", "300", "260", "VH"],
+          ["C5 veľmi vysoká", "EvoCor130/EvoProtect281", "180", "160", "L"],
+          ["C5 veľmi vysoká", "EvoCor130/EvoProtect281", "240", "200", "M"],
+          ["C5 veľmi vysoká", "EvoCor130/EvoProtect281", "300", "260", "H"],
+          ["C5 veľmi vysoká", "EvoCor130/EvoProtect281", "360", "320", "VH"],
+        ],
+      },
+    ],
   },
 ];
 
@@ -445,20 +590,32 @@ export const removedItems = [
 
 export const aboutBullets: LocalizedStringArray = {
   sk: [
-    "Naši aplikační technici odporučia a vyladia striekaciu techniku aj farby pre vaše podmienky, teda farby na mieru.",
-    "Vytipujeme optimálne varianty pre výrobu a potreby a poskytujeme bezplatné poradenstvo pri otázkach v oblasti povrchových úprav.",
-    "Miešanie a tónovanie farieb na zariadení FARB-EXPRESS Just in Time.",
-    "Prítomnosť aplikačného technika podľa dohody s kvalifikovanou písomnou správou a zaškolením pracovníkov.",
-    "Optimalizácia a zefektívnenie lakovacieho procesu vrátane redukcie VOC vo výrobe.",
-    "Podpora akreditovaného partnerského laboratória EUCL ako súčasť sekcie O nás.",
+    "Naši aplikační technici odporučia a vyladia striekaciu techniku a naše farby pre vaše podmienky – robíme FARBY NA MIERU.",
+    "Vytipujeme optimálne varianty pre vašu výrobu a potreby.",
+    "Miešanie a tónovanie farieb na zariadení FARB-EXPRESS „Just in Time“.",
+    "Štandardne v odtieňoch RAL, prípadne RAL Design, STN, ČSN, British Standard a ďalších podľa zadania.",
+    "Dodanie na miesto určenia do 24 hodín.",
+    "Optimalizácia a zefektívnenie lakovacieho procesu.",
+    "Minimalizácia a redukcia VOC vo vašej výrobe.",
+    "Poskytujeme bezplatné poradenstvo pri otázkach v oblasti povrchových úprav.",
+    "Prítomnosť aplikačného technika podľa dohody s kvalifikovanou písomnou správou.",
+    "Zaškolenie pracovníkov pre aplikáciu.",
+    "Kontrola lesku, farebných vlastností, hrúbok náteru, mriežková skúška a adhézne kontroly povrchovej úpravy priamo na mieste.",
+    "Naše partnerské akreditované laboratórium EUCL dokáže vykonať široké spektrum testov a pomôcť vám overiť kvalitu povrchovej úpravy vašich výrobkov.",
   ],
   en: [
-    "Our application technicians adjust spraying equipment and coating systems to your specific conditions, creating tailored coating solutions.",
-    "We identify the optimal options for your production and provide free consultancy in the field of surface finishing.",
+    "Our application technicians recommend and fine-tune spraying equipment and coatings for your conditions – we create COATINGS TAILORED TO YOU.",
+    "We identify optimal options for your production and requirements.",
     "Colour mixing and tinting via the FARB-EXPRESS Just in Time system.",
-    "Application technician presence by agreement, including written reporting and operator training.",
-    "Optimisation of the coating process, including VOC reduction in production.",
-    "Support from the accredited partner laboratory EUCL as part of the About section.",
+    "Standardly in RAL shades, or RAL Design, STN, ČSN, British Standard and others as specified.",
+    "Delivery to the specified location within 24 hours.",
+    "Optimisation and streamlining of the coating process.",
+    "Minimisation and reduction of VOC in your production.",
+    "We provide FREE CONSULTANCY on surface finishing questions.",
+    "Application technician attendance by agreement with a qualified written report.",
+    "Training of staff for application.",
+    "On-site inspection of gloss, colour properties, coating thickness, cross-cut test and adhesion checks.",
+    "Our accredited partner laboratory EUCL can perform a wide range of tests to help you verify the quality of the surface finish on your products.",
   ],
 };
 
@@ -473,7 +630,7 @@ export const siteCopy = {
     contactHref: "/kontakt",
     calculatorHref: "/uzitocne/kalkulacia-spotrieb",
     heroEyebrow: "Komplexné riešenia povrchových úprav",
-    heroTitle: "Nátery, technické poradenstvo a riešenia na mieru pre priemysel.",
+    heroTitle: "Nátery, technické poradenstvo a riešenia na mieru pre priemysel",
     heroLead:
       "Komplexné náterové systémy, technické poradenstvo a riešenia na mieru pre priemyselnú výrobu.",
     heroBody:
@@ -497,7 +654,7 @@ export const siteCopy = {
     aboutTitle: "O nás",
     aboutHeading: "Nie len dodávateľ. Partner pri komplexnom riešení povrchových úprav.",
     aboutText:
-      "Sme firma s dlhoročnou tradíciou a skúsenosťami v najrôznejších segmentoch a druhoch náterov s pobočkami po celom svete. Nie sme len výrobcom a predajcom, ale hlavne partnerom pri komplexnom riešení vašich povrchových úprav. Neplatíte za to čo vyhodíte, ale za to čo zabezpečuje ochranu vašich produktov.",
+      "Sme firma s dlhoročnou tradíciou a skúsenosťami v najrôznejších segmentoch a druhoch náterov s pobočkami po celom svete. Nie sme len výrobcom a predajcom, ale hlavne partnerom pri komplexnom riešení vašich povrchových úprav.",
     contactTitle: "Kontakt",
     contactHeading: "Priamy kontakt pre obchod aj technické konzultácie",
     contactText:
@@ -537,7 +694,7 @@ export const siteCopy = {
     contactHref: "/en/kontakt",
     calculatorHref: "/en/uzitocne/kalkulacia-spotrieb",
     heroEyebrow: "Complex surface finishing solutions",
-    heroTitle: "Premium coating systems for industry.",
+    heroTitle: "Premium coating systems for industry",
     heroLead:
       "Complete coating systems, technical consultancy and tailored solutions for industrial production.",
     heroBody:
