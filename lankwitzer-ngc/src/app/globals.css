@@ -392,7 +392,7 @@ textarea {
 }
 
 .section-alt {
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .section-heading {
@@ -806,10 +806,7 @@ textarea {
 .site-footer {
   margin-top: auto;
   padding: 2.8rem 0;
-  background:
-    linear-gradient(90deg, rgba(62, 121, 199, 0.12), transparent 26%),
-    linear-gradient(90deg, rgba(241, 141, 42, 0.12), transparent 42%),
-    #161a20;
+  background: #161a20;
   border-top: 1px solid var(--line);
 }
 
