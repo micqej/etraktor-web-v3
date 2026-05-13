@@ -39,11 +39,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(62, 121, 199, 0.18), transparent 24%),
-    radial-gradient(circle at top right, rgba(241, 141, 42, 0.18), transparent 22%),
-    linear-gradient(180deg, rgba(207, 59, 50, 0.08), transparent 18%),
-    linear-gradient(180deg, #14181f 0%, #191e26 100%);
+  background: linear-gradient(180deg, #14181f 0%, #191e26 100%);
   color: var(--foreground);
   font-family: var(--font-sans);
 }
@@ -396,7 +392,7 @@ textarea {
 }
 
 .section-alt {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .section-heading {
