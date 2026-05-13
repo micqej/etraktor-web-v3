@@ -28,12 +28,12 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 100%;
 }
 
+/* Desktop: väčší základný text pre lepšiu čitateľnosť (bez prerušenia clamp() headingov) */
 @media (min-width: 768px) {
-  html {
-    font-size: 130%;
+  body {
+    font-size: 18px;
   }
 }
 
@@ -309,7 +309,7 @@ textarea {
 }
 
 .home-hero-copy h1 {
-  font-size: clamp(3rem, 5.5vw, 6.5rem);
+  font-size: clamp(32px, 4.5vw, 64px);
   max-width: 14ch;
 }
 
@@ -348,7 +348,7 @@ textarea {
 .hero-stat-card strong {
   display: block;
   margin-top: 0.3rem;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(24px, 3vw, 40px);
   color: white;
 }
 
@@ -388,7 +388,7 @@ textarea {
 }
 
 .page-hero-content h1 {
-  font-size: clamp(3.3rem, 7vw, 6.2rem);
+  font-size: clamp(28px, 4vw, 56px);
 }
 
 .page-section {
@@ -406,7 +406,7 @@ textarea {
 .section-heading h1,
 .section-heading h2,
 .about-copy h2 {
-  font-size: clamp(2.9rem, 5vw, 4.8rem);
+  font-size: clamp(26px, 3.5vw, 48px);
 }
 
 .segment-grid {
@@ -618,7 +618,7 @@ textarea {
 }
 
 .contact-form-head h3 {
-  font-size: clamp(2.3rem, 4vw, 3.4rem);
+  font-size: clamp(22px, 3vw, 36px);
 }
 
 .contact-form-grid,
@@ -659,7 +659,7 @@ textarea {
 .detail-sidebar strong {
   display: block;
   margin-bottom: 0.8rem;
-  font-size: 1.45rem;
+  font-size: clamp(14px, 1.1vw, 20px);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -943,7 +943,7 @@ textarea {
   }
 
   .home-hero-copy h1 {
-    font-size: clamp(3.1rem, 14vw, 5rem);
+    font-size: clamp(28px, 10vw, 48px);
   }
 
   .page-hero {
